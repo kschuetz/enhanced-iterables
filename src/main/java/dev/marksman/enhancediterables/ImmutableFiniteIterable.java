@@ -12,6 +12,9 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.*;
+import static dev.marksman.enhancediterables.Validation.validateDrop;
+import static dev.marksman.enhancediterables.Validation.validateTake;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An {@code EnhancedIterable} that is both finite and safe from mutation.
@@ -26,6 +29,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     }
 
     default ImmutableFiniteIterable<A> concat(ImmutableFiniteIterable<A> other) {
+        requireNonNull(other);
         return EnhancedIterables.immutableFiniteIterable(Concat.concat(this, other));
     }
 
@@ -37,6 +41,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * @return a {@code ImmutableFiniteIterable<Tuple2<A, B>>}
      */
     default <B> ImmutableFiniteIterable<Tuple2<A, B>> cross(ImmutableFiniteIterable<B> other) {
+        requireNonNull(other);
         return immutableFiniteIterable(CartesianProduct.cartesianProduct(this, other));
     }
 
@@ -51,21 +56,25 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      */
     @Override
     default ImmutableFiniteIterable<A> drop(int count) {
+        validateDrop(count);
         return immutableFiniteIterable(Drop.drop(count, this));
     }
 
     @Override
     default ImmutableFiniteIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
+        requireNonNull(predicate);
         return immutableFiniteIterable(DropWhile.dropWhile(predicate, this));
     }
 
     @Override
     default ImmutableFiniteIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
+        requireNonNull(predicate);
         return immutableFiniteIterable(Filter.<A>filter(predicate).apply(this));
     }
 
     @Override
     default <B> ImmutableFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
+        requireNonNull(f);
         return immutableFiniteIterable(Map.map(f, this));
     }
 
@@ -95,6 +104,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
 
     @Override
     default Tuple2<? extends ImmutableFiniteIterable<A>, ? extends ImmutableFiniteIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
+        requireNonNull(predicate);
         Tuple2<Iterable<A>, Iterable<A>> spanResult = Span.<A>span(predicate).apply(this);
         return tuple(immutableFiniteIterable(spanResult._1()),
                 immutableFiniteIterable(spanResult._2()));
@@ -107,15 +117,19 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
 
     @Override
     default ImmutableFiniteIterable<A> take(int count) {
+        validateTake(count);
         return immutableFiniteIterable(Take.take(count, this));
     }
 
     @Override
     default ImmutableFiniteIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
+        requireNonNull(predicate);
         return immutableFiniteIterable(TakeWhile.takeWhile(predicate, this));
     }
 
     default <B, C> ImmutableFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
         return immutableFiniteIterable(ZipWith.zipWith(fn.toBiFunction(), this, other));
     }
 

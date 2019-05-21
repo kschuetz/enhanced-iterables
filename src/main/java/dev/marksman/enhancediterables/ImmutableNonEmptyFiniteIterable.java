@@ -11,6 +11,7 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableFiniteIterable;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyFiniteIterableOrThrow;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An {@code EnhancedIterable} that is finite, safe from mutation, and guaranteed to contain at least one element.
@@ -30,6 +31,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
 
     @Override
     default ImmutableNonEmptyFiniteIterable<A> concat(ImmutableFiniteIterable<A> other) {
+        requireNonNull(other);
         return immutableNonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
     }
 
@@ -41,11 +43,13 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
      * @return a {@code ImmutableNonEmptyFiniteIterable<Tuple2<A, B>>}
      */
     default <B> ImmutableNonEmptyFiniteIterable<Tuple2<A, B>> cross(ImmutableNonEmptyFiniteIterable<B> other) {
+        requireNonNull(other);
         return immutableNonEmptyFiniteIterableOrThrow(CartesianProduct.cartesianProduct(this, other));
     }
 
     @Override
     default <B> ImmutableNonEmptyFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
+        requireNonNull(f);
         return immutableNonEmptyFiniteIterableOrThrow(Map.map(f, this));
     }
 
@@ -75,10 +79,13 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
     }
 
     default <B, C> ImmutableNonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableNonEmptyIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
         return immutableNonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn.toBiFunction(), this, other));
     }
 
     static <A> ImmutableNonEmptyFiniteIterable<A> immutableNonEmptyFiniteIterable(A head, ImmutableFiniteIterable<A> tail) {
+        requireNonNull(tail);
         return new ImmutableNonEmptyFiniteIterable<A>() {
             @Override
             public A head() {

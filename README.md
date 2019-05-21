@@ -55,7 +55,7 @@ The base functionality that can be added to any `Iterable`.  Can be infinite, fi
 
 ### Constructing
 
-Any existing `Iterable<A>` can be converted to an `EnhancedIterable<A>` by calling the `EnhancedIterable.enhancedIterable` static method.
+Any existing `Iterable<A>` can be converted to an `EnhancedIterable<A>` by calling the `EnhancedIterable.enhance` static method.
 
 ## <a name="finite-iterable">`FiniteIterable<A>`</a>
 

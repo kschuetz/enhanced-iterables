@@ -13,6 +13,7 @@ import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An {@code EnhancedIterable} that is finite and guaranteed to contain at least one element.
@@ -26,6 +27,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
 
     @Override
     default NonEmptyFiniteIterable<A> concat(FiniteIterable<A> other) {
+        requireNonNull(other);
         return nonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
     }
 
@@ -37,11 +39,13 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * @return a {@code NonEmptyFiniteIterable<Tuple2<A, B>>}
      */
     default <B> NonEmptyFiniteIterable<Tuple2<A, B>> cross(NonEmptyFiniteIterable<B> other) {
+        requireNonNull(other);
         return nonEmptyFiniteIterableOrThrow(CartesianProduct.cartesianProduct(this, other));
     }
 
     @Override
     default <B> NonEmptyFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
+        requireNonNull(f);
         return nonEmptyFiniteIterableOrThrow(Map.map(f, this));
     }
 
@@ -65,6 +69,8 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     }
 
     default <B, C> NonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyFiniteIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
         return nonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn.toBiFunction(), this, other));
     }
 
@@ -77,6 +83,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * @return a {@code NonEmptyFiniteIterable<A>}
      */
     static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterable(A head, FiniteIterable<A> tail) {
+        requireNonNull(tail);
         return new NonEmptyFiniteIterable<A>() {
             @Override
             public A head() {

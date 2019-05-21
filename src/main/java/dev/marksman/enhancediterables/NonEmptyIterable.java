@@ -11,8 +11,9 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Iterator;
 
-import static dev.marksman.enhancediterables.EnhancedIterable.enhancedIterable;
+import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An {@code EnhancedIterable} that is guaranteed to contain at least one element.
@@ -39,11 +40,13 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
 
     @Override
     default NonEmptyIterable<A> concat(Iterable<A> other) {
+        requireNonNull(other);
         return nonEmptyIterableOrThrow(Concat.concat(this, other));
     }
 
     @Override
     default <B> NonEmptyIterable<B> fmap(Fn1<? super A, ? extends B> f) {
+        requireNonNull(f);
         return nonEmptyIterable(f.apply(head()), Map.map(f, tail()));
     }
 
@@ -63,6 +66,8 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     }
 
     default <B, C> NonEmptyIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
         return nonEmptyIterable(fn.apply(head(), other.head()),
                 ZipWith.zipWith(fn.toBiFunction(), tail(), other.tail()));
     }
@@ -76,7 +81,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      * @return a {@code NonEmptyIterable<A>}
      */
     static <A> NonEmptyIterable<A> nonEmptyIterable(A head, Iterable<A> tail) {
-        EnhancedIterable<A> enhancedTail = enhancedIterable(tail);
+        EnhancedIterable<A> enhancedTail = enhance(tail);
         return new NonEmptyIterable<A>() {
             @Override
             public A head() {
