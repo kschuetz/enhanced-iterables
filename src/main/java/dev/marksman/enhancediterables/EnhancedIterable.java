@@ -36,6 +36,7 @@ public interface EnhancedIterable<A> extends Iterable<A> {
     }
 
     default EnhancedIterable<A> concat(Iterable<A> other) {
+        requireNonNull(other);
         return enhance(Concat.concat(this, other));
     }
 
