@@ -9,6 +9,7 @@ import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Tails;
 import com.jnape.palatable.lambda.functions.builtin.fn2.*;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
+import com.jnape.palatable.lambda.functor.Functor;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Collection;
@@ -29,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <A> the element type
  */
-public interface EnhancedIterable<A> extends Iterable<A> {
+public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIterable<?>> {
 
     default NonEmptyIterable<A> append(A element) {
         return nonEmptyIterableOrThrow(Snoc.snoc(element, this));
