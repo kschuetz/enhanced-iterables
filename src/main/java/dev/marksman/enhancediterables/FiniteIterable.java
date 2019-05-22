@@ -173,7 +173,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     @Override
-    default EnhancedIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
+    default FiniteIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         return EnhancedIterables.finiteIterable(TakeWhile.takeWhile(predicate, this));
     }
