@@ -7,6 +7,7 @@ import com.jnape.palatable.lambda.functions.builtin.fn1.Inits;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Reverse;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Tails;
 import com.jnape.palatable.lambda.functions.builtin.fn2.*;
+import com.jnape.palatable.lambda.functions.builtin.fn3.FoldLeft;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
@@ -79,6 +80,25 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     default <B> FiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);
         return EnhancedIterables.finiteIterable(Map.map(f, this));
+    }
+
+    /**
+     * Applies a binary operator to a start value and all elements of this {@code FiniteIterable}, going left to right.
+     *
+     * @param z   the start value
+     * @param op  the binary operator
+     * @param <B> the result type of the binary operator
+     * @return the result of inserting {@code op} between consecutive elements of this {@code FiniteIterable},
+     * going left to right with the start value {@code z} on the left:
+     * <code>
+     * op(...op(z, x_1), x_2, ..., x_n)
+     * </code>
+     * where <code>x,,1,,, ..., x,,n,,</code> are the elements of this {@code FiniteIterable}
+     * Returns {@code z} if this {@code FiniteIterable} is empty.
+     */
+    default <B> B foldLeft(Fn2<? super B, ? super A, ? extends B> op, B z) {
+        requireNonNull(op);
+        return FoldLeft.<A, B>foldLeft(op, z).apply(this);
     }
 
     default NonEmptyIterable<? extends FiniteIterable<A>> inits() {
