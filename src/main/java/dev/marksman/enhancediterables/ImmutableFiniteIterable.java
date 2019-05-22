@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.coproduct.CoProduct2;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
@@ -84,6 +85,22 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     @Override
     default ImmutableFiniteIterable<A> intersperse(A a) {
         return immutableFiniteIterable(Intersperse.intersperse(a, this));
+    }
+
+    /**
+     * Partitions this {@code ImmutableFiniteIterable} given a disjoint mapping function.
+     *
+     * @param <B> The output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C> The output right Iterable element type, as well as the CoProduct2 B type
+     * @return a <code>Tuple2&lt;ImmutableFiniteIterable&lt;B&gt;, ImmutableFiniteIterable&lt;C&gt;&gt;</code>
+     */
+    @Override
+    default <B, C> Tuple2<? extends ImmutableFiniteIterable<B>, ? extends ImmutableFiniteIterable<C>> partition(
+            Fn1<? super A, ? extends CoProduct2<B, C, ?>> function) {
+        requireNonNull(function);
+        Tuple2<Iterable<B>, Iterable<C>> partitionResult = Partition.partition(function, this);
+        return tuple(immutableFiniteIterable(partitionResult._1()),
+                immutableFiniteIterable(partitionResult._2()));
     }
 
     @Override

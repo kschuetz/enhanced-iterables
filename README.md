@@ -44,6 +44,7 @@ The base functionality that can be added to any `Iterable`.  Can be infinite, fi
 | `fmap` | `EnhancedIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `intersperse` | `EnhancedIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
 | `isEmpty` | `boolean`| -- |
+| `partition` | `Tuple2<EnhancedIterable<B>, EnhancedIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `NonEmptyIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `EnhancedIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `slide` | `EnhancedIterable<NonEmptyFiniteIterable<A>>`| [`Slide.slide`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Slide.html) |
@@ -78,6 +79,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `foldLeft` | `B` | [`FoldLeft.foldLeft`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn3/FoldLeft.html) |
 | `inits` | `NonEmptyIterable<FiniteIterable<A>>`| [`Inits.inits`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Inits.html) |
 | `intersperse` | `FiniteIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `partition` | `Tuple2<FiniteIterable<B>, FiniteIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `NonEmptyFiniteIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `FiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `reverse` | `FiniteIterable<A>`| [`Reverse.reverse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Reverse.html) |
@@ -155,6 +157,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `filter` | `ImmutableIterable<A>`| [`Filter.filter`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Filter.html) |
 | `fmap` | `ImmutableIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `intersperse` | `ImmutableIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `partition` | `Tuple2<ImmutableIterable<B>, ImmutableIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `ImmutableNonEmptyIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `ImmutableIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `slide` | `ImmutableIterable<ImmutableNonEmptyFiniteIterable<A>>`| [`Slide.slide`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Slide.html) |
@@ -186,6 +189,7 @@ In addition to all methods on `ImmutableIterable<A>` and `FiniteIterable<A>`, pr
 | `filter` | `ImmutableFiniteIterable<A>`| [`Filter.filter`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Filter.html) |
 | `fmap` | `ImmutableFiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `intersperse` | `ImmutableFiniteIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `partition` | `Tuple2<ImmutableFiniteIterable<B>, ImmutableFiniteIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `ImmutableNonEmptyFiniteIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `ImmutableFiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `reverse` | `ImmutableFiniteIterable<A>`| [`Reverse.reverse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Reverse.html) |

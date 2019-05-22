@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.coproduct.CoProduct2;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
@@ -68,6 +69,25 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<A> intersperse(A a) {
         return immutableIterable(Intersperse.intersperse(a, this));
+    }
+
+    /**
+     * Partitions this {@code ImmutableIterable} given a disjoint mapping function.
+     * <p>
+     * Note that while the returned tuple must be constructed eagerly, the left and right iterables contained therein
+     * are both lazy, so comprehension over infinite iterables is supported.
+     *
+     * @param <B> The output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C> The output right Iterable element type, as well as the CoProduct2 B type
+     * @return a <code>Tuple2&lt;ImmutableIterable&lt;B&gt;, ImmutableIterable&lt;C&gt;&gt;</code>
+     */
+    @Override
+    default <B, C> Tuple2<? extends ImmutableIterable<B>, ? extends ImmutableIterable<C>> partition(
+            Fn1<? super A, ? extends CoProduct2<B, C, ?>> function) {
+        requireNonNull(function);
+        Tuple2<Iterable<B>, Iterable<C>> partitionResult = Partition.partition(function, this);
+        return tuple(immutableIterable(partitionResult._1()),
+                immutableIterable(partitionResult._2()));
     }
 
     @Override

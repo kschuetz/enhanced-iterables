@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
+import static com.jnape.palatable.lambda.adt.choice.Choice2.a;
+import static com.jnape.palatable.lambda.adt.choice.Choice2.b;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
@@ -212,6 +215,27 @@ class EnhancedIterableTest {
         @Test
         void negative() {
             assertFalse(enhance(asList(1, 2, 3)).isEmpty());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("partition")
+    class Partition {
+
+        @Test
+        void throwsOnNullArgument() {
+            assertThrows(NullPointerException.class, () -> enhance(emptyList()).partition(null));
+        }
+
+        @Test
+        void lambdaTestCase() {
+            EnhancedIterable<String> strings = enhance(asList("one", "two", "three", "four", "five"));
+            Tuple2<? extends EnhancedIterable<String>, ? extends EnhancedIterable<Integer>> partition =
+                    strings.partition(s -> s.length() % 2 == 1 ? a(s) : b(s.length()));
+
+            assertThat(partition._1(), contains("one", "two", "three"));
+            assertThat(partition._2(), contains(4, 4));
         }
 
     }

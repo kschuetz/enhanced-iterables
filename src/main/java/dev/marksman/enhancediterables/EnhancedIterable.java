@@ -1,6 +1,7 @@
 package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.Maybe;
+import com.jnape.palatable.lambda.adt.coproduct.CoProduct2;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn0;
 import com.jnape.palatable.lambda.functions.Fn1;
@@ -86,6 +87,23 @@ public interface EnhancedIterable<A> extends Iterable<A> {
 
     default boolean isEmpty() {
         return !iterator().hasNext();
+    }
+
+    /**
+     * Partitions this {@code EnhancedIterable} given a disjoint mapping function.
+     * <p>
+     * Note that while the returned tuple must be constructed eagerly, the left and right iterables contained therein
+     * are both lazy, so comprehension over infinite iterables is supported.
+     *
+     * @param <B> The output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C> The output right Iterable element type, as well as the CoProduct2 B type
+     * @return a <code>Tuple2&lt;EnhancedIterable&lt;B&gt;, EnhancedIterable&lt;C&gt;&gt;</code>
+     */
+    default <B, C> Tuple2<? extends EnhancedIterable<B>, ? extends EnhancedIterable<C>> partition(
+            Fn1<? super A, ? extends CoProduct2<B, C, ?>> function) {
+        requireNonNull(function);
+        Tuple2<Iterable<B>, Iterable<C>> partitionResult = Partition.partition(function, this);
+        return tuple(enhance(partitionResult._1()), enhance(partitionResult._2()));
     }
 
     default NonEmptyIterable<A> prepend(A element) {
