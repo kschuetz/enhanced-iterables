@@ -17,6 +17,7 @@ import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
 import static dev.marksman.enhancediterables.Validation.validateDrop;
+import static dev.marksman.enhancediterables.Validation.validateSlide;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -101,6 +102,23 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
 
     default FiniteIterable<A> reverse() {
         return EnhancedIterables.finiteIterable(Reverse.reverse(this));
+    }
+
+    /**
+     * "Slide" a window of {@code k} elements across the {@code FiniteIterable} by one element at a time.
+     * <p>
+     * Example:
+     *
+     * <code>FiniteIterable.of(1, 2, 3, 4, 5).slide(2); // [[1, 2], [2, 3], [3, 4], [4, 5]]</code>
+     *
+     * @param k the number of elements in the sliding window.  Must be >= 1.
+     * @return a {@code FiniteIterable<NonEmptyFiniteIterable<A>>}
+     */
+    @Override
+    default FiniteIterable<? extends NonEmptyFiniteIterable<A>> slide(int k) {
+        validateSlide(k);
+        return EnhancedIterables.finiteIterable(Map.map(EnhancedIterables::nonEmptyFiniteIterableOrThrow,
+                Slide.slide(k, this)));
     }
 
     @Override

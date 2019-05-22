@@ -240,6 +240,34 @@ class EnhancedIterableTest {
     }
 
     @Nested
+    @DisplayName("slide")
+    class Slide {
+
+        @Test
+        void throwsOnZeroArgument() {
+            assertThrows(IllegalArgumentException.class, () -> enhance(emptyList()).slide(0));
+        }
+
+        @Test
+        void onEmpty() {
+            assertThat(enhance(emptyList()).slide(1), emptyIterable());
+        }
+
+        @Test
+        void k1() {
+            assertThat(enhance(asList(0, 1, 2, 3)).slide(1),
+                    contains(contains(0), contains(1), contains(2), contains(3)));
+        }
+
+        @Test
+        void k2() {
+            assertThat(enhance(asList(0, 1, 2, 3)).slide(2),
+                    contains(contains(0, 1), contains(1, 2), contains(2, 3)));
+        }
+
+    }
+
+    @Nested
     @DisplayName("span")
     class Span {
 

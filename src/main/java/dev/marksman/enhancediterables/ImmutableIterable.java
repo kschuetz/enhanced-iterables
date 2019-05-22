@@ -10,8 +10,7 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.*;
-import static dev.marksman.enhancediterables.Validation.validateDrop;
-import static dev.marksman.enhancediterables.Validation.validateTake;
+import static dev.marksman.enhancediterables.Validation.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -79,6 +78,23 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<A> prependAll(A a) {
         return immutableIterable(PrependAll.prependAll(a, this));
+    }
+
+    /**
+     * "Slide" a window of {@code k} elements across the {@code ImmutableIterable} by one element at a time.
+     * <p>
+     * Example:
+     *
+     * <code>ImmutableIterable.of(1, 2, 3, 4, 5).slide(2); // [[1, 2], [2, 3], [3, 4], [4, 5]]</code>
+     *
+     * @param k the number of elements in the sliding window.  Must be >= 1.
+     * @return an {@code ImmutableIterable<ImmutableNonEmptyFiniteIterable<A>>}
+     */
+    @Override
+    default ImmutableIterable<? extends ImmutableNonEmptyFiniteIterable<A>> slide(int k) {
+        validateSlide(k);
+        return immutableIterable(Map.map(EnhancedIterables::immutableNonEmptyFiniteIterableOrThrow,
+                Slide.slide(k, this)));
     }
 
     @Override

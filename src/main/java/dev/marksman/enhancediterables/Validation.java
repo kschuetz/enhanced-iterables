@@ -21,4 +21,9 @@ class Validation {
     static void validateDrop(int count) {
         requireNonNegative("count", count);
     }
+
+    static void validateSlide(int k) {
+        requirePositive("k", k);
+    }
+
 }

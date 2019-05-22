@@ -15,8 +15,7 @@ import java.util.Collection;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
-import static dev.marksman.enhancediterables.Validation.validateDrop;
-import static dev.marksman.enhancediterables.Validation.validateTake;
+import static dev.marksman.enhancediterables.Validation.*;
 import static dev.marksman.enhancediterables.internal.ProtectedIterator.protectedIterator;
 import static java.util.Objects.requireNonNull;
 
@@ -95,6 +94,22 @@ public interface EnhancedIterable<A> extends Iterable<A> {
 
     default EnhancedIterable<A> prependAll(A a) {
         return enhance(PrependAll.prependAll(a, this));
+    }
+
+    /**
+     * "Slide" a window of {@code k} elements across the {@code EnhancedIterable} by one element at a time.
+     * <p>
+     * Example:
+     *
+     * <code>EnhancedIterable.of(1, 2, 3, 4, 5).slide(2); // [[1, 2], [2, 3], [3, 4], [4, 5]]</code>
+     *
+     * @param k the number of elements in the sliding window.  Must be >= 1.
+     * @return an {@code EnhancedIterable<NonEmptyFiniteIterable<A>>}
+     */
+    default EnhancedIterable<? extends NonEmptyFiniteIterable<A>> slide(int k) {
+        validateSlide(k);
+        return enhance(Map.map(EnhancedIterables::nonEmptyFiniteIterableOrThrow,
+                Slide.slide(k, this)));
     }
 
     default Tuple2<? extends EnhancedIterable<A>, ? extends EnhancedIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {

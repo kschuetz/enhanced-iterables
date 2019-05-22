@@ -12,8 +12,7 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.*;
-import static dev.marksman.enhancediterables.Validation.validateDrop;
-import static dev.marksman.enhancediterables.Validation.validateTake;
+import static dev.marksman.enhancediterables.Validation.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -100,6 +99,23 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     @Override
     default ImmutableFiniteIterable<A> reverse() {
         return immutableFiniteIterable(Reverse.reverse(this));
+    }
+
+    /**
+     * "Slide" a window of {@code k} elements across the {@code ImmutableFiniteIterable} by one element at a time.
+     * <p>
+     * Example:
+     *
+     * <code>ImmutableFiniteIterable.of(1, 2, 3, 4, 5).slide(2); // [[1, 2], [2, 3], [3, 4], [4, 5]]</code>
+     *
+     * @param k the number of elements in the sliding window.  Must be >= 1.
+     * @return an {@code ImmutableFiniteIterable<ImmutableNonEmptyFiniteIterable<A>>}
+     */
+    @Override
+    default ImmutableFiniteIterable<? extends ImmutableNonEmptyFiniteIterable<A>> slide(int k) {
+        validateSlide(k);
+        return immutableFiniteIterable(Map.map(EnhancedIterables::immutableNonEmptyFiniteIterableOrThrow,
+                Slide.slide(k, this)));
     }
 
     @Override
