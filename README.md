@@ -46,6 +46,7 @@ The base functionality that can be added to any `Iterable`.  Can be infinite, fi
 | `isEmpty` | `boolean`| -- |
 | `prepend` | `NonEmptyIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `EnhancedIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
+| `slide` | `EnhancedIterable<NonEmptyFiniteIterable<A>>`| [`Slide.slide`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Slide.html) |
 | `span` | `Tuple2<EnhancedIterable<A>, EnhancedIterable<A>>`| [`Span.span`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Span.html) |
 | `take` | `FiniteIterable<A>`| [`Take.take`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Take.html) |
 | `takeWhile` | `EnhancedIterable<A>`| [`TakeWhile.takeWhile`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/TakeWhile.html) |
@@ -74,11 +75,13 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `dropWhile` | `FiniteIterable<A>`| [`DropWhile.dropWhile`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/DropWhile.html) |
 | `filter` | `FiniteIterable<A>`| [`Filter.filter`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Filter.html) |
 | `fmap` | `FiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
+| `foldLeft` | `B` | [`FoldLeft.foldLeft`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn3/FoldLeft.html) |
 | `inits` | `NonEmptyIterable<FiniteIterable<A>>`| [`Inits.inits`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Inits.html) |
 | `intersperse` | `FiniteIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
 | `prepend` | `NonEmptyFiniteIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `FiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `reverse` | `FiniteIterable<A>`| [`Reverse.reverse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Reverse.html) |
+| `slide` | `FiniteIterable<NonEmptyFiniteIterable<A>>`| [`Slide.slide`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Slide.html) |
 | `span` | `Tuple2<FiniteIterable<A>, FiniteIterable<A>>`| [`Span.span`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Span.html) |
 | `tails` | `NonEmptyIterable<FiniteIterable<A>>`| [`Tails.tails`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Tails.html) |
 | `takeWhile` | `FiniteIterable<A>`| [`TakeWhile.takeWhile`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/TakeWhile.html) |
@@ -154,6 +157,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `intersperse` | `ImmutableIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
 | `prepend` | `ImmutableNonEmptyIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `ImmutableIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
+| `slide` | `ImmutableIterable<ImmutableNonEmptyFiniteIterable<A>>`| [`Slide.slide`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Slide.html) |
 | `span` | `Tuple2<ImmutableIterable<A>, ImmutableIterable<A>>`| [`Span.span`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Span.html) |
 | `take` | `ImmutableFiniteIterable<A>`| [`Take.take`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Take.html) |
 | `takeWhile` | `ImmutableIterable<A>`| [`TakeWhile.takeWhile`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/TakeWhile.html) |
@@ -170,7 +174,7 @@ An `EnhancedIterable` that is known at compile-time to be safe from mutation and
 
 ### Methods
 
-In addition to all methods on `ImmutableIterable<A>`, provides the following:
+In addition to all methods on `ImmutableIterable<A>` and `FiniteIterable<A>`, provides the following:
 
 | Method | Returns | Lambda function |
 |---|---|---|
@@ -185,6 +189,7 @@ In addition to all methods on `ImmutableIterable<A>`, provides the following:
 | `prepend` | `ImmutableNonEmptyFiniteIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `ImmutableFiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `reverse` | `ImmutableFiniteIterable<A>`| [`Reverse.reverse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Reverse.html) |
+| `slide` | `ImmutableFiniteIterable<ImmutableNonEmptyFiniteIterable<A>>`| [`Slide.slide`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Slide.html) |
 | `span` | `Tuple2<ImmutableFiniteIterable<A>, ImmutableFiniteIterable<A>>`| [`Span.span`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Span.html) |
 | `tails` | `NonEmptyIterable<ImmutableFiniteIterable<A>>`| [`Tails.tails`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Tails.html) |
 | `takeWhile` | `ImmutableFiniteIterable<A>`| [`TakeWhile.takeWhile`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/TakeWhile.html) |
