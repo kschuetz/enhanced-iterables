@@ -130,7 +130,7 @@ public interface EnhancedIterable<A> extends Iterable<A> {
     default <B, C> EnhancedIterable<C> zipWith(Fn2<A, B, C> fn, Iterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return enhance(ZipWith.zipWith(fn.toBiFunction(), this, other));
+        return enhance(ZipWith.zipWith(fn, this, other));
     }
 
     static <A> EnhancedIterable<A> enhance(Iterable<A> underlying) {

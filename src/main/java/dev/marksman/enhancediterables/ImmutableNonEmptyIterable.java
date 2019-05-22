@@ -47,7 +47,7 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
     default <B, C> ImmutableNonEmptyIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableNonEmptyIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return immutableNonEmptyIterableOrThrow(ZipWith.zipWith(fn.toBiFunction(), this, other));
+        return immutableNonEmptyIterableOrThrow(ZipWith.zipWith(fn, this, other));
     }
 
     static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterable(A head, ImmutableIterable<A> tail) {

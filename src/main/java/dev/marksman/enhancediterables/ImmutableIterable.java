@@ -109,7 +109,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     default <B, C> ImmutableIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return immutableIterable(ZipWith.zipWith(fn.toBiFunction(), this, other));
+        return immutableIterable(ZipWith.zipWith(fn, this, other));
     }
 
     @SafeVarargs

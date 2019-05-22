@@ -69,7 +69,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
         requireNonNull(fn);
         requireNonNull(other);
         return nonEmptyIterable(fn.apply(head(), other.head()),
-                ZipWith.zipWith(fn.toBiFunction(), tail(), other.tail()));
+                ZipWith.zipWith(fn, tail(), other.tail()));
     }
 
     /**

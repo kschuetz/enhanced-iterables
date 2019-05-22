@@ -130,7 +130,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     default <B, C> ImmutableFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return immutableFiniteIterable(ZipWith.zipWith(fn.toBiFunction(), this, other));
+        return immutableFiniteIterable(ZipWith.zipWith(fn, this, other));
     }
 
     @SafeVarargs

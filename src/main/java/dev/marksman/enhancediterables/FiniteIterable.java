@@ -125,7 +125,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, Iterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn.toBiFunction(), this, other));
+        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
     }
 
     static <A> FiniteIterable<A> finiteIterable(Collection<A> collection) {

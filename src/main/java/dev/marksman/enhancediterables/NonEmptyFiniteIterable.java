@@ -71,7 +71,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     default <B, C> NonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyFiniteIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return nonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn.toBiFunction(), this, other));
+        return nonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn, this, other));
     }
 
     /**
