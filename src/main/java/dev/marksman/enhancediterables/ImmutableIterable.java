@@ -77,8 +77,9 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Note that while the returned tuple must be constructed eagerly, the left and right iterables contained therein
      * are both lazy, so comprehension over infinite iterables is supported.
      *
-     * @param <B> The output left Iterable element type, as well as the CoProduct2 A type
-     * @param <C> The output right Iterable element type, as well as the CoProduct2 B type
+     * @param function the mapping function
+     * @param <B>      The output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C>      The output right Iterable element type, as well as the CoProduct2 B type
      * @return a <code>Tuple2&lt;ImmutableIterable&lt;B&gt;, ImmutableIterable&lt;C&gt;&gt;</code>
      */
     @Override
@@ -107,7 +108,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      *
      * <code>ImmutableIterable.of(1, 2, 3, 4, 5).slide(2); // [[1, 2], [2, 3], [3, 4], [4, 5]]</code>
      *
-     * @param k the number of elements in the sliding window.  Must be >= 1.
+     * @param k the number of elements in the sliding window.  Must be &gt;= 1.
      * @return an {@code ImmutableIterable<ImmutableNonEmptyFiniteIterable<A>>}
      */
     @Override

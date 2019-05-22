@@ -95,8 +95,9 @@ public interface EnhancedIterable<A> extends Iterable<A> {
      * Note that while the returned tuple must be constructed eagerly, the left and right iterables contained therein
      * are both lazy, so comprehension over infinite iterables is supported.
      *
-     * @param <B> The output left Iterable element type, as well as the CoProduct2 A type
-     * @param <C> The output right Iterable element type, as well as the CoProduct2 B type
+     * @param function the mapping function
+     * @param <B>      The output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C>      The output right Iterable element type, as well as the CoProduct2 B type
      * @return a <code>Tuple2&lt;EnhancedIterable&lt;B&gt;, EnhancedIterable&lt;C&gt;&gt;</code>
      */
     default <B, C> Tuple2<? extends EnhancedIterable<B>, ? extends EnhancedIterable<C>> partition(
@@ -121,7 +122,7 @@ public interface EnhancedIterable<A> extends Iterable<A> {
      *
      * <code>EnhancedIterable.of(1, 2, 3, 4, 5).slide(2); // [[1, 2], [2, 3], [3, 4], [4, 5]]</code>
      *
-     * @param k the number of elements in the sliding window.  Must be >= 1.
+     * @param k the number of elements in the sliding window.  Must be &gt;= 1.
      * @return an {@code EnhancedIterable<NonEmptyFiniteIterable<A>>}
      */
     default EnhancedIterable<? extends NonEmptyFiniteIterable<A>> slide(int k) {

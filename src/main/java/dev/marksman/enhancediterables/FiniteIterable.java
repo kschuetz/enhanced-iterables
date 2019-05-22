@@ -114,8 +114,9 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     /**
      * Partitions this {@code FiniteIterable} given a disjoint mapping function.
      *
-     * @param <B> The output left Iterable element type, as well as the CoProduct2 A type
-     * @param <C> The output right Iterable element type, as well as the CoProduct2 B type
+     * @param function the mapping function
+     * @param <B>      The output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C>      The output right Iterable element type, as well as the CoProduct2 B type
      * @return a <code>Tuple2&lt;FiniteIterable&lt;B&gt;, FiniteIterable&lt;C&gt;&gt;</code>
      */
     @Override
@@ -148,7 +149,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      *
      * <code>FiniteIterable.of(1, 2, 3, 4, 5).slide(2); // [[1, 2], [2, 3], [3, 4], [4, 5]]</code>
      *
-     * @param k the number of elements in the sliding window.  Must be >= 1.
+     * @param k the number of elements in the sliding window.  Must be &gt;= 1.
      * @return a {@code FiniteIterable<NonEmptyFiniteIterable<A>>}
      */
     @Override
