@@ -21,7 +21,7 @@
        
 # What is it?
 
-*enhanced-iterables* is a Java library that is intended to be used in conjunction with [lambda](https://palatable.github.io/lambda/). 
+*enhanced-iterables* is a Java library that is intended to be used in conjunction with [lambda](https://github.com/palatable/lambda). 
 
 It provides interfaces that add some useful methods to `Iterable`s.  Most of these methods delegate to lambda functions, and return the most specific type of `Iterable` possible.    
 

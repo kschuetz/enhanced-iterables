@@ -5,7 +5,7 @@
 
     <groupId>dev.marksman</groupId>
     <artifactId>enhanced-iterables</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2-SNAPSHOT</version>
 
     <name>enhanced-iterables</name>
     <description>
