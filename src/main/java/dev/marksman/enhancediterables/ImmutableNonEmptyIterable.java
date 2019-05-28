@@ -8,6 +8,7 @@ import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
+import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyFiniteIterableOrThrow;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyIterableOrThrow;
 import static java.util.Objects.requireNonNull;
 
@@ -64,6 +65,12 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
         requireNonNull(fn);
         requireNonNull(other);
         return immutableNonEmptyIterableOrThrow(ZipWith.zipWith(fn, this, other));
+    }
+
+    default <B, C> ImmutableNonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableNonEmptyFiniteIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
+        return immutableNonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn, this, other));
     }
 
     static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterable(A head, ImmutableIterable<A> tail) {

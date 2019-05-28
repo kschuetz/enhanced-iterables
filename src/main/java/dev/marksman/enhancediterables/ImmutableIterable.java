@@ -199,6 +199,12 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         return immutableIterable(ZipWith.zipWith(fn, this, other));
     }
 
+    default <B, C> ImmutableFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableFiniteIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
+        return immutableFiniteIterable(ZipWith.zipWith(fn, this, other));
+    }
+
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         return EnhancedIterables.of(first, more);

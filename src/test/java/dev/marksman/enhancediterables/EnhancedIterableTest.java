@@ -532,7 +532,8 @@ class EnhancedIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> enhance(emptyList()).zipWith(tupler(), null));
+            assertThrows(NullPointerException.class, () -> enhance(emptyList())
+                    .zipWith(tupler(), (EnhancedIterable<Object>) null));
         }
 
         @Test

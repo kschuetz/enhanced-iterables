@@ -12,6 +12,7 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 import java.util.Iterator;
 
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
+import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
 import static java.util.Objects.requireNonNull;
 
@@ -86,6 +87,12 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
         requireNonNull(other);
         return nonEmptyIterable(fn.apply(head(), other.head()),
                 ZipWith.zipWith(fn, tail(), other.tail()));
+    }
+
+    default <B, C> NonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyFiniteIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
+        return nonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn, this, other));
     }
 
     /**

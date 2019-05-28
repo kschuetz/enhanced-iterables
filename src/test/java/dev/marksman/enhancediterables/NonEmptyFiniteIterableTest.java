@@ -531,7 +531,8 @@ class NonEmptyFiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyFiniteIterable("foo", emptyList()).zipWith(tupler(), null));
+            assertThrows(NullPointerException.class, () -> nonEmptyFiniteIterable("foo", emptyList())
+                    .zipWith(tupler(), (NonEmptyFiniteIterable<Object>) null));
         }
 
         @Test

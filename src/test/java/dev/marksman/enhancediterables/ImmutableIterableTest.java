@@ -532,7 +532,8 @@ class ImmutableIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> immutableIterable(emptyList()).zipWith(tupler(), null));
+            assertThrows(NullPointerException.class, () -> immutableIterable(emptyList())
+                    .zipWith(tupler(), (ImmutableIterable<Object>) null));
         }
 
         @Test

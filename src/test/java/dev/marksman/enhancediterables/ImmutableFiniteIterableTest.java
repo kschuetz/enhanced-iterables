@@ -612,7 +612,8 @@ class ImmutableFiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).zipWith(tupler(), null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList())
+                    .zipWith(tupler(), (ImmutableFiniteIterable<Object>) null));
         }
 
         @Test

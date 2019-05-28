@@ -467,7 +467,8 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).zipWith(tupler(), null));
+            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList())
+                    .zipWith(tupler(), (NonEmptyIterable<Object>) null));
         }
 
         @Test

@@ -218,6 +218,18 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return enhance(ZipWith.zipWith(fn, this, other));
     }
 
+    default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, FiniteIterable<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
+        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
+    }
+
+    default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, Collection<B> other) {
+        requireNonNull(fn);
+        requireNonNull(other);
+        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
+    }
+
     static <A> EnhancedIterable<A> enhance(Iterable<A> underlying) {
         requireNonNull(underlying);
         if (underlying instanceof EnhancedIterable<?>) {
