@@ -35,6 +35,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     default FiniteIterable<A> concat(FiniteIterable<A> other) {
+        requireNonNull(other);
         return EnhancedIterables.finiteIterable(Concat.concat(this, other));
     }
 

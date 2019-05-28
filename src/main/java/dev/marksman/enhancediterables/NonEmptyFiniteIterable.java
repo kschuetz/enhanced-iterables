@@ -12,7 +12,10 @@ import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
+import java.util.Collection;
+
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
+import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -95,6 +98,10 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
                 return tail;
             }
         };
+    }
+
+    static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterable(A head, Collection<A> tail) {
+        return nonEmptyFiniteIterable(head, finiteIterable(tail));
     }
 
 }
