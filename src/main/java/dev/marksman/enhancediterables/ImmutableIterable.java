@@ -73,6 +73,15 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         return immutableIterable(Drop.drop(count, this));
     }
 
+    /**
+     * Returns a new {@code ImmutableIterable} that skips the first contiguous group of elements of this
+     * {@code ImmutableIterable} that satisfy a predicate.
+     * <p>
+     * Iteration begins at the first element for which the predicate evaluates to false.
+     *
+     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @return an {@link ImmutableIterable}
+     */
     @Override
     default ImmutableIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
