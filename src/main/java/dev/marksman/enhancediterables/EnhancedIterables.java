@@ -6,7 +6,10 @@ import com.jnape.palatable.lambda.functions.builtin.fn1.Uncons;
 import static dev.marksman.enhancediterables.ProtectedIterator.protectedIterator;
 import static java.util.Arrays.asList;
 
-class EnhancedIterables {
+final class EnhancedIterables {
+
+    private EnhancedIterables() {
+    }
 
     static <A> FiniteIterable<A> finiteIterable(Iterable<A> underlying) {
         if (underlying instanceof FiniteIterable<?>) {

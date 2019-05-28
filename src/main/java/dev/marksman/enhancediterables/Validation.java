@@ -1,6 +1,9 @@
 package dev.marksman.enhancediterables;
 
-class Validation {
+final class Validation {
+
+    private Validation() {
+    }
 
     static void requirePositive(String paramName, int value) {
         if (value < 1) {
