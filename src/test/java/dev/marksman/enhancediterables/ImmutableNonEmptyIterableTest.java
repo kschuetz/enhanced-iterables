@@ -16,7 +16,6 @@ import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
-import static dev.marksman.enhancediterables.NonEmptyIterable.nonEmptyIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,47 +24,47 @@ import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
 
-class NonEmptyIterableTest {
+class ImmutableNonEmptyIterableTest {
 
     @Test
     void singletonHead() {
-        NonEmptyIterable<Integer> subject = nonEmptyIterable(1, emptyList());
+        NonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, emptyList());
         assertEquals(1, subject.head());
     }
 
     @Test
     void singletonTail() {
-        NonEmptyIterable<Integer> subject = nonEmptyIterable(1, emptyList());
+        NonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, emptyList());
         assertThat(subject.tail(), emptyIterable());
     }
 
     @Test
     void singletonIteration() {
-        NonEmptyIterable<Integer> subject = nonEmptyIterable(1, emptyList());
+        NonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, emptyList());
         assertThat(subject, contains(1));
     }
 
     @Test
     void multipleHead() {
-        NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+        NonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
         assertEquals(1, subject.head());
     }
 
     @Test
     void multipleTail() {
-        NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+        NonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
         assertThat(subject.tail(), contains(2, 3));
     }
 
     @Test
     void multipleIteration() {
-        NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3, 4, 5, 6));
+        NonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3, 4, 5, 6));
         assertThat(subject, contains(1, 2, 3, 4, 5, 6));
     }
 
     @Test
     void iteratorNextReturnsCorrectElements() {
-        NonEmptyIterable<String> subject = nonEmptyIterable("foo", asList("bar", "baz"));
+        NonEmptyIterable<String> subject = immutableNonEmptyIterable("foo", asList("bar", "baz"));
         Iterator<String> iterator = subject.iterator();
         assertEquals("foo", iterator.next());
         assertEquals("bar", iterator.next());
@@ -75,7 +74,7 @@ class NonEmptyIterableTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void iteratorHasNextCanBeCalledMultipleTimes() {
-        NonEmptyIterable<String> subject = nonEmptyIterable("foo", asList("bar", "baz"));
+        NonEmptyIterable<String> subject = immutableNonEmptyIterable("foo", asList("bar", "baz"));
         Iterator<String> iterator = subject.iterator();
         assertTrue(iterator.hasNext());
         assertTrue(iterator.hasNext());
@@ -85,7 +84,7 @@ class NonEmptyIterableTest {
 
     @Test
     void iteratorHasNextReturnsFalseIfNothingRemains() {
-        NonEmptyIterable<String> subject = nonEmptyIterable("foo", emptyList());
+        NonEmptyIterable<String> subject = immutableNonEmptyIterable("foo", emptyList());
         Iterator<String> iterator = subject.iterator();
         iterator.next();
         assertFalse(iterator.hasNext());
@@ -93,7 +92,7 @@ class NonEmptyIterableTest {
 
     @Test
     void iteratorNextThrowsIfNothingRemains() {
-        NonEmptyIterable<String> subject = nonEmptyIterable("foo", emptyList());
+        NonEmptyIterable<String> subject = immutableNonEmptyIterable("foo", emptyList());
         Iterator<String> iterator = subject.iterator();
         iterator.next();
         assertThrows(NoSuchElementException.class, iterator::next);
@@ -101,7 +100,7 @@ class NonEmptyIterableTest {
 
     @Test
     void iteratorThrowsIfRemoveIsCalled() {
-        NonEmptyIterable<String> subject = nonEmptyIterable("foo", asList("bar", "baz"));
+        NonEmptyIterable<String> subject = immutableNonEmptyIterable("foo", asList("bar", "baz"));
         Iterator<String> iterator = subject.iterator();
         assertThrows(UnsupportedOperationException.class, iterator::remove);
         iterator.next();
@@ -118,7 +117,7 @@ class NonEmptyIterableTest {
 
         @Test
         void toSize3() {
-            assertThat(nonEmptyIterable("foo", asList("bar", "baz")).append("qux"),
+            assertThat(immutableNonEmptyIterable("foo", asList("bar", "baz")).append("qux"),
                     contains("foo", "bar", "baz", "qux"));
         }
 
@@ -130,12 +129,12 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).concat(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).concat(null));
         }
 
         @Test
         void size3PlusSize3() {
-            NonEmptyIterable<String> subject = nonEmptyIterable("foo", asList("bar", "baz"));
+            NonEmptyIterable<String> subject = immutableNonEmptyIterable("foo", asList("bar", "baz"));
             assertThat(subject.concat(subject),
                     contains("foo", "bar", "baz", "foo", "bar", "baz"));
         }
@@ -148,24 +147,24 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNegativeArgument() {
-            assertThrows(IllegalArgumentException.class, () -> nonEmptyIterable("foo", emptyList()).drop(-1));
+            assertThrows(IllegalArgumentException.class, () -> immutableNonEmptyIterable("foo", emptyList()).drop(-1));
         }
 
         @Test
         void countOfZero() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.drop(0), contains(1, 2, 3));
         }
 
         @Test
         void countOfOne() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.drop(1), contains(2, 3));
         }
 
         @Test
         void countExceedingSize() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.drop(10000), emptyIterable());
         }
 
@@ -177,24 +176,24 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).dropWhile(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).dropWhile(null));
         }
 
         @Test
         void predicateNeverTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.dropWhile(constantly(false)), contains(1, 2, 3));
         }
 
         @Test
         void predicateAlwaysTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.dropWhile(constantly(true)), emptyIterable());
         }
 
         @Test
         void predicateSometimesTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.dropWhile(LT.lt(2)), contains(2, 3));
         }
 
@@ -206,24 +205,24 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).dropWhile(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).dropWhile(null));
         }
 
         @Test
         void predicateNeverTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.filter(constantly(false)), emptyIterable());
         }
 
         @Test
         void predicateAlwaysTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.filter(constantly(true)), contains(1, 2, 3));
         }
 
         @Test
         void predicateSometimesTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.filter(n -> n % 2 == 1), contains(1, 3));
         }
 
@@ -235,19 +234,19 @@ class NonEmptyIterableTest {
 
         @Test
         void predicateNeverTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertEquals(nothing(), subject.find(constantly(false)));
         }
 
         @Test
         void predicateAlwaysTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertEquals(just(1), subject.find(constantly(true)));
         }
 
         @Test
         void predicateSometimesTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3, 4));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3, 4));
             assertEquals(just(2), subject.find(n -> n % 2 == 0));
         }
     }
@@ -258,23 +257,23 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).fmap(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).fmap(null));
         }
 
         @Test
         void testCase1() {
-            assertThat(nonEmptyIterable(1, asList(2, 3)).fmap(n -> n * 2), contains(2, 4, 6));
+            assertThat(immutableNonEmptyIterable(1, asList(2, 3)).fmap(n -> n * 2), contains(2, 4, 6));
         }
 
         @Test
         void functorIdentity() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertTrue(iterablesContainSameElements(subject, subject.fmap(id())));
         }
 
         @Test
         void functorComposition() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             Fn1<Integer, Integer> f = n -> n * 2;
             Fn1<Integer, String> g = Object::toString;
             assertTrue(iterablesContainSameElements(subject.fmap(f).fmap(g), subject.fmap(f.fmap(g))));
@@ -288,7 +287,7 @@ class NonEmptyIterableTest {
 
         @Test
         void testCase1() {
-            assertThat(nonEmptyIterable("foo", asList("bar", "baz")).intersperse("*"),
+            assertThat(immutableNonEmptyIterable("foo", asList("bar", "baz")).intersperse("*"),
                     contains("foo", "*", "bar", "*", "baz"));
         }
 
@@ -300,7 +299,7 @@ class NonEmptyIterableTest {
 
         @Test
         void negative() {
-            assertFalse(nonEmptyIterable("foo", emptyList()).isEmpty());
+            assertFalse(immutableNonEmptyIterable("foo", emptyList()).isEmpty());
         }
 
     }
@@ -312,7 +311,7 @@ class NonEmptyIterableTest {
 
         @Test
         void toSize3() {
-            assertThat(nonEmptyIterable("foo", asList("bar", "baz")).prepend("qux"),
+            assertThat(immutableNonEmptyIterable("foo", asList("bar", "baz")).prepend("qux"),
                     contains("qux", "foo", "bar", "baz"));
         }
 
@@ -324,7 +323,7 @@ class NonEmptyIterableTest {
 
         @Test
         void testCase1() {
-            assertThat(nonEmptyIterable("foo", asList("bar", "baz")).prependAll("*"),
+            assertThat(immutableNonEmptyIterable("foo", asList("bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }
 
@@ -336,18 +335,18 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnZeroArgument() {
-            assertThrows(IllegalArgumentException.class, () -> nonEmptyIterable("foo", emptyList()).slide(0));
+            assertThrows(IllegalArgumentException.class, () -> immutableNonEmptyIterable("foo", emptyList()).slide(0));
         }
 
         @Test
         void k1() {
-            assertThat(nonEmptyIterable(0, asList(1, 2, 3)).slide(1),
+            assertThat(immutableNonEmptyIterable(0, asList(1, 2, 3)).slide(1),
                     contains(contains(0), contains(1), contains(2), contains(3)));
         }
 
         @Test
         void k2() {
-            assertThat(nonEmptyIterable(0, asList(1, 2, 3)).slide(2),
+            assertThat(immutableNonEmptyIterable(0, asList(1, 2, 3)).slide(2),
                     contains(contains(0, 1), contains(1, 2), contains(2, 3)));
         }
 
@@ -359,7 +358,7 @@ class NonEmptyIterableTest {
 
         @Test
         void testCase1() {
-            assertThat(nonEmptyIterable(1, asList(2, 3, 4, 5)).tails(),
+            assertThat(immutableNonEmptyIterable(1, asList(2, 3, 4, 5)).tails(),
                     contains(contains(1, 2, 3, 4, 5), contains(2, 3, 4, 5), contains(3, 4, 5), contains(4, 5),
                             contains(5), emptyIterable()));
         }
@@ -372,24 +371,24 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNegativeArgument() {
-            assertThrows(IllegalArgumentException.class, () -> nonEmptyIterable("foo", emptyList()).drop(-1));
+            assertThrows(IllegalArgumentException.class, () -> immutableNonEmptyIterable("foo", emptyList()).drop(-1));
         }
 
         @Test
         void countOfZero() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.take(0), emptyIterable());
         }
 
         @Test
         void countOfOne() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.take(1), contains(1));
         }
 
         @Test
         void countExceedingSize() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.take(10000), contains(1, 2, 3));
         }
 
@@ -401,24 +400,24 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).takeWhile(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).takeWhile(null));
         }
 
         @Test
         void predicateNeverTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.takeWhile(constantly(false)), emptyIterable());
         }
 
         @Test
         void predicateAlwaysTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.takeWhile(constantly(true)), contains(1, 2, 3));
         }
 
         @Test
         void predicateSometimesTrue() {
-            NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, asList(2, 3));
             assertThat(subject.takeWhile(LT.lt(2)), contains(1));
         }
 
@@ -430,12 +429,12 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).toArray(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).toArray(null));
         }
 
         @Test
         void writesToArray() {
-            assertArrayEquals(new Integer[]{1, 2, 3}, nonEmptyIterable(1, asList(2, 3)).toArray(Integer[].class));
+            assertArrayEquals(new Integer[]{1, 2, 3}, immutableNonEmptyIterable(1, asList(2, 3)).toArray(Integer[].class));
         }
 
     }
@@ -446,12 +445,12 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).toCollection(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).toCollection(null));
         }
 
         @Test
         void toArrayList() {
-            assertThat(nonEmptyIterable(1, asList(2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
+            assertThat(immutableNonEmptyIterable(1, asList(2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
         }
 
     }
@@ -462,21 +461,27 @@ class NonEmptyIterableTest {
 
         @Test
         void throwsOnNullFunction() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).zipWith(null, emptyList()));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList())
+                    .zipWith(null, emptyList()));
         }
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyIterable("foo", emptyList()).zipWith(tupler(), null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList())
+                    .zipWith(tupler(), (ImmutableNonEmptyIterable<String>) null));
         }
 
         @Test
         void testCase1() {
-            NonEmptyIterable<Integer> list1 = nonEmptyIterable(1, asList(2, 3, 4, 5));
-            NonEmptyIterable<String> list2 = nonEmptyIterable("foo", asList("bar", "baz"));
+            ImmutableNonEmptyIterable<Integer> list1 = immutableNonEmptyIterable(1, asList(2, 3, 4, 5));
+            ImmutableNonEmptyIterable<String> list2 = immutableNonEmptyIterable("foo", asList("bar", "baz"));
             assertThat(list1.zipWith(tupler(), list2), contains(tuple(1, "foo"), tuple(2, "bar"), tuple(3, "baz")));
         }
 
+    }
+
+    private static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterable(A head, Iterable<A> tail) {
+        return ImmutableNonEmptyIterable.immutableNonEmptyIterable(head, EnhancedIterables.immutableIterable(tail));
     }
 
 }

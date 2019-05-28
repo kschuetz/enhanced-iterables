@@ -78,7 +78,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
         return immutableNonEmptyFiniteIterableOrThrow(Reverse.reverse(this));
     }
 
-    default <B, C> ImmutableNonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableNonEmptyIterable<B> other) {
+    default <B, C> ImmutableNonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableNonEmptyFiniteIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
         return immutableNonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn, this, other));

@@ -21,7 +21,7 @@ import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
-import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.immutableFiniteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -31,21 +31,21 @@ import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
 
-class FiniteIterableTest {
+class ImmutableFiniteIterableTest {
 
     @Test
     void singletonIteration() {
-        assertThat(finiteIterable(singletonList(1)), contains(1));
+        assertThat(immutableFiniteIterable(singletonList(1)), contains(1));
     }
 
     @Test
     void multipleIteration() {
-        assertThat(finiteIterable(asList(1, 2, 3, 4, 5, 6)), contains(1, 2, 3, 4, 5, 6));
+        assertThat(immutableFiniteIterable(asList(1, 2, 3, 4, 5, 6)), contains(1, 2, 3, 4, 5, 6));
     }
 
     @Test
     void iteratorNextReturnsCorrectElements() {
-        FiniteIterable<String> subject = finiteIterable(asList("foo", "bar", "baz"));
+        ImmutableFiniteIterable<String> subject = immutableFiniteIterable(asList("foo", "bar", "baz"));
         Iterator<String> iterator = subject.iterator();
         assertEquals("foo", iterator.next());
         assertEquals("bar", iterator.next());
@@ -55,7 +55,7 @@ class FiniteIterableTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     void iteratorHasNextCanBeCalledMultipleTimes() {
-        FiniteIterable<String> subject = finiteIterable(asList("foo", "bar", "baz"));
+        ImmutableFiniteIterable<String> subject = immutableFiniteIterable(asList("foo", "bar", "baz"));
         Iterator<String> iterator = subject.iterator();
         assertTrue(iterator.hasNext());
         assertTrue(iterator.hasNext());
@@ -65,7 +65,7 @@ class FiniteIterableTest {
 
     @Test
     void iteratorHasNextReturnsFalseIfNothingRemains() {
-        FiniteIterable<String> subject = finiteIterable(singletonList("foo"));
+        ImmutableFiniteIterable<String> subject = immutableFiniteIterable(singletonList("foo"));
         Iterator<String> iterator = subject.iterator();
         iterator.next();
         assertFalse(iterator.hasNext());
@@ -73,7 +73,7 @@ class FiniteIterableTest {
 
     @Test
     void iteratorNextThrowsIfNothingRemains() {
-        FiniteIterable<String> subject = finiteIterable(singletonList("foo"));
+        ImmutableFiniteIterable<String> subject = immutableFiniteIterable(singletonList("foo"));
         Iterator<String> iterator = subject.iterator();
         iterator.next();
         assertThrows(NoSuchElementException.class, iterator::next);
@@ -81,7 +81,7 @@ class FiniteIterableTest {
 
     @Test
     void iteratorThrowsIfRemoveIsCalled() {
-        FiniteIterable<String> subject = finiteIterable(asList("foo", "bar", "baz"));
+        ImmutableFiniteIterable<String> subject = immutableFiniteIterable(asList("foo", "bar", "baz"));
         Iterator<String> iterator = subject.iterator();
         assertThrows(UnsupportedOperationException.class, iterator::remove);
         iterator.next();
@@ -98,12 +98,12 @@ class FiniteIterableTest {
 
         @Test
         void toEmpty() {
-            assertThat(finiteIterable(emptyList()).append("foo"), contains("foo"));
+            assertThat(immutableFiniteIterable(emptyList()).append("foo"), contains("foo"));
         }
 
         @Test
         void toSize3() {
-            assertThat(finiteIterable(asList("foo", "bar", "baz")).append("qux"),
+            assertThat(immutableFiniteIterable(asList("foo", "bar", "baz")).append("qux"),
                     contains("foo", "bar", "baz", "qux"));
         }
 
@@ -115,30 +115,30 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).concat(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).concat(null));
         }
 
         @Test
         void emptyPlusEmpty() {
-            assertThat(finiteIterable(emptyList()).concat(emptyList()), IsEmptyIterable.emptyIterable());
+            assertThat(immutableFiniteIterable(emptyList()).concat(emptyList()), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void emptyPlusSize3() {
-            assertThat(finiteIterable(emptyList()).concat(asList("foo", "bar", "baz")),
+            assertThat(immutableFiniteIterable(emptyList()).concat(asList("foo", "bar", "baz")),
                     contains("foo", "bar", "baz"));
         }
 
         @Test
         void size3PlusEmpty() {
-            assertThat(finiteIterable(asList("foo", "bar", "baz")).concat(emptyList()),
+            assertThat(immutableFiniteIterable(asList("foo", "bar", "baz")).concat(emptyList()),
                     contains("foo", "bar", "baz"));
         }
 
         @Test
         void size3PlusSize3() {
             List<String> underlying = asList("foo", "bar", "baz");
-            assertThat(finiteIterable(underlying).concat(underlying),
+            assertThat(immutableFiniteIterable(underlying).concat(underlying),
                     contains("foo", "bar", "baz", "foo", "bar", "baz"));
         }
 
@@ -150,22 +150,22 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(asList(1, 2, 3)).cross(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(asList(1, 2, 3)).cross(null));
         }
 
         @Test
         void nonEmptyWithEmpty() {
-            assertThat(finiteIterable(asList(1, 2, 3)).cross(finiteIterable(emptyList())), emptyIterable());
+            assertThat(immutableFiniteIterable(asList(1, 2, 3)).cross(immutableFiniteIterable(emptyList())), emptyIterable());
         }
 
         @Test
         void emptyWithNonEmpty() {
-            assertThat(finiteIterable(emptyList()).cross(finiteIterable(asList(1, 2, 3))), emptyIterable());
+            assertThat(immutableFiniteIterable(emptyList()).cross(immutableFiniteIterable(asList(1, 2, 3))), emptyIterable());
         }
 
         @Test
         void nonEmptyWithNonEmpty() {
-            assertThat(finiteIterable(asList(1, 2, 3)).cross(finiteIterable(asList("foo", "bar", "baz"))),
+            assertThat(immutableFiniteIterable(asList(1, 2, 3)).cross(immutableFiniteIterable(asList("foo", "bar", "baz"))),
                     contains(tuple(1, "foo"), tuple(1, "bar"), tuple(1, "baz"),
                             tuple(2, "foo"), tuple(2, "bar"), tuple(2, "baz"),
                             tuple(3, "foo"), tuple(3, "bar"), tuple(3, "baz")));
@@ -179,24 +179,24 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNegativeArgument() {
-            assertThrows(IllegalArgumentException.class, () -> finiteIterable(emptyList()).drop(-1));
+            assertThrows(IllegalArgumentException.class, () -> immutableFiniteIterable(emptyList()).drop(-1));
         }
 
         @Test
         void countOfZero() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.drop(0), contains(1, 2, 3));
         }
 
         @Test
         void countOfOne() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.drop(1), contains(2, 3));
         }
 
         @Test
         void countExceedingSize() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.drop(10000), IsEmptyIterable.emptyIterable());
         }
 
@@ -208,24 +208,24 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).dropWhile(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).dropWhile(null));
         }
 
         @Test
         void predicateNeverTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.dropWhile(constantly(false)), contains(1, 2, 3));
         }
 
         @Test
         void predicateAlwaysTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.dropWhile(constantly(true)), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void predicateSometimesTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.dropWhile(LT.lt(2)), contains(2, 3));
         }
 
@@ -237,24 +237,24 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).dropWhile(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).dropWhile(null));
         }
 
         @Test
         void predicateNeverTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.filter(constantly(false)), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void predicateAlwaysTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.filter(constantly(true)), contains(1, 2, 3));
         }
 
         @Test
         void predicateSometimesTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.filter(n -> n % 2 == 1), contains(1, 3));
         }
 
@@ -266,19 +266,19 @@ class FiniteIterableTest {
 
         @Test
         void predicateNeverTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertEquals(nothing(), subject.find(constantly(false)));
         }
 
         @Test
         void predicateAlwaysTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertEquals(just(1), subject.find(constantly(true)));
         }
 
         @Test
         void predicateSometimesTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3, 4));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3, 4));
             assertEquals(just(2), subject.find(n -> n % 2 == 0));
         }
     }
@@ -289,23 +289,23 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).fmap(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).fmap(null));
         }
 
         @Test
         void testCase1() {
-            assertThat(finiteIterable(asList(1, 2, 3)).fmap(n -> n * 2), contains(2, 4, 6));
+            assertThat(immutableFiniteIterable(asList(1, 2, 3)).fmap(n -> n * 2), contains(2, 4, 6));
         }
 
         @Test
         void functorIdentity() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertTrue(iterablesContainSameElements(subject, subject.fmap(id())));
         }
 
         @Test
         void functorComposition() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             Fn1<Integer, Integer> f = n -> n * 2;
             Fn1<Integer, String> g = Object::toString;
             assertTrue(iterablesContainSameElements(subject.fmap(f).fmap(g), subject.fmap(f.fmap(g))));
@@ -319,19 +319,19 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullOperator() {
-            FiniteIterable<Integer> ints = finiteIterable(asList(1, 2, 3));
+            FiniteIterable<Integer> ints = immutableFiniteIterable(asList(1, 2, 3));
             assertThrows(NullPointerException.class, () -> ints.foldLeft(null, 0));
         }
 
         @Test
         void onEmpty() {
-            FiniteIterable<Integer> ints = finiteIterable(emptyList());
+            FiniteIterable<Integer> ints = immutableFiniteIterable(emptyList());
             assertEquals(999, ints.foldLeft(Integer::sum, 999));
         }
 
         @Test
         void onSize5() {
-            FiniteIterable<Integer> ints = finiteIterable(asList(1, 2, 3, 4, 5));
+            FiniteIterable<Integer> ints = immutableFiniteIterable(asList(1, 2, 3, 4, 5));
             assertEquals(25, ints.foldLeft(Integer::sum, 10));
         }
 
@@ -343,7 +343,7 @@ class FiniteIterableTest {
 
         @Test
         void testCase1() {
-            assertThat(finiteIterable(asList(1, 2, 3, 4, 5)).inits(),
+            assertThat(immutableFiniteIterable(asList(1, 2, 3, 4, 5)).inits(),
                     contains(emptyIterable(), contains(1), contains(1, 2), contains(1, 2, 3),
                             contains(1, 2, 3, 4), contains(1, 2, 3, 4, 5)));
         }
@@ -356,12 +356,12 @@ class FiniteIterableTest {
 
         @Test
         void doesNothingOnEmptyList() {
-            assertThat(finiteIterable(emptyList()).intersperse("*"), IsEmptyIterable.emptyIterable());
+            assertThat(immutableFiniteIterable(emptyList()).intersperse("*"), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void testCase1() {
-            assertThat(finiteIterable(asList("foo", "bar", "baz")).intersperse("*"),
+            assertThat(immutableFiniteIterable(asList("foo", "bar", "baz")).intersperse("*"),
                     contains("foo", "*", "bar", "*", "baz"));
         }
 
@@ -373,12 +373,12 @@ class FiniteIterableTest {
 
         @Test
         void positive() {
-            assertTrue(finiteIterable(emptyList()).isEmpty());
+            assertTrue(immutableFiniteIterable(emptyList()).isEmpty());
         }
 
         @Test
         void negative() {
-            assertFalse(finiteIterable(asList(1, 2, 3)).isEmpty());
+            assertFalse(immutableFiniteIterable(asList(1, 2, 3)).isEmpty());
         }
 
     }
@@ -389,13 +389,13 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).partition(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).partition(null));
         }
 
         @Test
         void lambdaTestCase() {
-            FiniteIterable<String> strings = finiteIterable(asList("one", "two", "three", "four", "five"));
-            Tuple2<? extends FiniteIterable<String>, ? extends FiniteIterable<Integer>> partition =
+            ImmutableFiniteIterable<String> strings = immutableFiniteIterable(asList("one", "two", "three", "four", "five"));
+            Tuple2<? extends ImmutableFiniteIterable<String>, ? extends ImmutableFiniteIterable<Integer>> partition =
                     strings.partition(s -> s.length() % 2 == 1 ? a(s) : b(s.length()));
 
             assertThat(partition._1(), contains("one", "two", "three"));
@@ -410,12 +410,12 @@ class FiniteIterableTest {
 
         @Test
         void toEmpty() {
-            assertThat(finiteIterable(emptyList()).prepend("foo"), contains("foo"));
+            assertThat(immutableFiniteIterable(emptyList()).prepend("foo"), contains("foo"));
         }
 
         @Test
         void toSize3() {
-            assertThat(finiteIterable(asList("foo", "bar", "baz")).prepend("qux"),
+            assertThat(immutableFiniteIterable(asList("foo", "bar", "baz")).prepend("qux"),
                     contains("qux", "foo", "bar", "baz"));
         }
 
@@ -427,12 +427,12 @@ class FiniteIterableTest {
 
         @Test
         void doesNothingOnEmptyList() {
-            assertThat(finiteIterable(emptyList()).prependAll("*"), IsEmptyIterable.emptyIterable());
+            assertThat(immutableFiniteIterable(emptyList()).prependAll("*"), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void testCase1() {
-            assertThat(finiteIterable(asList("foo", "bar", "baz")).prependAll("*"),
+            assertThat(immutableFiniteIterable(asList("foo", "bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }
 
@@ -444,7 +444,7 @@ class FiniteIterableTest {
 
         @Test
         void testCase1() {
-            assertThat(finiteIterable(asList(1, 2, 3, 4, 5)).reverse(), contains(5, 4, 3, 2, 1));
+            assertThat(immutableFiniteIterable(asList(1, 2, 3, 4, 5)).reverse(), contains(5, 4, 3, 2, 1));
         }
 
     }
@@ -455,23 +455,23 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnZeroArgument() {
-            assertThrows(IllegalArgumentException.class, () -> finiteIterable(emptyList()).slide(0));
+            assertThrows(IllegalArgumentException.class, () -> immutableFiniteIterable(emptyList()).slide(0));
         }
 
         @Test
         void onEmpty() {
-            assertThat(finiteIterable(emptyList()).slide(1), IsEmptyIterable.emptyIterable());
+            assertThat(immutableFiniteIterable(emptyList()).slide(1), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void k1() {
-            assertThat(finiteIterable(asList(0, 1, 2, 3)).slide(1),
+            assertThat(immutableFiniteIterable(asList(0, 1, 2, 3)).slide(1),
                     contains(contains(0), contains(1), contains(2), contains(3)));
         }
 
         @Test
         void k2() {
-            assertThat(finiteIterable(asList(0, 1, 2, 3)).slide(2),
+            assertThat(immutableFiniteIterable(asList(0, 1, 2, 3)).slide(2),
                     contains(contains(0, 1), contains(1, 2), contains(2, 3)));
         }
 
@@ -483,13 +483,13 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).span(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).span(null));
         }
 
         @Test
         void testCase1() {
-            Tuple2<? extends FiniteIterable<Integer>, ? extends FiniteIterable<Integer>> spanResult =
-                    finiteIterable(asList(1, 2, 3, 4, 5)).span(n -> n < 4);
+            Tuple2<? extends ImmutableFiniteIterable<Integer>, ? extends ImmutableFiniteIterable<Integer>> spanResult =
+                    immutableFiniteIterable(asList(1, 2, 3, 4, 5)).span(n -> n < 4);
             assertThat(spanResult._1(), contains(1, 2, 3));
             assertThat(spanResult._2(), contains(4, 5));
         }
@@ -502,7 +502,7 @@ class FiniteIterableTest {
 
         @Test
         void testCase1() {
-            assertThat(finiteIterable(asList(1, 2, 3, 4, 5)).tails(),
+            assertThat(immutableFiniteIterable(asList(1, 2, 3, 4, 5)).tails(),
                     contains(contains(1, 2, 3, 4, 5), contains(2, 3, 4, 5), contains(3, 4, 5), contains(4, 5),
                             contains(5), IsEmptyIterable.emptyIterable()));
         }
@@ -515,24 +515,24 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNegativeArgument() {
-            assertThrows(IllegalArgumentException.class, () -> finiteIterable(emptyList()).drop(-1));
+            assertThrows(IllegalArgumentException.class, () -> immutableFiniteIterable(emptyList()).drop(-1));
         }
 
         @Test
         void countOfZero() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.take(0), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void countOfOne() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.take(1), contains(1));
         }
 
         @Test
         void countExceedingSize() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.take(10000), contains(1, 2, 3));
         }
 
@@ -544,24 +544,24 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).takeWhile(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).takeWhile(null));
         }
 
         @Test
         void predicateNeverTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.takeWhile(constantly(false)), IsEmptyIterable.emptyIterable());
         }
 
         @Test
         void predicateAlwaysTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.takeWhile(constantly(true)), contains(1, 2, 3));
         }
 
         @Test
         void predicateSometimesTrue() {
-            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            ImmutableFiniteIterable<Integer> subject = immutableFiniteIterable(asList(1, 2, 3));
             assertThat(subject.takeWhile(LT.lt(2)), contains(1));
         }
 
@@ -573,12 +573,12 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).toArray(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).toArray(null));
         }
 
         @Test
         void writesToArray() {
-            assertArrayEquals(new Integer[]{1, 2, 3}, finiteIterable(asList(1, 2, 3)).toArray(Integer[].class));
+            assertArrayEquals(new Integer[]{1, 2, 3}, immutableFiniteIterable(asList(1, 2, 3)).toArray(Integer[].class));
         }
 
     }
@@ -589,12 +589,12 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).toCollection(null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).toCollection(null));
         }
 
         @Test
         void toArrayList() {
-            assertThat(finiteIterable(asList(1, 2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
+            assertThat(immutableFiniteIterable(asList(1, 2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
         }
 
     }
@@ -605,18 +605,18 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullFunction() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).zipWith(null, emptyList()));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).zipWith(null, emptyList()));
         }
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).zipWith(tupler(), null));
+            assertThrows(NullPointerException.class, () -> immutableFiniteIterable(emptyList()).zipWith(tupler(), null));
         }
 
         @Test
         void testCase1() {
-            FiniteIterable<Integer> list1 = finiteIterable(asList(1, 2, 3, 4, 5));
-            FiniteIterable<String> list2 = finiteIterable(asList("foo", "bar", "baz"));
+            ImmutableFiniteIterable<Integer> list1 = immutableFiniteIterable(asList(1, 2, 3, 4, 5));
+            ImmutableFiniteIterable<String> list2 = immutableFiniteIterable(asList("foo", "bar", "baz"));
             assertThat(list1.zipWith(tupler(), list2), contains(tuple(1, "foo"), tuple(2, "bar"), tuple(3, "baz")));
         }
 

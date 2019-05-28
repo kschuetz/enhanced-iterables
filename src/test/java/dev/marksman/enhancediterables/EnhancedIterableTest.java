@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
@@ -21,6 +23,7 @@ import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyIterable.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
@@ -28,6 +31,65 @@ import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
 
 class EnhancedIterableTest {
+
+    @Test
+    void singletonIteration() {
+        assertThat(enhance(singletonList(1)), contains(1));
+    }
+
+    @Test
+    void multipleIteration() {
+        assertThat(enhance(asList(1, 2, 3, 4, 5, 6)), contains(1, 2, 3, 4, 5, 6));
+    }
+
+    @Test
+    void iteratorNextReturnsCorrectElements() {
+        EnhancedIterable<String> subject = enhance(asList("foo", "bar", "baz"));
+        Iterator<String> iterator = subject.iterator();
+        assertEquals("foo", iterator.next());
+        assertEquals("bar", iterator.next());
+        assertEquals("baz", iterator.next());
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void iteratorHasNextCanBeCalledMultipleTimes() {
+        EnhancedIterable<String> subject = enhance(asList("foo", "bar", "baz"));
+        Iterator<String> iterator = subject.iterator();
+        assertTrue(iterator.hasNext());
+        assertTrue(iterator.hasNext());
+        assertTrue(iterator.hasNext());
+        assertEquals("foo", iterator.next());
+    }
+
+    @Test
+    void iteratorHasNextReturnsFalseIfNothingRemains() {
+        EnhancedIterable<String> subject = enhance(singletonList("foo"));
+        Iterator<String> iterator = subject.iterator();
+        iterator.next();
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void iteratorNextThrowsIfNothingRemains() {
+        EnhancedIterable<String> subject = enhance(singletonList("foo"));
+        Iterator<String> iterator = subject.iterator();
+        iterator.next();
+        assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
+    @Test
+    void iteratorThrowsIfRemoveIsCalled() {
+        EnhancedIterable<String> subject = enhance(asList("foo", "bar", "baz"));
+        Iterator<String> iterator = subject.iterator();
+        assertThrows(UnsupportedOperationException.class, iterator::remove);
+        iterator.next();
+        assertThrows(UnsupportedOperationException.class, iterator::remove);
+        iterator.next();
+        assertThrows(UnsupportedOperationException.class, iterator::remove);
+        iterator.next();
+        assertThrows(UnsupportedOperationException.class, iterator::remove);
+    }
 
     @Nested
     @DisplayName("append")
