@@ -92,7 +92,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate the predicate; should be referentially transparent and not have side-effects
-     * @return an {@link EnhancedIterable}
+     * @return an {@link ImmutableFiniteIterable<A>}
      */
     @Override
     default ImmutableFiniteIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -100,6 +100,13 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
         return immutableFiniteIterable(DropWhile.dropWhile(predicate, this));
     }
 
+    /**
+     * Returns a new {@code ImmutableFiniteIterable} that contains all elements of this {@code ImmutableFiniteIterable}
+     * that satisfy a predicate.
+     *
+     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @return an {@link ImmutableFiniteIterable<A>}
+     */
     @Override
     default ImmutableFiniteIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);

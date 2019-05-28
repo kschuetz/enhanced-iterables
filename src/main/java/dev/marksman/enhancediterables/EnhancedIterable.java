@@ -87,13 +87,20 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate the predicate; should be referentially transparent and not have side-effects
-     * @return an {@link EnhancedIterable}
+     * @return an {@link EnhancedIterable<A>}
      */
     default EnhancedIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         return enhance(DropWhile.dropWhile(predicate, this));
     }
 
+    /**
+     * Returns a new {@code EnhancedIterable} that contains all elements of this {@code EnhancedIterable}
+     * that satisfy a predicate.
+     *
+     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @return an {@link EnhancedIterable<A>}
+     */
     default EnhancedIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         return enhance(Filter.<A>filter(predicate).apply(this));

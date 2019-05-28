@@ -122,7 +122,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate the predicate; should be referentially transparent and not have side-effects
-     * @return a {@link FiniteIterable}
+     * @return a {@link FiniteIterable<A>}
      */
     @Override
     default FiniteIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -130,6 +130,13 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
         return EnhancedIterables.finiteIterable(DropWhile.dropWhile(predicate, this));
     }
 
+    /**
+     * Returns a new {@code FiniteIterable} that contains all elements of this {@code FiniteIterable}
+     * that satisfy a predicate.
+     *
+     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @return a {@link FiniteIterable<A>}
+     */
     @Override
     default FiniteIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);

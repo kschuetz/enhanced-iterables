@@ -80,7 +80,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate the predicate; should be referentially transparent and not have side-effects
-     * @return an {@link ImmutableIterable}
+     * @return an {@link ImmutableIterable<A>}
      */
     @Override
     default ImmutableIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -88,6 +88,13 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         return immutableIterable(DropWhile.dropWhile(predicate, this));
     }
 
+    /**
+     * Returns a new {@code ImmutableIterable} that contains all elements of this {@code ImmutableIterable}
+     * that satisfy a predicate.
+     *
+     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @return an {@link ImmutableIterable<A>}
+     */
     @Override
     default ImmutableIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
