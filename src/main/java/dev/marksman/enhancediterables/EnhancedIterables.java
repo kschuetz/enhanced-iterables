@@ -3,13 +3,13 @@ package dev.marksman.enhancediterables;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Uncons;
 
-import static dev.marksman.enhancediterables.internal.ProtectedIterator.protectedIterator;
+import static dev.marksman.enhancediterables.ProtectedIterator.protectedIterator;
 import static java.util.Arrays.asList;
 
 class EnhancedIterables {
 
     static <A> FiniteIterable<A> finiteIterable(Iterable<A> underlying) {
-        if (underlying instanceof EnhancedIterable<?>) {
+        if (underlying instanceof FiniteIterable<?>) {
             return (FiniteIterable<A>) underlying;
         } else {
             return () -> protectedIterator(underlying.iterator());

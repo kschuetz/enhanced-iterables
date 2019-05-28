@@ -1,18 +1,22 @@
 package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
+import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
 import static com.jnape.palatable.lambda.adt.choice.Choice2.a;
 import static com.jnape.palatable.lambda.adt.choice.Choice2.b;
+import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
+import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
 import static java.util.Arrays.asList;
@@ -21,6 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyIterable.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
+import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
 
 class EnhancedIterableTest {
 
@@ -195,11 +200,41 @@ class EnhancedIterableTest {
             assertThrows(NullPointerException.class, () -> enhance(emptyList()).fmap(null));
         }
 
+        @Test
+        void testCase1() {
+            assertThat(enhance(asList(1, 2, 3)).fmap(n -> n * 2), contains(2, 4, 6));
+        }
+
+        @Test
+        void functorIdentity() {
+            EnhancedIterable<Integer> subject = enhance(asList(1, 2, 3));
+            assertTrue(iterablesContainSameElements(subject, subject.fmap(id())));
+        }
+
+        @Test
+        void functorComposition() {
+            EnhancedIterable<Integer> subject = enhance(asList(1, 2, 3));
+            Fn1<Integer, Integer> f = n -> n * 2;
+            Fn1<Integer, String> g = Object::toString;
+            assertTrue(iterablesContainSameElements(subject.fmap(f).fmap(g), subject.fmap(f.fmap(g))));
+        }
+
     }
 
     @Nested
     @DisplayName("intersperse")
     class Intersperse {
+
+        @Test
+        void doesNothingOnEmptyList() {
+            assertThat(enhance(emptyList()).intersperse("*"), emptyIterable());
+        }
+
+        @Test
+        void testCase1() {
+            assertThat(enhance(asList("foo", "bar", "baz")).intersperse("*"),
+                    contains("foo", "*", "bar", "*", "baz"));
+        }
 
     }
 
@@ -261,6 +296,17 @@ class EnhancedIterableTest {
     @DisplayName("prependAll")
     class PrependAll {
 
+        @Test
+        void doesNothingOnEmptyList() {
+            assertThat(enhance(emptyList()).prependAll("*"), emptyIterable());
+        }
+
+        @Test
+        void testCase1() {
+            assertThat(enhance(asList("foo", "bar", "baz")).prependAll("*"),
+                    contains("*", "foo", "*", "bar", "*", "baz"));
+        }
+
     }
 
     @Nested
@@ -300,11 +346,26 @@ class EnhancedIterableTest {
             assertThrows(NullPointerException.class, () -> enhance(emptyList()).span(null));
         }
 
+        @Test
+        void testCase1() {
+            Tuple2<? extends EnhancedIterable<Integer>, ? extends EnhancedIterable<Integer>> spanResult =
+                    enhance(asList(1, 2, 3, 4, 5)).span(n -> n < 4);
+            assertThat(spanResult._1(), contains(1, 2, 3));
+            assertThat(spanResult._2(), contains(4, 5));
+        }
+
     }
 
     @Nested
     @DisplayName("tails")
     class Tails {
+
+        @Test
+        void testCase1() {
+            assertThat(enhance(asList(1, 2, 3, 4, 5)).tails(),
+                    contains(contains(1, 2, 3, 4, 5), contains(2, 3, 4, 5), contains(3, 4, 5), contains(4, 5),
+                            contains(5), emptyIterable()));
+        }
 
     }
 
@@ -375,6 +436,11 @@ class EnhancedIterableTest {
             assertThrows(NullPointerException.class, () -> enhance(emptyList()).toArray(null));
         }
 
+        @Test
+        void writesToArray() {
+            assertArrayEquals(new Integer[]{1, 2, 3}, enhance(asList(1, 2, 3)).toArray(Integer[].class));
+        }
+
     }
 
     @Nested
@@ -384,6 +450,11 @@ class EnhancedIterableTest {
         @Test
         void throwsOnNullArgument() {
             assertThrows(NullPointerException.class, () -> enhance(emptyList()).toCollection(null));
+        }
+
+        @Test
+        void toArrayList() {
+            assertThat(enhance(asList(1, 2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
         }
 
     }
@@ -400,6 +471,13 @@ class EnhancedIterableTest {
         @Test
         void throwsOnNullArgument() {
             assertThrows(NullPointerException.class, () -> enhance(emptyList()).zipWith(tupler(), null));
+        }
+
+        @Test
+        void testCase1() {
+            EnhancedIterable<Integer> list1 = enhance(asList(1, 2, 3, 4, 5));
+            EnhancedIterable<String> list2 = enhance(asList("foo", "bar", "baz"));
+            assertThat(list1.zipWith(tupler(), list2), contains(tuple(1, "foo"), tuple(2, "bar"), tuple(3, "baz")));
         }
 
     }

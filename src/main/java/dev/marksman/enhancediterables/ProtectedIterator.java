@@ -1,12 +1,8 @@
-package dev.marksman.enhancediterables.internal;
+package dev.marksman.enhancediterables;
 
 import java.util.Iterator;
 
-/**
- * A class that is not part of the public API.
- * For internal use only.
- */
-public final class ProtectedIterator<A> implements Iterator<A> {
+final class ProtectedIterator<A> implements Iterator<A> {
     private final Iterator<A> underlying;
 
     private ProtectedIterator(Iterator<A> underlying) {
@@ -23,7 +19,7 @@ public final class ProtectedIterator<A> implements Iterator<A> {
         return underlying.next();
     }
 
-    public static <A> ProtectedIterator<A> protectedIterator(Iterator<A> underlying) {
+    static <A> ProtectedIterator<A> protectedIterator(Iterator<A> underlying) {
         return new ProtectedIterator<>(underlying);
     }
 

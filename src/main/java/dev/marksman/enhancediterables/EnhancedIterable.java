@@ -17,8 +17,8 @@ import java.util.Collection;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
+import static dev.marksman.enhancediterables.ProtectedIterator.protectedIterator;
 import static dev.marksman.enhancediterables.Validation.*;
-import static dev.marksman.enhancediterables.internal.ProtectedIterator.protectedIterator;
 import static java.util.Objects.requireNonNull;
 
 /**
