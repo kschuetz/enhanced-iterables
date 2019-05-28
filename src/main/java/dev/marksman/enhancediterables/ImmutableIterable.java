@@ -101,6 +101,15 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         return immutableIterable(Filter.<A>filter(predicate).apply(this));
     }
 
+    /**
+     * Returns a new {@code ImmutableIterable} by applying a function to all elements of this {@code ImmutableIterable}.
+     *
+     * @param f   a function from {@code A} to {@code B}.
+     *            This function should be referentially transparent and not perform side-effects.
+     *            It may be called zero or more times for each element.
+     * @param <B> the type returned by {@code f}
+     * @return an {@link ImmutableIterable<B>}
+     */
     @Override
     default <B> ImmutableIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);

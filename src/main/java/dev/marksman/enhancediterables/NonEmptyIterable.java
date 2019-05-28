@@ -51,6 +51,15 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
         return nonEmptyIterableOrThrow(Concat.concat(this, other));
     }
 
+    /**
+     * Returns a new {@code NonEmptyIterable} by applying a function to all elements of this {@code NonEmptyIterable}.
+     *
+     * @param f   a function from {@code A} to {@code B}.
+     *            This function should be referentially transparent and not perform side-effects.
+     *            It may be called zero or more times for each element.
+     * @param <B> the type returned by {@code f}
+     * @return an {@link NonEmptyIterable<B>}
+     */
     @Override
     default <B> NonEmptyIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);

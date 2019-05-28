@@ -66,6 +66,15 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
         return nonEmptyFiniteIterableOrThrow(CartesianProduct.cartesianProduct(this, other));
     }
 
+    /**
+     * Returns a new {@code NonEmptyFiniteIterable} by applying a function to all elements of this {@code NonEmptyFiniteIterable}.
+     *
+     * @param f   a function from {@code A} to {@code B}.
+     *            This function should be referentially transparent and not perform side-effects.
+     *            It may be called zero or more times for each element.
+     * @param <B> the type returned by {@code f}
+     * @return an {@link NonEmptyFiniteIterable<B>}
+     */
     @Override
     default <B> NonEmptyFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);

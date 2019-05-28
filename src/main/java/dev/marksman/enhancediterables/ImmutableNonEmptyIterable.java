@@ -35,6 +35,15 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
         return immutableNonEmptyIterableOrThrow(Concat.concat(this, other));
     }
 
+    /**
+     * Returns a new {@code ImmutableNonEmptyIterable} by applying a function to all elements of this {@code ImmutableNonEmptyIterable}.
+     *
+     * @param f   a function from {@code A} to {@code B}.
+     *            This function should be referentially transparent and not perform side-effects.
+     *            It may be called zero or more times for each element.
+     * @param <B> the type returned by {@code f}
+     * @return an {@link ImmutableNonEmptyIterable<B>}
+     */
     @Override
     default <B> ImmutableNonEmptyIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);

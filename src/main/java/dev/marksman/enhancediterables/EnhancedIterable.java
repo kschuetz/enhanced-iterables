@@ -118,6 +118,15 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return Find.find(predicate, this);
     }
 
+    /**
+     * Returns a new {@code EnhancedIterable} by applying a function to all elements of this {@code EnhancedIterable}.
+     *
+     * @param f   a function from {@code A} to {@code B}.
+     *            This function should be referentially transparent and not perform side-effects.
+     *            It may be called zero or more times for each element.
+     * @param <B> the type returned by {@code f}
+     * @return an {@link EnhancedIterable<B>}
+     */
     default <B> EnhancedIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);
         return enhance(Map.map(f, this));
