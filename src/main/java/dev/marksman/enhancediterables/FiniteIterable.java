@@ -89,6 +89,18 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Returns the lazily computed cartesian product of this {@code FiniteIterable} with a {@code Collection}.
+     *
+     * @param other a {@link Collection} of any type
+     * @param <B>   the type of the other {@code Collection}
+     * @return a {@code FiniteIterable<Tuple2<A, B>>}
+     */
+    default <B> FiniteIterable<Tuple2<A, B>> cross(Collection<B> other) {
+        requireNonNull(other);
+        return EnhancedIterables.finiteIterable(CartesianProduct.cartesianProduct(this, other));
+    }
+
+    /**
      * Returns a new {@code FiniteIterable} that drops the first {@code count} elements of this {@code FiniteIterable}.
      *
      * @param count the number of elements to drop from this {@code FiniteIterable}.

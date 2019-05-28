@@ -151,7 +151,8 @@ class FiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> finiteIterable(asList(1, 2, 3)).cross(null));
+            assertThrows(NullPointerException.class, () -> finiteIterable(asList(1, 2, 3))
+                    .cross((FiniteIterable<Integer>) null));
         }
 
         @Test

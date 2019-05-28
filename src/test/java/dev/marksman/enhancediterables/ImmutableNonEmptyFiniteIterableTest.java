@@ -150,7 +150,8 @@ class ImmutableNonEmptyFiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> immutableNonEmptyFiniteIterable(1, asList(2, 3)).cross(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyFiniteIterable(1, asList(2, 3))
+                    .cross((ImmutableNonEmptyFiniteIterable<Integer>) null));
         }
 
         @Test

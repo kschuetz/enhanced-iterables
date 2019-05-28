@@ -150,7 +150,8 @@ class NonEmptyFiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyFiniteIterable(1, asList(2, 3)).cross(null));
+            assertThrows(NullPointerException.class, () -> nonEmptyFiniteIterable(1, asList(2, 3))
+                    .cross((NonEmptyFiniteIterable<Integer>) null));
         }
 
         @Test
