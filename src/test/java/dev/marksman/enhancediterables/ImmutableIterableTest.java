@@ -114,7 +114,7 @@ class ImmutableIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> immutableIterable(emptyList()).concat(null));
+            assertThrows(NullPointerException.class, () -> immutableIterable(emptyList()).concat((ImmutableIterable<Object>) null));
         }
 
         @Test

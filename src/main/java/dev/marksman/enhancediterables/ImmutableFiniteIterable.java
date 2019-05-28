@@ -23,14 +23,39 @@ import static java.util.Objects.requireNonNull;
  */
 public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, FiniteIterable<A> {
 
+    /**
+     * Lazily appends an element to the end of this {@code ImmutableFiniteIterable}, yielding a new {@code ImmutableNonEmptyFiniteIterable}.
+     *
+     * @param element the element to append
+     * @return an {@link ImmutableNonEmptyFiniteIterable<A>}
+     */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> append(A element) {
         return immutableNonEmptyFiniteIterableOrThrow(Snoc.snoc(element, this));
     }
 
+    /**
+     * Lazily concatenates another {@code ImmutableFiniteIterable} to the end of this {@code ImmutableFiniteIterable},
+     * yielding a new {@code ImmutableFiniteIterable}.
+     *
+     * @param other the other {@link ImmutableFiniteIterable}
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
     default ImmutableFiniteIterable<A> concat(ImmutableFiniteIterable<A> other) {
         requireNonNull(other);
-        return EnhancedIterables.immutableFiniteIterable(Concat.concat(this, other));
+        return immutableFiniteIterable(Concat.concat(this, other));
+    }
+
+    /**
+     * Lazily concatenates an {@code ImmutableNonEmptyFiniteIterable} to the end of this {@code ImmutableFiniteIterable},
+     * yielding a new {@code ImmutableNonEmptyFiniteIterable}.
+     *
+     * @param other an {@link ImmutableNonEmptyFiniteIterable}
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
+     */
+    default ImmutableNonEmptyFiniteIterable<A> concat(ImmutableNonEmptyFiniteIterable<A> other) {
+        requireNonNull(other);
+        return immutableNonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
     }
 
     /**

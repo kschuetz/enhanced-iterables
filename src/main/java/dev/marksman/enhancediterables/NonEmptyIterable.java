@@ -38,6 +38,13 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      */
     EnhancedIterable<A> tail();
 
+    /**
+     * Lazily concatenates an {@code Iterable} to the end of this {@code NonEmptyIterable},
+     * yielding a new {@code NonEmptyIterable}.
+     *
+     * @param other an {@link Iterable}
+     * @return an {@link NonEmptyIterable<A>}
+     */
     @Override
     default NonEmptyIterable<A> concat(Iterable<A> other) {
         requireNonNull(other);

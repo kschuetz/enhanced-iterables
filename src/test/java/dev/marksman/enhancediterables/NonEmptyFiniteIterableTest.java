@@ -131,7 +131,8 @@ class NonEmptyFiniteIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> nonEmptyFiniteIterable("foo", emptyList()).concat(null));
+            assertThrows(NullPointerException.class, () -> nonEmptyFiniteIterable("foo", emptyList())
+                    .concat((FiniteIterable<String>) null));
         }
 
         @Test

@@ -22,6 +22,13 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
     @Override
     ImmutableIterable<A> tail();
 
+    /**
+     * Lazily concatenates an {@code ImmutableIterable} to the end of this {@code ImmutableNonEmptyIterable},
+     * yielding a new {@code ImmutableNonEmptyIterable}.
+     *
+     * @param other an {@link ImmutableIterable}
+     * @return an {@code ImmutableNonEmptyIterable<A>}
+     */
     @Override
     default ImmutableNonEmptyIterable<A> concat(ImmutableIterable<A> other) {
         requireNonNull(other);

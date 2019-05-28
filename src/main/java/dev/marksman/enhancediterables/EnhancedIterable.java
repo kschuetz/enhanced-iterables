@@ -32,13 +32,38 @@ import static java.util.Objects.requireNonNull;
  */
 public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIterable<?>> {
 
+    /**
+     * Lazily appends an element to the end of this {@code EnhancedIterable}, yielding a new {@code NonEmptyIterable}.
+     *
+     * @param element the element to append
+     * @return a {@link NonEmptyIterable<A>}
+     */
     default NonEmptyIterable<A> append(A element) {
         return nonEmptyIterableOrThrow(Snoc.snoc(element, this));
     }
 
+    /**
+     * Lazily concatenates another {@code Iterable} to the end of this {@code EnhancedIterable},
+     * yielding a new {@code EnhancedIterable}.
+     *
+     * @param other the other {@link Iterable}
+     * @return an {@link EnhancedIterable<A>}
+     */
     default EnhancedIterable<A> concat(Iterable<A> other) {
         requireNonNull(other);
         return enhance(Concat.concat(this, other));
+    }
+
+    /**
+     * Lazily concatenates a {@code NonEmptyIterable} to the end of this {@code EnhancedIterable},
+     * yielding a new {@code NonEmptyIterable}.
+     *
+     * @param other a {@link NonEmptyIterable}
+     * @return a {@code NonEmptyIterable<A>}
+     */
+    default NonEmptyIterable<A> concat(NonEmptyIterable<A> other) {
+        requireNonNull(other);
+        return nonEmptyIterableOrThrow(Concat.concat(this, other));
     }
 
     /**

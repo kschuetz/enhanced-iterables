@@ -5,7 +5,10 @@ import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Init;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Reverse;
-import com.jnape.palatable.lambda.functions.builtin.fn2.*;
+import com.jnape.palatable.lambda.functions.builtin.fn2.CartesianProduct;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
+import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
@@ -24,11 +27,13 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
     @Override
     ImmutableFiniteIterable<A> tail();
 
-    @Override
-    default ImmutableNonEmptyFiniteIterable<A> append(A element) {
-        return immutableNonEmptyFiniteIterableOrThrow(Snoc.snoc(element, this));
-    }
-
+    /**
+     * Lazily concatenates another {@code ImmutableFiniteIterable} to the end of this {@code ImmutableNonEmptyFiniteIterable},
+     * yielding a new {@code ImmutableIterable}.
+     *
+     * @param other the other {@link ImmutableIterable}
+     * @return an {@code ImmutableIterable<A>}
+     */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> concat(ImmutableFiniteIterable<A> other) {
         requireNonNull(other);

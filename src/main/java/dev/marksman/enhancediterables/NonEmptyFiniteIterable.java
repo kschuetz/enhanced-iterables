@@ -28,8 +28,28 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     FiniteIterable<A> tail();
 
+    /**
+     * Lazily concatenates a {@code FiniteIterable} to the end of this {@code NonEmptyFiniteIterable},
+     * yielding a new {@code NonEmptyFiniteIterable}.
+     *
+     * @param other a {@link FiniteIterable}
+     * @return an {@code NonEmptyFiniteIterable<A>}
+     */
     @Override
     default NonEmptyFiniteIterable<A> concat(FiniteIterable<A> other) {
+        requireNonNull(other);
+        return nonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
+    }
+
+    /**
+     * Lazily concatenates a {@code Collection} to the end of this {@code NonEmptyFiniteIterable},
+     * yielding a new {@code NonEmptyFiniteIterable}.
+     *
+     * @param other a {@link Collection}
+     * @return an {@code NonEmptyFiniteIterable<A>}
+     */
+    @Override
+    default NonEmptyFiniteIterable<A> concat(Collection<A> other) {
         requireNonNull(other);
         return nonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
     }

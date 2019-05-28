@@ -23,14 +23,39 @@ import static java.util.Objects.requireNonNull;
  */
 public interface ImmutableIterable<A> extends EnhancedIterable<A> {
 
+    /**
+     * Lazily appends an element to the end of this {@code ImmutableIterable}, yielding a new {@code ImmutableNonEmptyIterable}.
+     *
+     * @param element the element to append
+     * @return an {@link ImmutableNonEmptyIterable<A>}
+     */
     @Override
     default ImmutableNonEmptyIterable<A> append(A element) {
         return immutableNonEmptyIterableOrThrow(Snoc.snoc(element, this));
     }
 
+    /**
+     * Lazily concatenates another {@code ImmutableIterable} to the end of this {@code ImmutableIterable},
+     * yielding a new {@code ImmutableIterable}.
+     *
+     * @param other the other {@link ImmutableIterable}
+     * @return an {@code ImmutableIterable<A>}
+     */
     default ImmutableIterable<A> concat(ImmutableIterable<A> other) {
         requireNonNull(other);
         return EnhancedIterables.immutableIterable(Concat.concat(this, other));
+    }
+
+    /**
+     * Lazily concatenates an {@code ImmutableNonEmptyIterable} to the end of this {@code ImmutableIterable},
+     * yielding a new {@code ImmutableNonEmptyIterable}.
+     *
+     * @param other an {@link ImmutableNonEmptyIterable}
+     * @return an {@code ImmutableNonEmptyIterable<A>}
+     */
+    default ImmutableNonEmptyIterable<A> concat(ImmutableNonEmptyIterable<A> other) {
+        requireNonNull(other);
+        return EnhancedIterables.immutableNonEmptyIterableOrThrow(Concat.concat(this, other));
     }
 
     /**

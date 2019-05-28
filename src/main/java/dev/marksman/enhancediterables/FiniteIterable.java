@@ -29,14 +29,51 @@ import static java.util.Objects.requireNonNull;
  */
 public interface FiniteIterable<A> extends EnhancedIterable<A> {
 
+    /**
+     * Lazily appends an element to the end of this {@code FiniteIterable}, yielding a new {@code NonEmptyFiniteIterable}.
+     *
+     * @param element the element to append
+     * @return a {@link NonEmptyFiniteIterable<A>}
+     */
     @Override
     default NonEmptyFiniteIterable<A> append(A element) {
         return nonEmptyFiniteIterableOrThrow(Snoc.snoc(element, this));
     }
 
+    /**
+     * Lazily concatenates another {@code FiniteIterable} to the end of this {@code FiniteIterable},
+     * yielding a new {@code FiniteIterable}.
+     *
+     * @param other the other {@link FiniteIterable}
+     * @return a {@code FiniteIterable<A>}
+     */
     default FiniteIterable<A> concat(FiniteIterable<A> other) {
         requireNonNull(other);
         return EnhancedIterables.finiteIterable(Concat.concat(this, other));
+    }
+
+    /**
+     * Lazily concatenates a {@code Collection} to the end of this {@code FiniteIterable},
+     * yielding a new {@code FiniteIterable}.
+     *
+     * @param other a {@link Collection}
+     * @return a {@code FiniteIterable<A>}
+     */
+    default FiniteIterable<A> concat(Collection<A> other) {
+        requireNonNull(other);
+        return EnhancedIterables.finiteIterable(Concat.concat(this, other));
+    }
+
+    /**
+     * Lazily concatenates a {@code NonEmptyFiniteIterable} to the end of this {@code FiniteIterable},
+     * yielding a new {@code NonEmptyFiniteIterable}.
+     *
+     * @param other a {@link NonEmptyFiniteIterable}
+     * @return a {@code NonEmptyFiniteIterable<A>}
+     */
+    default NonEmptyFiniteIterable<A> concat(NonEmptyFiniteIterable<A> other) {
+        requireNonNull(other);
+        return EnhancedIterables.nonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
     }
 
     /**

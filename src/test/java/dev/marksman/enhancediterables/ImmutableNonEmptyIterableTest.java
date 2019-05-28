@@ -129,7 +129,8 @@ class ImmutableNonEmptyIterableTest {
 
         @Test
         void throwsOnNullArgument() {
-            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).concat(null));
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).
+                    concat((ImmutableFiniteIterable<String>) null));
         }
 
         @Test
