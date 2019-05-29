@@ -150,6 +150,12 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
                 immutableIterable(partitionResult._2()));
     }
 
+    /**
+     * Lazily prepends an element to the front of this {@code ImmutableIterable}, yielding a new {@code ImmutableNonEmptyIterable}.
+     *
+     * @param element the element to prepend
+     * @return a {@link ImmutableNonEmptyIterable<A>}
+     */
     @Override
     default ImmutableNonEmptyIterable<A> prepend(A element) {
         return ImmutableNonEmptyIterable.immutableNonEmptyIterable(element, this);

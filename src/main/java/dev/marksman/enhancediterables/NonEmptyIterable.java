@@ -68,6 +68,16 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Always returns false, as a {@code NonEmptyIterable} is never empty.
+     *
+     * @return false
+     */
+    @Override
+    default boolean isEmpty() {
+        return false;
+    }
+
+    /**
      * Returns a new {@code NonEmptyIterable} with the provided separator value injected between each value of this
      * {@code NonEmptyIterable}.
      * <p>

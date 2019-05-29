@@ -86,6 +86,12 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
         return immutableNonEmptyFiniteIterableOrThrow(Intersperse.intersperse(separator, this));
     }
 
+    /**
+     * Lazily prepends an element to the front of this {@code ImmutableNonEmptyFiniteIterable}, yielding a new {@code ImmutableNonEmptyFiniteIterable}.
+     *
+     * @param element the element to prepend
+     * @return a {@link ImmutableNonEmptyFiniteIterable<A>}
+     */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> prepend(A element) {
         return immutableNonEmptyFiniteIterable(element, this);

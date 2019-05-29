@@ -145,6 +145,11 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return enhance(Intersperse.intersperse(separator, this));
     }
 
+    /**
+     * Tests whether this {@code EnhancedIterable} is empty.
+     *
+     * @return true if this {@code EnhancedIterable} contains no elements, false otherwise
+     */
     default boolean isEmpty() {
         return !iterator().hasNext();
     }
@@ -167,6 +172,12 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return tuple(enhance(partitionResult._1()), enhance(partitionResult._2()));
     }
 
+    /**
+     * Lazily prepends an element to the front of this {@code EnhancedIterable}, yielding a new {@code NonEmptyIterable}.
+     *
+     * @param element the element to prepend
+     * @return a {@link NonEmptyIterable<A>}
+     */
     default NonEmptyIterable<A> prepend(A element) {
         return NonEmptyIterable.nonEmptyIterable(element, this);
     }

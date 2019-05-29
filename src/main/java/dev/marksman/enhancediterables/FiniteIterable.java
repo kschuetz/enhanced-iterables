@@ -212,6 +212,12 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
                 EnhancedIterables.finiteIterable(partitionResult._2()));
     }
 
+    /**
+     * Lazily prepends an element to the front of this {@code FiniteIterable}, yielding a new {@code NonEmptyFiniteIterable}.
+     *
+     * @param element the element to prepend
+     * @return a {@link NonEmptyFiniteIterable<A>}
+     */
     @Override
     default NonEmptyFiniteIterable<A> prepend(A element) {
         return NonEmptyFiniteIterable.nonEmptyFiniteIterable(element, this);

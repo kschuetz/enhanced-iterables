@@ -163,6 +163,12 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
                 immutableFiniteIterable(partitionResult._2()));
     }
 
+    /**
+     * Lazily prepends an element to the front of this {@code ImmutableFiniteIterable}, yielding a new {@code ImmutableNonEmptyFiniteIterable}.
+     *
+     * @param element the element to prepend
+     * @return a {@link ImmutableNonEmptyFiniteIterable<A>}
+     */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> prepend(A element) {
         return ImmutableNonEmptyFiniteIterable.immutableNonEmptyFiniteIterable(element, this);
