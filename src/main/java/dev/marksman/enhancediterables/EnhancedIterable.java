@@ -224,6 +224,15 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return tuple(enhance(spanResult._1()), enhance(spanResult._2()));
     }
 
+    /**
+     * Returns a {@code NonEmptyIterable} containing all of the subsequences of tail
+     * elements of this {@code EnhancedIterable}, ordered by size, starting with the full list.
+     * Example:
+     *
+     * <code>EnhancedIterable.of(1, 2, 3).tails(); // [[1, 2, 3], [2, 3], [3], []]</code>
+     *
+     * @return a {@code NonEmptyIterable<EnhancedIterable<A>>}
+     */
     default NonEmptyIterable<? extends EnhancedIterable<A>> tails() {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterable::enhance, Tails.tails(this)));
     }

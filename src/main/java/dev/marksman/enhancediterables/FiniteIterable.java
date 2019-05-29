@@ -273,6 +273,15 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
                 EnhancedIterables.finiteIterable(spanResult._2()));
     }
 
+    /**
+     * Returns a {@code NonEmptyIterable} containing all of the subsequences of tail
+     * elements of this {@code FiniteIterable}, ordered by size, starting with the full list.
+     * Example:
+     *
+     * <code>FiniteIterable.of(1, 2, 3).tails(); // [[1, 2, 3], [2, 3], [3], []]</code>
+     *
+     * @return a {@code NonEmptyIterable<FiniteIterable<A>>}
+     */
     @Override
     default NonEmptyIterable<? extends FiniteIterable<A>> tails() {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Tails.tails(this)));

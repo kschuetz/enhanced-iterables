@@ -225,6 +225,15 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
                 immutableFiniteIterable(spanResult._2()));
     }
 
+    /**
+     * Returns a {@code NonEmptyIterable} containing all of the subsequences of tail
+     * elements of this {@code ImmutableFiniteIterable}, ordered by size, starting with the full list.
+     * Example:
+     *
+     * <code>ImmutableFiniteIterable.of(1, 2, 3).tails(); // [[1, 2, 3], [2, 3], [3], []]</code>
+     *
+     * @return a {@code NonEmptyIterable<ImmutableFiniteIterable<A>>}
+     */
     @Override
     default NonEmptyIterable<? extends ImmutableFiniteIterable<A>> tails() {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Tails.tails(this)));
