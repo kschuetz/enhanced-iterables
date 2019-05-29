@@ -91,7 +91,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * <p>
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return an {@link ImmutableFiniteIterable<A>}
      */
     @Override
@@ -104,7 +104,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * Returns a new {@code ImmutableFiniteIterable} that contains all elements of this {@code ImmutableFiniteIterable}
      * that satisfy a predicate.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return an {@link ImmutableFiniteIterable<A>}
      */
     @Override
@@ -210,6 +210,13 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
                 Slide.slide(k, this)));
     }
 
+    /**
+     * Returns a {@code Tuple2} where the first slot is the front contiguous elements of this
+     * {@code ImmutableFiniteIterable} matching a predicate and the second slot is all the remaining elements.
+     *
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
+     * @return a <code>Tuple2&lt;ImmutableFiniteIterable&lt;B&gt;, ImmutableFiniteIterable&lt;C&gt;&gt;</code>
+     */
     @Override
     default Tuple2<? extends ImmutableFiniteIterable<A>, ? extends ImmutableFiniteIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);

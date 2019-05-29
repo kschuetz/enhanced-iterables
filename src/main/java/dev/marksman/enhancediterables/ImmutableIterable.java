@@ -79,7 +79,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * <p>
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return an {@link ImmutableIterable<A>}
      */
     @Override
@@ -92,7 +92,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Returns a new {@code ImmutableIterable} that contains all elements of this {@code ImmutableIterable}
      * that satisfy a predicate.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return an {@link ImmutableIterable<A>}
      */
     @Override
@@ -192,6 +192,13 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
                 Slide.slide(k, this)));
     }
 
+    /**
+     * Returns a {@code Tuple2} where the first slot is the front contiguous elements of this
+     * {@code ImmutableIterable} matching a predicate and the second slot is all the remaining elements.
+     *
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
+     * @return a <code>Tuple2&lt;ImmutableIterable&lt;B&gt;, ImmutableIterable&lt;C&gt;&gt;</code>
+     */
     @Override
     default Tuple2<? extends ImmutableIterable<A>, ? extends ImmutableIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);

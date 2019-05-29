@@ -121,7 +121,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * <p>
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return a {@link FiniteIterable<A>}
      */
     @Override
@@ -134,7 +134,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Returns a new {@code FiniteIterable} that contains all elements of this {@code FiniteIterable}
      * that satisfy a predicate.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return a {@link FiniteIterable<A>}
      */
     @Override
@@ -258,6 +258,13 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
                 Slide.slide(k, this)));
     }
 
+    /**
+     * Returns a {@code Tuple2} where the first slot is the front contiguous elements of this
+     * {@code FiniteIterable} matching a predicate and the second slot is all the remaining elements.
+     *
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
+     * @return a <code>Tuple2&lt;FiniteIterable&lt;B&gt;, FiniteIterable&lt;C&gt;&gt;</code>
+     */
     @Override
     default Tuple2<? extends FiniteIterable<A>, ? extends FiniteIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);

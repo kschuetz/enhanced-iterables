@@ -86,7 +86,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * <p>
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return an {@link EnhancedIterable<A>}
      */
     default EnhancedIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -98,7 +98,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * Returns a new {@code EnhancedIterable} that contains all elements of this {@code EnhancedIterable}
      * that satisfy a predicate.
      *
-     * @param predicate the predicate; should be referentially transparent and not have side-effects
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
      * @return an {@link EnhancedIterable<A>}
      */
     default EnhancedIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
@@ -211,6 +211,13 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
                 Slide.slide(k, this)));
     }
 
+    /**
+     * Returns a {@code Tuple2} where the first slot is the front contiguous elements of this
+     * {@code EnhancedIterable} matching a predicate and the second slot is all the remaining elements.
+     *
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
+     * @return a <code>Tuple2&lt;EnhancedIterable&lt;B&gt;, EnhancedIterable&lt;C&gt;&gt;</code>
+     */
     default Tuple2<? extends EnhancedIterable<A>, ? extends EnhancedIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         Tuple2<Iterable<A>, Iterable<A>> spanResult = Span.<A>span(predicate).apply(this);
