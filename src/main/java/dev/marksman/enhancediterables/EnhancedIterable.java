@@ -237,6 +237,15 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterable::enhance, Tails.tails(this)));
     }
 
+    /**
+     * Returns a new {@code FiniteIterable} that takes the first {@code count} elements of this {@code EnhancedIterable}.
+     *
+     * @param count the number of elements to take from this {@code EnhancedIterable}.
+     *              Must be &gt;= 0.
+     *              May exceed size of this {@code EnhancedIterable}, in which case, the result will contain
+     *              as many elements available.
+     * @return a {@code FiniteIterable<A>}
+     */
     default FiniteIterable<A> take(int count) {
         validateTake(count);
         return finiteIterable(Take.take(count, this));

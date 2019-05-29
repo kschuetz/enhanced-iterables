@@ -221,6 +221,15 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableIterable, Tails.tails(this)));
     }
 
+    /**
+     * Returns a new {@code ImmutableFiniteIterable} that takes the first {@code count} elements of this {@code ImmutableIterable}.
+     *
+     * @param count the number of elements to take from this {@code EnhancedIterable}.
+     *              Must be &gt;= 0.
+     *              May exceed size of this {@code ImmutableIterable}, in which case, the result will contain
+     *              as many elements available.
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
     @Override
     default ImmutableFiniteIterable<A> take(int count) {
         validateTake(count);

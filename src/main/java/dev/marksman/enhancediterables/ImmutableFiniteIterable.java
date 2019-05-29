@@ -13,7 +13,8 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.*;
-import static dev.marksman.enhancediterables.Validation.*;
+import static dev.marksman.enhancediterables.Validation.validateDrop;
+import static dev.marksman.enhancediterables.Validation.validateSlide;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -237,12 +238,6 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     @Override
     default NonEmptyIterable<? extends ImmutableFiniteIterable<A>> tails() {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Tails.tails(this)));
-    }
-
-    @Override
-    default ImmutableFiniteIterable<A> take(int count) {
-        validateTake(count);
-        return immutableFiniteIterable(Take.take(count, this));
     }
 
     @Override
