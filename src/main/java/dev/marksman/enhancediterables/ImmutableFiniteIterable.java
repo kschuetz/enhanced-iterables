@@ -28,7 +28,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * Lazily appends an element to the end of this {@code ImmutableFiniteIterable}, yielding a new {@code ImmutableNonEmptyFiniteIterable}.
      *
      * @param element the element to append
-     * @return an {@link ImmutableNonEmptyFiniteIterable<A>}
+     * @return an <code>ImmutableNonEmptyFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> append(A element) {
@@ -93,7 +93,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return an {@link ImmutableFiniteIterable<A>}
+     * @return a <code>ImmutableFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableFiniteIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -106,7 +106,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * that satisfy a predicate.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return an {@link ImmutableFiniteIterable<A>}
+     * @return a <code>ImmutableFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableFiniteIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
@@ -121,7 +121,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an {@link ImmutableFiniteIterable<B>}
+     * @return an <code>ImmutableFiniteIterable&lt;B&gt;</code>
      */
     @Override
     default <B> ImmutableFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -140,7 +140,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * If this {@code ImmutableFiniteIterable} contains fewer than two elements, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link ImmutableFiniteIterable<A>}
+     * @return a <code>ImmutableFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableFiniteIterable<A> intersperse(A separator) {
@@ -168,7 +168,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * Lazily prepends an element to the front of this {@code ImmutableFiniteIterable}, yielding a new {@code ImmutableNonEmptyFiniteIterable}.
      *
      * @param element the element to prepend
-     * @return a {@link ImmutableNonEmptyFiniteIterable<A>}
+     * @return a <code>ImmutableNonEmptyFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> prepend(A element) {
@@ -182,7 +182,7 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * If this {@code ImmutableFiniteIterable} is empty, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link ImmutableFiniteIterable<A>}
+     * @return a <code>ImmutableFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableFiniteIterable<A> prependAll(A separator) {

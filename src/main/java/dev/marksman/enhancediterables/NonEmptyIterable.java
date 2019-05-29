@@ -44,7 +44,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      * yielding a new {@code NonEmptyIterable}.
      *
      * @param other an {@link Iterable}
-     * @return an {@link NonEmptyIterable<A>}
+     * @return a <code>NonEmptyIterable&lt;A&gt;</code>
      */
     @Override
     default NonEmptyIterable<A> concat(Iterable<A> other) {
@@ -59,7 +59,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an {@link NonEmptyIterable<B>}
+     * @return a <code>NonEmptyIterable&lt;B&gt;</code>
      */
     @Override
     default <B> NonEmptyIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -84,7 +84,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      * If this {@code NonEmptyIterable} contains only one element, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link NonEmptyIterable<A>}
+     * @return a <code>NonEmptyIterable&lt;A&gt;</code>
      */
     @Override
     default NonEmptyIterable<A> intersperse(A separator) {
@@ -101,7 +101,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      * {@code NonEmptyIterable}.
      *
      * @param separator the separator value
-     * @return an {@link NonEmptyIterable<A>}
+     * @return a <code>NonEmptyIterable&lt;A&gt;</code>
      */
     @Override
     default NonEmptyIterable<A> prependAll(A separator) {

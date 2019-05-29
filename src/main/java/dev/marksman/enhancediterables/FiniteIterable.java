@@ -33,7 +33,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Lazily appends an element to the end of this {@code FiniteIterable}, yielding a new {@code NonEmptyFiniteIterable}.
      *
      * @param element the element to append
-     * @return a {@link NonEmptyFiniteIterable<A>}
+     * @return a <code>NonEmptyFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default NonEmptyFiniteIterable<A> append(A element) {
@@ -122,7 +122,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a {@link FiniteIterable<A>}
+     * @return a <code>FiniteIterable&lt;A&gt;</code>
      */
     @Override
     default FiniteIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -135,7 +135,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * that satisfy a predicate.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a {@link FiniteIterable<A>}
+     * @return a <code>FiniteIterable&lt;A&gt;</code>
      */
     @Override
     default FiniteIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
@@ -150,7 +150,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an {@link FiniteIterable<B>}
+     * @return a <code>FiniteIterableonEmptyFiniteIterable&lt;B&gt;</code>
      */
     @Override
     default <B> FiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -188,7 +188,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * If this {@code FiniteIterable} contains fewer than two elements, it is left untouched.
      *
      * @param separator the separator value
-     * @return a {@link FiniteIterable<A>}
+     * @return a <code>FiniteIterable&lt;A&gt;</code>
      */
     @Override
     default FiniteIterable<A> intersperse(A separator) {
@@ -216,7 +216,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Lazily prepends an element to the front of this {@code FiniteIterable}, yielding a new {@code NonEmptyFiniteIterable}.
      *
      * @param element the element to prepend
-     * @return a {@link NonEmptyFiniteIterable<A>}
+     * @return a <code>NonEmptyFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default NonEmptyFiniteIterable<A> prepend(A element) {
@@ -230,7 +230,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * If this {@code FiniteIterable} is empty, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link FiniteIterable<A>}
+     * @return a <code>FiniteIterable&lt;A&gt;</code>
      */
     @Override
     default FiniteIterable<A> prependAll(A separator) {

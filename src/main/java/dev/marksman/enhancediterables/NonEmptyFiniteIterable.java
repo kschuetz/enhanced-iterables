@@ -73,7 +73,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an {@link NonEmptyFiniteIterable<B>}
+     * @return a <code>NonEmptyFiniteIterable&lt;B&gt;</code>
      */
     @Override
     default <B> NonEmptyFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -92,7 +92,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * If this {@code NonEmptyFiniteIterable} contains only one element, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link NonEmptyFiniteIterable<A>}
+     * @return a <code>NonEmptyFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default NonEmptyFiniteIterable<A> intersperse(A separator) {
@@ -104,7 +104,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * {@code NonEmptyFiniteIterable}.
      *
      * @param separator the separator value
-     * @return an {@link NonEmptyFiniteIterable<A>}
+     * @return a <code>NonEmptyFiniteIterable&lt;A&gt;</code>
      */
     @Override
     default NonEmptyFiniteIterable<A> prependAll(A separator) {

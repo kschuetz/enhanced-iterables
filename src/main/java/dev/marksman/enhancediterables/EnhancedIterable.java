@@ -36,7 +36,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * Lazily appends an element to the end of this {@code EnhancedIterable}, yielding a new {@code NonEmptyIterable}.
      *
      * @param element the element to append
-     * @return a {@link NonEmptyIterable<A>}
+     * @return a <code>NonEmptyIterable&lt;A&gt;</code>
      */
     default NonEmptyIterable<A> append(A element) {
         return nonEmptyIterableOrThrow(Snoc.snoc(element, this));
@@ -47,7 +47,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * yielding a new {@code EnhancedIterable}.
      *
      * @param other the other {@link Iterable}
-     * @return an {@link EnhancedIterable<A>}
+     * @return an <code>EnhancedIterable&lt;A&gt;</code>
      */
     default EnhancedIterable<A> concat(Iterable<A> other) {
         requireNonNull(other);
@@ -87,7 +87,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return an {@link EnhancedIterable<A>}
+     * @return an <code>EnhancedIterable&lt;A&gt;</code>
      */
     default EnhancedIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
@@ -99,7 +99,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * that satisfy a predicate.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return an {@link EnhancedIterable<A>}
+     * @return an <code>EnhancedIterable&lt;A&gt;</code>
      */
     default EnhancedIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
@@ -125,7 +125,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an {@link EnhancedIterable<B>}
+     * @return an <code>EnhancedIterable&lt;B&gt;</code>
      */
     default <B> EnhancedIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);
@@ -139,7 +139,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * If this {@code EnhancedIterable} contains fewer than two elements, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link EnhancedIterable<A>}
+     * @return an <code>EnhancedIterable&lt;A&gt;</code>
      */
     default EnhancedIterable<A> intersperse(A separator) {
         return enhance(Intersperse.intersperse(separator, this));
@@ -176,7 +176,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * Lazily prepends an element to the front of this {@code EnhancedIterable}, yielding a new {@code NonEmptyIterable}.
      *
      * @param element the element to prepend
-     * @return a {@link NonEmptyIterable<A>}
+     * @return a <code>NonEmptyIterable&lt;A&gt;</code>
      */
     default NonEmptyIterable<A> prepend(A element) {
         return NonEmptyIterable.nonEmptyIterable(element, this);
@@ -189,7 +189,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * If this {@code EnhancedIterable} is empty, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link EnhancedIterable<A>}
+     * @return an <code>EnhancedIterable&lt;A&gt;</code>
      */
     default EnhancedIterable<A> prependAll(A separator) {
         return enhance(PrependAll.prependAll(separator, this));

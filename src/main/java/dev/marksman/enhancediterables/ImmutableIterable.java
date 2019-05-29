@@ -27,7 +27,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Lazily appends an element to the end of this {@code ImmutableIterable}, yielding a new {@code ImmutableNonEmptyIterable}.
      *
      * @param element the element to append
-     * @return an {@link ImmutableNonEmptyIterable<A>}
+     * @return a <code>ImmutableNonEmptyIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableNonEmptyIterable<A> append(A element) {
@@ -80,7 +80,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return an {@link ImmutableIterable<A>}
+     * @return a <code>ImmutableIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -93,7 +93,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * that satisfy a predicate.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return an {@link ImmutableIterable<A>}
+     * @return a <code>ImmutableIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
@@ -108,7 +108,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an {@link ImmutableIterable<B>}
+     * @return a <code>ImmutableIterable&lt;B&gt;</code>
      */
     @Override
     default <B> ImmutableIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -123,7 +123,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * If this {@code ImmutableIterable} contains fewer than two elements, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link ImmutableIterable<A>}
+     * @return a <code>ImmutableIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableIterable<A> intersperse(A separator) {
@@ -154,7 +154,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Lazily prepends an element to the front of this {@code ImmutableIterable}, yielding a new {@code ImmutableNonEmptyIterable}.
      *
      * @param element the element to prepend
-     * @return a {@link ImmutableNonEmptyIterable<A>}
+     * @return an <code>ImmutableNonEmptyIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableNonEmptyIterable<A> prepend(A element) {
@@ -168,7 +168,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * If this {@code ImmutableIterable} is empty, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link ImmutableIterable<A>}
+     * @return a <code>ImmutableIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableIterable<A> prependAll(A separator) {

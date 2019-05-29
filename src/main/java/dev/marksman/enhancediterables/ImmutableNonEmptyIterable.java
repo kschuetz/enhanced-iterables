@@ -43,7 +43,7 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an {@link ImmutableNonEmptyIterable<B>}
+     * @return an <code>ImmutableNonEmptyIterable&lt;B&gt;</code>
      */
     @Override
     default <B> ImmutableNonEmptyIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -58,7 +58,7 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
      * If this {@code ImmutableNonEmptyIterable} contains only one element, it is left untouched.
      *
      * @param separator the separator value
-     * @return an {@link ImmutableNonEmptyIterable<A>}
+     * @return a <code>ImmutableNonEmptyIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableNonEmptyIterable<A> intersperse(A separator) {
@@ -70,7 +70,7 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
      * {@code ImmutableNonEmptyIterable}.
      *
      * @param separator the separator value
-     * @return an {@link ImmutableNonEmptyIterable<A>}
+     * @return a <code>ImmutableNonEmptyIterable&lt;A&gt;</code>
      */
     @Override
     default ImmutableNonEmptyIterable<A> prependAll(A separator) {
