@@ -21,9 +21,11 @@
        
 # What is it?
 
-*enhanced-iterables* is a Java library that is intended to be used in conjunction with [lambda](https://palatable.github.io/lambda/). 
+*enhanced-iterables* is a Java library that is intended to be used in conjunction with [lambda](https://github.com/palatable/lambda). 
 
 It provides interfaces that add some useful methods to `Iterable`s.  Most of these methods delegate to lambda functions, and return the most specific type of `Iterable` possible.    
+
+For more details, check out the [javadoc](https://kschuetz.github.io/enhanced-iterables/javadoc/).
 
 # Types
 
@@ -168,7 +170,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 
 ### Constructing
 - `ImmutableIterable.of` static method
-- It is not possible to convert an `Iterable` to an `ImmutableIterable`s directly; you must implement the interface instead.
+- It is not possible to convert an `Iterable` to an `ImmutableIterable` directly; you must implement the interface instead.
 The [*collection-views*](https://github.com/kschuetz/collection-views) library provides some implementations of `ImmutableIterable` (e.g. `ImmutableVector`).
 
 ## <a name="immutable-finite-iterable">`ImmutableFiniteIterable<A>`</a>
