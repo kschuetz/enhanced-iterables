@@ -330,6 +330,12 @@ class ImmutableNonEmptyIterableTest {
 
         @Test
         void testCase1() {
+            assertThat(immutableNonEmptyIterable("foo", emptyList()).prependAll("*"),
+                    contains("*", "foo"));
+        }
+
+        @Test
+        void testCase2() {
             assertThat(immutableNonEmptyIterable("foo", asList("bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }

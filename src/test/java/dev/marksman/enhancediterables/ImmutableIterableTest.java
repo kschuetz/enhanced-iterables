@@ -371,6 +371,12 @@ class ImmutableIterableTest {
 
         @Test
         void testCase1() {
+            assertThat(immutableIterable(singletonList("foo")).prependAll("*"),
+                    contains("*", "foo"));
+        }
+
+        @Test
+        void testCase2() {
             assertThat(immutableIterable(asList("foo", "bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }

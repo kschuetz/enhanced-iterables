@@ -440,6 +440,12 @@ class FiniteIterableTest {
 
         @Test
         void testCase1() {
+            assertThat(finiteIterable(singletonList("foo")).prependAll("*"),
+                    contains("*", "foo"));
+        }
+
+        @Test
+        void testCase2() {
             assertThat(finiteIterable(asList("foo", "bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }

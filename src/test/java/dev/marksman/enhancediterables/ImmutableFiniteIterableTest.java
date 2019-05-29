@@ -440,6 +440,12 @@ class ImmutableFiniteIterableTest {
 
         @Test
         void testCase1() {
+            assertThat(immutableFiniteIterable(singletonList("foo")).prependAll("*"),
+                    contains("*", "foo"));
+        }
+
+        @Test
+        void testCase2() {
             assertThat(immutableFiniteIterable(asList("foo", "bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }

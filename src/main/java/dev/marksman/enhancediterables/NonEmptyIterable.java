@@ -96,9 +96,16 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
         return Cons.cons(head(), tail()).iterator();
     }
 
+    /**
+     * Returns a new {@code NonEmptyIterable} with the provided separator value injected before each value of this
+     * {@code NonEmptyIterable}.
+     *
+     * @param separator the separator value
+     * @return an {@link NonEmptyIterable<A>}
+     */
     @Override
-    default NonEmptyIterable<A> prependAll(A a) {
-        return nonEmptyIterableOrThrow(PrependAll.prependAll(a, this));
+    default NonEmptyIterable<A> prependAll(A separator) {
+        return nonEmptyIterableOrThrow(PrependAll.prependAll(separator, this));
     }
 
     default <B, C> NonEmptyIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyIterable<B> other) {

@@ -182,8 +182,17 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return NonEmptyIterable.nonEmptyIterable(element, this);
     }
 
-    default EnhancedIterable<A> prependAll(A a) {
-        return enhance(PrependAll.prependAll(a, this));
+    /**
+     * Returns a new {@code EnhancedIterable} with the provided separator value injected before each value of this
+     * {@code EnhancedIterable}.
+     * <p>
+     * If this {@code EnhancedIterable} is empty, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link EnhancedIterable<A>}
+     */
+    default EnhancedIterable<A> prependAll(A separator) {
+        return enhance(PrependAll.prependAll(separator, this));
     }
 
     /**

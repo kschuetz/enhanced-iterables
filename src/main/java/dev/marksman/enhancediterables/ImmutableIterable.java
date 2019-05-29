@@ -161,9 +161,18 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         return ImmutableNonEmptyIterable.immutableNonEmptyIterable(element, this);
     }
 
+    /**
+     * Returns a new {@code ImmutableIterable} with the provided separator value injected before each value of this
+     * {@code ImmutableIterable}.
+     * <p>
+     * If this {@code ImmutableIterable} is empty, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link ImmutableIterable<A>}
+     */
     @Override
-    default ImmutableIterable<A> prependAll(A a) {
-        return immutableIterable(PrependAll.prependAll(a, this));
+    default ImmutableIterable<A> prependAll(A separator) {
+        return immutableIterable(PrependAll.prependAll(separator, this));
     }
 
     /**

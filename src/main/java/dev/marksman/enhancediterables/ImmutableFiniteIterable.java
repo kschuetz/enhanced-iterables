@@ -174,9 +174,18 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
         return ImmutableNonEmptyFiniteIterable.immutableNonEmptyFiniteIterable(element, this);
     }
 
+    /**
+     * Returns a new {@code ImmutableFiniteIterable} with the provided separator value injected before each value of this
+     * {@code ImmutableFiniteIterable}.
+     * <p>
+     * If this {@code ImmutableFiniteIterable} is empty, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link ImmutableFiniteIterable<A>}
+     */
     @Override
-    default ImmutableFiniteIterable<A> prependAll(A a) {
-        return immutableFiniteIterable(PrependAll.prependAll(a, this));
+    default ImmutableFiniteIterable<A> prependAll(A separator) {
+        return immutableFiniteIterable(PrependAll.prependAll(separator, this));
     }
 
     @Override

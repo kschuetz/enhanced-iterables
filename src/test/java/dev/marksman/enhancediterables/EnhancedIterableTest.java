@@ -371,6 +371,12 @@ class EnhancedIterableTest {
 
         @Test
         void testCase1() {
+            assertThat(enhance(singletonList("foo")).prependAll("*"),
+                    contains("*", "foo"));
+        }
+
+        @Test
+        void testCase2() {
             assertThat(enhance(asList("foo", "bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }

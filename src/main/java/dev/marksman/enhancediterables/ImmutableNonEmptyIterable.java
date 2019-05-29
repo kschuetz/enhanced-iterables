@@ -65,9 +65,16 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
         return immutableNonEmptyIterableOrThrow(Intersperse.intersperse(separator, this));
     }
 
+    /**
+     * Returns a new {@code ImmutableNonEmptyIterable} with the provided separator value injected before each value of this
+     * {@code ImmutableNonEmptyIterable}.
+     *
+     * @param separator the separator value
+     * @return an {@link ImmutableNonEmptyIterable<A>}
+     */
     @Override
-    default ImmutableNonEmptyIterable<A> prependAll(A a) {
-        return immutableNonEmptyIterableOrThrow(PrependAll.prependAll(a, this));
+    default ImmutableNonEmptyIterable<A> prependAll(A separator) {
+        return immutableNonEmptyIterableOrThrow(PrependAll.prependAll(separator, this));
     }
 
     default <B, C> ImmutableNonEmptyIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableNonEmptyIterable<B> other) {

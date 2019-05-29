@@ -330,6 +330,12 @@ class NonEmptyIterableTest {
 
         @Test
         void testCase1() {
+            assertThat(nonEmptyIterable("foo", emptyList()).prependAll("*"),
+                    contains("*", "foo"));
+        }
+
+        @Test
+        void testCase2() {
             assertThat(nonEmptyIterable("foo", asList("bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
         }

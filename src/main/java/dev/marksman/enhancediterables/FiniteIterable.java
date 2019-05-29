@@ -223,9 +223,18 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
         return NonEmptyFiniteIterable.nonEmptyFiniteIterable(element, this);
     }
 
+    /**
+     * Returns a new {@code FiniteIterable} with the provided separator value injected before each value of this
+     * {@code FiniteIterable}.
+     * <p>
+     * If this {@code FiniteIterable} is empty, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link FiniteIterable<A>}
+     */
     @Override
-    default FiniteIterable<A> prependAll(A a) {
-        return EnhancedIterables.finiteIterable(PrependAll.prependAll(a, this));
+    default FiniteIterable<A> prependAll(A separator) {
+        return EnhancedIterables.finiteIterable(PrependAll.prependAll(separator, this));
     }
 
     default FiniteIterable<A> reverse() {
