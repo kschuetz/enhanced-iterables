@@ -116,9 +116,18 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         return immutableIterable(Map.map(f, this));
     }
 
+    /**
+     * Returns a new {@code ImmutableIterable} with the provided separator value injected between each value of this
+     * {@code ImmutableIterable}.
+     * <p>
+     * If this {@code ImmutableIterable} contains fewer than two elements, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link ImmutableIterable<A>}
+     */
     @Override
-    default ImmutableIterable<A> intersperse(A a) {
-        return immutableIterable(Intersperse.intersperse(a, this));
+    default ImmutableIterable<A> intersperse(A separator) {
+        return immutableIterable(Intersperse.intersperse(separator, this));
     }
 
     /**

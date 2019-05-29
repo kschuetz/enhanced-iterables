@@ -293,6 +293,12 @@ class EnhancedIterableTest {
         }
 
         @Test
+        void doesNothingOnSingletonList() {
+            assertThat(enhance(singletonList("foo")).intersperse("*"),
+                    contains("foo"));
+        }
+
+        @Test
         void testCase1() {
             assertThat(enhance(asList("foo", "bar", "baz")).intersperse("*"),
                     contains("foo", "*", "bar", "*", "baz"));

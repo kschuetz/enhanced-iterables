@@ -181,9 +181,18 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Inits.inits(this)));
     }
 
+    /**
+     * Returns a new {@code FiniteIterable} with the provided separator value injected between each value of this
+     * {@code FiniteIterable}.
+     * <p>
+     * If this {@code FiniteIterable} contains fewer than two elements, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return a {@link FiniteIterable<A>}
+     */
     @Override
-    default FiniteIterable<A> intersperse(A a) {
-        return EnhancedIterables.finiteIterable(Intersperse.intersperse(a, this));
+    default FiniteIterable<A> intersperse(A separator) {
+        return EnhancedIterables.finiteIterable(Intersperse.intersperse(separator, this));
     }
 
     /**

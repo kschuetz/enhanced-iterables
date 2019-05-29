@@ -67,9 +67,18 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
         return nonEmptyIterable(f.apply(head()), Map.map(f, tail()));
     }
 
+    /**
+     * Returns a new {@code NonEmptyIterable} with the provided separator value injected between each value of this
+     * {@code NonEmptyIterable}.
+     * <p>
+     * If this {@code NonEmptyIterable} contains only one element, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link NonEmptyIterable<A>}
+     */
     @Override
-    default NonEmptyIterable<A> intersperse(A a) {
-        return nonEmptyIterableOrThrow(Intersperse.intersperse(a, this));
+    default NonEmptyIterable<A> intersperse(A separator) {
+        return nonEmptyIterableOrThrow(Intersperse.intersperse(separator, this));
     }
 
     @Override

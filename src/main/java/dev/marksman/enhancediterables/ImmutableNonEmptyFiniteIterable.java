@@ -72,9 +72,18 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
         return immutableFiniteIterable(Init.init(this));
     }
 
+    /**
+     * Returns a new {@code ImmutableNonEmptyFiniteIterable} with the provided separator value injected between each value of this
+     * {@code ImmutableNonEmptyFiniteIterable}.
+     * <p>
+     * If this {@code ImmutableNonEmptyFiniteIterable} contains only one element, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link ImmutableNonEmptyFiniteIterable<A>}
+     */
     @Override
-    default ImmutableNonEmptyFiniteIterable<A> intersperse(A a) {
-        return immutableNonEmptyFiniteIterableOrThrow(Intersperse.intersperse(a, this));
+    default ImmutableNonEmptyFiniteIterable<A> intersperse(A separator) {
+        return immutableNonEmptyFiniteIterableOrThrow(Intersperse.intersperse(separator, this));
     }
 
     @Override

@@ -362,6 +362,12 @@ class ImmutableFiniteIterableTest {
         }
 
         @Test
+        void doesNothingOnSingletonList() {
+            assertThat(immutableFiniteIterable(singletonList("foo")).intersperse("*"),
+                    contains("foo"));
+        }
+
+        @Test
         void testCase1() {
             assertThat(immutableFiniteIterable(asList("foo", "bar", "baz")).intersperse("*"),
                     contains("foo", "*", "bar", "*", "baz"));

@@ -51,9 +51,18 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
         return immutableNonEmptyIterableOrThrow(Map.map(f, this));
     }
 
+    /**
+     * Returns a new {@code ImmutableNonEmptyIterable} with the provided separator value injected between each value of this
+     * {@code ImmutableNonEmptyIterable}.
+     * <p>
+     * If this {@code ImmutableNonEmptyIterable} contains only one element, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link ImmutableNonEmptyIterable<A>}
+     */
     @Override
-    default ImmutableNonEmptyIterable<A> intersperse(A a) {
-        return immutableNonEmptyIterableOrThrow(Intersperse.intersperse(a, this));
+    default ImmutableNonEmptyIterable<A> intersperse(A separator) {
+        return immutableNonEmptyIterableOrThrow(Intersperse.intersperse(separator, this));
     }
 
     @Override

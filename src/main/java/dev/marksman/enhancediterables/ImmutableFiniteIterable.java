@@ -132,9 +132,18 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Inits.inits(this)));
     }
 
+    /**
+     * Returns a new {@code ImmutableFiniteIterable} with the provided separator value injected between each value of this
+     * {@code ImmutableFiniteIterable}.
+     * <p>
+     * If this {@code ImmutableFiniteIterable} contains fewer than two elements, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link ImmutableFiniteIterable<A>}
+     */
     @Override
-    default ImmutableFiniteIterable<A> intersperse(A a) {
-        return immutableFiniteIterable(Intersperse.intersperse(a, this));
+    default ImmutableFiniteIterable<A> intersperse(A separator) {
+        return immutableFiniteIterable(Intersperse.intersperse(separator, this));
     }
 
     /**

@@ -85,9 +85,18 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
         return EnhancedIterables.finiteIterable(Init.init(this));
     }
 
+    /**
+     * Returns a new {@code NonEmptyFiniteIterable} with the provided separator value injected between each value of this
+     * {@code NonEmptyFiniteIterable}.
+     * <p>
+     * If this {@code NonEmptyFiniteIterable} contains only one element, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link NonEmptyFiniteIterable<A>}
+     */
     @Override
-    default NonEmptyFiniteIterable<A> intersperse(A a) {
-        return nonEmptyFiniteIterableOrThrow(Intersperse.intersperse(a, this));
+    default NonEmptyFiniteIterable<A> intersperse(A separator) {
+        return nonEmptyFiniteIterableOrThrow(Intersperse.intersperse(separator, this));
     }
 
     @Override

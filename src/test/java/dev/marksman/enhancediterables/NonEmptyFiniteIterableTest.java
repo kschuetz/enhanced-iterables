@@ -340,6 +340,12 @@ class NonEmptyFiniteIterableTest {
     class Intersperse {
 
         @Test
+        void doesNothingOnSingletonList() {
+            assertThat(nonEmptyFiniteIterable("foo", emptyList()).intersperse("*"),
+                    contains("foo"));
+        }
+
+        @Test
         void testCase1() {
             assertThat(nonEmptyFiniteIterable("foo", asList("bar", "baz")).intersperse("*"),
                     contains("foo", "*", "bar", "*", "baz"));

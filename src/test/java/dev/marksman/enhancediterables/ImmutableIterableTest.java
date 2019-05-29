@@ -293,6 +293,12 @@ class ImmutableIterableTest {
         }
 
         @Test
+        void doesNothingOnSingletonList() {
+            assertThat(immutableIterable(singletonList("foo")).intersperse("*"),
+                    contains("foo"));
+        }
+
+        @Test
         void testCase1() {
             assertThat(immutableIterable(asList("foo", "bar", "baz")).intersperse("*"),
                     contains("foo", "*", "bar", "*", "baz"));

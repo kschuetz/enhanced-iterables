@@ -132,8 +132,17 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return enhance(Map.map(f, this));
     }
 
-    default EnhancedIterable<A> intersperse(A a) {
-        return enhance(Intersperse.intersperse(a, this));
+    /**
+     * Returns a new {@code EnhancedIterable} with the provided separator value injected between each value of this
+     * {@code EnhancedIterable}.
+     * <p>
+     * If this {@code EnhancedIterable} contains fewer than two elements, it is left untouched.
+     *
+     * @param separator the separator value
+     * @return an {@link EnhancedIterable<A>}
+     */
+    default EnhancedIterable<A> intersperse(A separator) {
+        return enhance(Intersperse.intersperse(separator, this));
     }
 
     default boolean isEmpty() {

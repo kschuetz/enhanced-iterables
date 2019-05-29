@@ -287,6 +287,12 @@ class ImmutableNonEmptyIterableTest {
     class Intersperse {
 
         @Test
+        void doesNothingOnSingletonList() {
+            assertThat(immutableNonEmptyIterable("foo", emptyList()).intersperse("*"),
+                    contains("foo"));
+        }
+
+        @Test
         void testCase1() {
             assertThat(immutableNonEmptyIterable("foo", asList("bar", "baz")).intersperse("*"),
                     contains("foo", "*", "bar", "*", "baz"));
