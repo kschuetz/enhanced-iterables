@@ -161,8 +161,8 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * are both lazy, so comprehension over infinite iterables is supported.
      *
      * @param function the mapping function
-     * @param <B>      The output left Iterable element type, as well as the CoProduct2 A type
-     * @param <C>      The output right Iterable element type, as well as the CoProduct2 B type
+     * @param <B>      the output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C>      the output right Iterable element type, as well as the CoProduct2 B type
      * @return a <code>Tuple2&lt;EnhancedIterable&lt;B&gt;, EnhancedIterable&lt;C&gt;&gt;</code>
      */
     default <B, C> Tuple2<? extends EnhancedIterable<B>, ? extends EnhancedIterable<C>> partition(
@@ -196,7 +196,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     }
 
     /**
-     * "Slide" a window of {@code k} elements across the {@code EnhancedIterable} by one element at a time.
+     * "Slides" a window of {@code k} elements across the {@code EnhancedIterable} by one element at a time.
      * <p>
      * Example:
      *
@@ -251,39 +251,115 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return finiteIterable(Take.take(count, this));
     }
 
+    /**
+     * Returns a new {@code EnhancedIterable} that limits to the first contiguous group of elements of this
+     * {@code EnhancedIterable} that satisfy a predicate.
+     * <p>
+     * Iteration ends at, but does not include, the first element for which the predicate evaluates to false.
+     *
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
+     * @return an {@code EnhancedIterable<A>}
+     */
     default EnhancedIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         return enhance(TakeWhile.takeWhile(predicate, this));
     }
 
+    /**
+     * Writes all the elements of this {@code EnhancedIterable} directly into an array of the specified type.
+     *
+     * @param arrayType the type of the array
+     * @return a new array
+     */
     default A[] toArray(Class<A[]> arrayType) {
         requireNonNull(arrayType);
         return ToArray.toArray(arrayType).apply(this);
     }
 
+    /**
+     * Creates an instance of a {@code Collection} of type {@code C}, and adds to it all elements in this {@code EnhancedIterable}.
+     * <p>
+     * Note that instances of {@code C} must support {@link Collection#add} (which is to say, must not throw on invocation).
+     *
+     * @param cSupplier a function that instantiates a new {@link Collection} of type {@code C}
+     * @param <C>       the resulting collection type
+     * @return a new {@code Collection} of type {@code C}
+     */
     default <C extends Collection<A>> C toCollection(Fn0<C> cSupplier) {
         requireNonNull(cSupplier);
         return ToCollection.toCollection(cSupplier).apply(this);
     }
 
+    /**
+     * Zips together this {@code EnhancedIterable} with another {@code Iterable} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return an {@code EnhancedIterable<C>}
+     */
     default <B, C> EnhancedIterable<C> zipWith(Fn2<A, B, C> fn, Iterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
         return enhance(ZipWith.zipWith(fn, this, other));
     }
 
+    /**
+     * Zips together this {@code EnhancedIterable} with a {@code FiniteIterable} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return a {@code FiniteIterable<C>}
+     */
     default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, FiniteIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
         return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
     }
 
+    /**
+     * Zips together this {@code EnhancedIterable} with a {@code Collection} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return a {@code FiniteIterable<C>}
+     */
     default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, Collection<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
         return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
     }
 
+    /**
+     * Wraps an existing {@code Iterable} in an {@code EnhancedIterable}.
+     * <p>
+     * If {@code underlying} is already an {@link EnhancedIterable}, returns it directly.
+     *
+     * @param underlying the {@link Iterable} to wrap.
+     *                   May be finite or infinite.
+     * @param <A>        the element type
+     * @return an {@code EnhancedIterable<A>}
+     */
     static <A> EnhancedIterable<A> enhance(Iterable<A> underlying) {
         requireNonNull(underlying);
         if (underlying instanceof EnhancedIterable<?>) {
@@ -293,6 +369,16 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         }
     }
 
+    /**
+     * Creates an {@code EnhancedIterable} containing the given elements.
+     * <p>
+     * Note that this method actually returns an {@link ImmutableNonEmptyFiniteIterable}, which is
+     * also an {@link EnhancedIterable}.
+     *
+     * @param first the first element
+     * @param more  the remaining elements
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
+     */
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         return EnhancedIterables.of(first, more);

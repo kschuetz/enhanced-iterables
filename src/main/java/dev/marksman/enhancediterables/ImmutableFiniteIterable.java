@@ -129,6 +129,15 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
         return immutableFiniteIterable(Map.map(f, this));
     }
 
+    /**
+     * Returns a {@code NonEmptyIterable} containing all of the subsequences of initial
+     * elements of this {@code ImmutableFiniteIterable}, ordered by size, starting with the empty list.
+     * Example:
+     *
+     * <code>ImmutableFiniteIterable.of(1, 2, 3).inits(); // [[], [1], [1, 2], [1, 2, 3]]</code>
+     *
+     * @return an {@code ImmutableFiniteIterable<FiniteIterable<A>>}
+     */
     default NonEmptyIterable<? extends ImmutableFiniteIterable<A>> inits() {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Inits.inits(this)));
     }
@@ -151,8 +160,8 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      * Partitions this {@code ImmutableFiniteIterable} given a disjoint mapping function.
      *
      * @param function the mapping function
-     * @param <B>      The output left Iterable element type, as well as the CoProduct2 A type
-     * @param <C>      The output right Iterable element type, as well as the CoProduct2 B type
+     * @param <B>      the output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C>      the output right Iterable element type, as well as the CoProduct2 B type
      * @return a <code>Tuple2&lt;ImmutableFiniteIterable&lt;B&gt;, ImmutableFiniteIterable&lt;C&gt;&gt;</code>
      */
     @Override
@@ -189,13 +198,20 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
         return immutableFiniteIterable(PrependAll.prependAll(separator, this));
     }
 
+    /**
+     * Returns a reversed representation of this {@code ImmutableFiniteIterable}.
+     * <p>
+     * Note that reversing is deferred until the returned {@code Iterable} is iterated.
+     *
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
     @Override
     default ImmutableFiniteIterable<A> reverse() {
         return immutableFiniteIterable(Reverse.reverse(this));
     }
 
     /**
-     * "Slide" a window of {@code k} elements across the {@code ImmutableFiniteIterable} by one element at a time.
+     * "Slides" a window of {@code k} elements across the {@code ImmutableFiniteIterable} by one element at a time.
      * <p>
      * Example:
      *
@@ -240,18 +256,51 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Tails.tails(this)));
     }
 
+    /**
+     * Returns a new {@code ImmutableFiniteIterable} that limits to the first contiguous group of elements of this
+     * {@code FiniteIterable} that satisfy a predicate.
+     * <p>
+     * Iteration ends at, but does not include, the first element for which the predicate evaluates to false.
+     *
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
+     * @return a {@code ImmutableFiniteIterable<A>}
+     */
     @Override
     default ImmutableFiniteIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         return immutableFiniteIterable(TakeWhile.takeWhile(predicate, this));
     }
 
+    /**
+     * Zips together this {@code ImmutableFiniteIterable} with another {@code ImmutableIterable} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return an {@code ImmutableFiniteIterable<C>}
+     */
     default <B, C> ImmutableFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
         return immutableFiniteIterable(ZipWith.zipWith(fn, this, other));
     }
 
+    /**
+     * Creates an {@code ImmutableFiniteIterable} containing the given elements.
+     * <p>
+     * Note that this method actually returns an {@link ImmutableNonEmptyFiniteIterable}, which is
+     * also an {@link ImmutableFiniteIterable}.
+     *
+     * @param first the first element
+     * @param more  the remaining elements
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
+     */
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         return EnhancedIterables.of(first, more);

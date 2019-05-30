@@ -177,6 +177,15 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
         return FoldLeft.<A, B>foldLeft(op, z).apply(this);
     }
 
+    /**
+     * Returns a {@code NonEmptyIterable} containing all of the subsequences of initial
+     * elements of this {@code FiniteIterable}, ordered by size, starting with the empty list.
+     * Example:
+     *
+     * <code>FiniteIterable.of(1, 2, 3).inits(); // [[], [1], [1, 2], [1, 2, 3]]</code>
+     *
+     * @return a {@code NonEmptyIterable<FiniteIterable<A>>}
+     */
     default NonEmptyIterable<? extends FiniteIterable<A>> inits() {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Inits.inits(this)));
     }
@@ -199,8 +208,8 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Partitions this {@code FiniteIterable} given a disjoint mapping function.
      *
      * @param function the mapping function
-     * @param <B>      The output left Iterable element type, as well as the CoProduct2 A type
-     * @param <C>      The output right Iterable element type, as well as the CoProduct2 B type
+     * @param <B>      the output left Iterable element type, as well as the CoProduct2 A type
+     * @param <C>      the output right Iterable element type, as well as the CoProduct2 B type
      * @return a <code>Tuple2&lt;FiniteIterable&lt;B&gt;, FiniteIterable&lt;C&gt;&gt;</code>
      */
     @Override
@@ -237,12 +246,19 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
         return EnhancedIterables.finiteIterable(PrependAll.prependAll(separator, this));
     }
 
+    /**
+     * Returns a reversed representation of this {@code FiniteIterable}.
+     * <p>
+     * Note that reversing is deferred until the returned {@code Iterable} is iterated.
+     *
+     * @return a {@code FiniteIterable<A>}
+     */
     default FiniteIterable<A> reverse() {
         return EnhancedIterables.finiteIterable(Reverse.reverse(this));
     }
 
     /**
-     * "Slide" a window of {@code k} elements across the {@code FiniteIterable} by one element at a time.
+     * "Slides" a window of {@code k} elements across the {@code FiniteIterable} by one element at a time.
      * <p>
      * Example:
      *
@@ -287,27 +303,80 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
         return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Tails.tails(this)));
     }
 
+    /**
+     * Returns a new {@code FiniteIterable} that limits to the first contiguous group of elements of this
+     * {@code FiniteIterable} that satisfy a predicate.
+     * <p>
+     * Iteration ends at, but does not include, the first element for which the predicate evaluates to false.
+     *
+     * @param predicate a predicate; should be referentially transparent and not have side-effects
+     * @return a {@code FiniteIterable<A>}
+     */
     @Override
     default FiniteIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         return EnhancedIterables.finiteIterable(TakeWhile.takeWhile(predicate, this));
     }
 
+    /**
+     * Zips together this {@code FiniteIterable} with another {@code Iterable} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return an {@code FiniteIterable<C>}
+     */
     default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, Iterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
         return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
     }
 
+    /**
+     * Creates a {@code FiniteIterable} by wrapping a {@code Collection}.
+     * <p>
+     * Does not make a copy of the {@link Collection}.
+     *
+     * @param collection the source {@code Collection}
+     * @param <A>        the element type
+     * @return a {@code FiniteIterable<A>}
+     */
     static <A> FiniteIterable<A> finiteIterable(Collection<A> collection) {
         requireNonNull(collection);
         return EnhancedIterables.finiteIterable(collection);
     }
 
+    /**
+     * Creates a {@code FiniteIterable} by wrapping an {@code Iterable}.
+     *
+     * @param maxCount the maximum number of elements to take from the supplied {@link Iterable}.
+     *                 Must be &gt;= 0.
+     *                 May exceed size of the {@code Iterable}, in which case, the result will contain
+     *                 as many elements available.
+     * @param iterable the source {@code Iterable}
+     * @param <A>      the element type
+     * @return a {@code FiniteIterable<A>}
+     */
     static <A> FiniteIterable<A> finiteIterable(int maxCount, Iterable<A> iterable) {
         return enhance(iterable).take(maxCount);
     }
 
+    /**
+     * Creates a {@code FiniteIterable} containing the given elements.
+     * <p>
+     * Note that this method actually returns an {@link ImmutableNonEmptyFiniteIterable}, which is
+     * also a {@link FiniteIterable}.
+     *
+     * @param first the first element
+     * @param more  the remaining elements
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
+     */
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         return EnhancedIterables.of(first, more);

@@ -33,9 +33,9 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     A head();
 
     /**
-     * Returns an {@link EnhancedIterable} containing all subsequent elements beyond the first.
+     * Returns an {@code EnhancedIterable} containing all subsequent elements of this one beyond the first.
      *
-     * @return an {@code EnhancedIterable<A>}.  May be empty.
+     * @return an {@code EnhancedIterable<A>}
      */
     EnhancedIterable<A> tail();
 
@@ -91,6 +91,9 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
         return nonEmptyIterableOrThrow(Intersperse.intersperse(separator, this));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     default Iterator<A> iterator() {
         return Cons.cons(head(), tail()).iterator();
@@ -108,6 +111,20 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
         return nonEmptyIterableOrThrow(PrependAll.prependAll(separator, this));
     }
 
+    /**
+     * Zips together this {@code NonEmptyIterable} with another {@code NonEmptyIterable} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return an {@code NonEmptyIterable<C>}
+     */
     default <B, C> NonEmptyIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
@@ -115,6 +132,20 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
                 ZipWith.zipWith(fn, tail(), other.tail()));
     }
 
+    /**
+     * Zips together this {@code NonEmptyIterable} with a {@code NonEmptyFiniteIterable} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return an {@code NonEmptyFiniteIterable<C>}
+     */
     default <B, C> NonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyFiniteIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
@@ -142,6 +173,21 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
                 return enhancedTail;
             }
         };
+    }
+
+    /**
+     * Creates a {@code NonEmptyIterable} containing the given elements.
+     * <p>
+     * Note that this method actually returns an {@link ImmutableNonEmptyFiniteIterable}, which is
+     * also a {@link NonEmptyIterable}.
+     *
+     * @param first the first element
+     * @param more  the remaining elements
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
+     */
+    @SafeVarargs
+    static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
+        return EnhancedIterables.of(first, more);
     }
 
 }

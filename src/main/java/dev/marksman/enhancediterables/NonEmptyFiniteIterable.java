@@ -25,6 +25,11 @@ import static java.util.Objects.requireNonNull;
  */
 public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIterable<A> {
 
+    /**
+     * Returns an {@code FiniteIterable} containing all subsequent elements of this one beyond the first.
+     *
+     * @return an {@code FiniteIterable<A>}
+     */
     @Override
     FiniteIterable<A> tail();
 
@@ -81,6 +86,11 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
         return nonEmptyFiniteIterableOrThrow(Map.map(f, this));
     }
 
+    /**
+     * Returns a {@code FiniteIterable} containing all of elements of this one, except for the last element.
+     *
+     * @return a {@code FiniteIterable<A>}
+     */
     default FiniteIterable<A> init() {
         return EnhancedIterables.finiteIterable(Init.init(this));
     }
@@ -111,11 +121,32 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
         return nonEmptyFiniteIterableOrThrow(PrependAll.prependAll(separator, this));
     }
 
+    /**
+     * Returns a reversed representation of this {@code NonEmptyFiniteIterable}.
+     * <p>
+     * Note that reversing is deferred until the returned {@code Iterable} is iterated.
+     *
+     * @return a {@code NonEmptyFiniteIterable<A>}
+     */
     @Override
     default NonEmptyFiniteIterable<A> reverse() {
         return nonEmptyFiniteIterableOrThrow(Reverse.reverse(this));
     }
 
+    /**
+     * Zips together this {@code NonEmptyFiniteIterable} with an {@code NonEmptyIterable} by applying a zipping function.
+     * <p>
+     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     *
+     * @param fn    the zipping function.
+     *              Not null.
+     *              This function should be referentially transparent and not perform side-effects.
+     *              It may be called zero or more times for each element.
+     * @param other the other {@code Iterable}
+     * @param <B>   the element type of the other {@code Iterable}
+     * @param <C>   the element type of the result
+     * @return an {@code NonEmptyFiniteIterable<C>}
+     */
     default <B, C> NonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
@@ -145,8 +176,31 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
         };
     }
 
+    /**
+     * Creates a {@code NonEmptyFiniteIterable}.
+     *
+     * @param head the first element
+     * @param tail the remaining elements.  May be empty.
+     * @param <A>  the element type
+     * @return a {@code NonEmptyFiniteIterable<A>}
+     */
     static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterable(A head, Collection<A> tail) {
         return nonEmptyFiniteIterable(head, finiteIterable(tail));
+    }
+
+    /**
+     * Creates a {@code NonEmptyFiniteIterable} containing the given elements.
+     * <p>
+     * Note that this method actually returns an {@link ImmutableNonEmptyFiniteIterable}, which is
+     * also an {@link NonEmptyFiniteIterable}.
+     *
+     * @param first the first element
+     * @param more  the remaining elements
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
+     */
+    @SafeVarargs
+    static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
+        return EnhancedIterables.of(first, more);
     }
 
 }
