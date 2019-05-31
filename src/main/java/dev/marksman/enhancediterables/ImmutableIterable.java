@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.adt.coproduct.CoProduct2;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
@@ -251,6 +252,33 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     default ImmutableIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
         return immutableIterable(TakeWhile.takeWhile(predicate, this));
+    }
+
+    /**
+     * Converts this {@code ImmutableIterable} to an {@code ImmutableFiniteIterable} if there is enough
+     * information to do so without iterating it.
+     * <p>
+     * Note that if this method returns {@code nothing()}, it does NOT necessarily mean this
+     * {@code ImmutableIterable} is infinite.
+     *
+     * @return a {@code Maybe<ImmutableFiniteIterable<A>}
+     */
+    @Override
+    default Maybe<? extends ImmutableFiniteIterable<A>> toFinite() {
+        return EnhancedIterables.maybeFinite(this)
+                .fmap(EnhancedIterables::immutableFiniteIterable);
+    }
+
+    /**
+     * Converts this {@code ImmutableIterable} to a {@code ImmutableNonEmptyIterable} if it contains
+     * one or more elements.
+     *
+     * @return a {@code Maybe<ImmutableNonEmptyIterable<A>}
+     */
+    @Override
+    default Maybe<? extends ImmutableNonEmptyIterable<A>> toNonEmpty() {
+        return EnhancedIterables.maybeNonEmpty(this)
+                .fmap(EnhancedIterables::immutableNonEmptyIterableOrThrow);
     }
 
     /**

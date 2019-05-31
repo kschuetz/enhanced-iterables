@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
@@ -14,6 +15,7 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Collection;
 
+import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
 import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Objects.requireNonNull;
@@ -131,6 +133,26 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default NonEmptyFiniteIterable<A> reverse() {
         return nonEmptyFiniteIterableOrThrow(Reverse.reverse(this));
+    }
+
+    /**
+     * Always succeeds because {@code NonEmptyFiniteIterable}s are always finite.
+     *
+     * @return this {@code NonEmptyFiniteIterable} wrapped in a `just`
+     */
+    @Override
+    default Maybe<? extends NonEmptyFiniteIterable<A>> toFinite() {
+        return just(this);
+    }
+
+    /**
+     * Always succeeds because {@code NonEmptyFiniteIterable}s are always non-empty.
+     *
+     * @return this {@code NonEmptyFiniteIterable} wrapped in a `just`
+     */
+    @Override
+    default Maybe<? extends NonEmptyFiniteIterable<A>> toNonEmpty() {
+        return just(this);
     }
 
     /**

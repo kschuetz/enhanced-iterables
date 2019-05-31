@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn2.Cons;
@@ -11,6 +12,7 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Iterator;
 
+import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
@@ -109,6 +111,31 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     @Override
     default NonEmptyIterable<A> prependAll(A separator) {
         return nonEmptyIterableOrThrow(PrependAll.prependAll(separator, this));
+    }
+
+    /**
+     * Converts this {@code NonEmptyIterable} to an {@code NonEmptyFiniteIterable} if there is enough
+     * information to do so without iterating it.
+     * <p>
+     * Note that if this method returns {@code nothing()}, it does NOT necessarily mean this
+     * {@code NonEmptyIterable} is infinite.
+     *
+     * @return a {@code Maybe<NonEmptyFiniteIterable<A>}
+     */
+    @Override
+    default Maybe<? extends NonEmptyFiniteIterable<A>> toFinite() {
+        return EnhancedIterables.maybeFinite(this)
+                .fmap(EnhancedIterables::nonEmptyFiniteIterableOrThrow);
+    }
+
+    /**
+     * Always succeeds because {@code NonEmptyIterable}s are always non-empty.
+     *
+     * @return this {@code NonEmptyIterable} wrapped in a `just`
+     */
+    @Override
+    default Maybe<? extends NonEmptyIterable<A>> toNonEmpty() {
+        return just(this);
     }
 
     /**

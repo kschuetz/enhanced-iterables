@@ -14,7 +14,6 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Collection;
 
-import static com.jnape.palatable.lambda.adt.Maybe.nothing;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
@@ -290,10 +289,25 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return ToCollection.toCollection(cSupplier).apply(this);
     }
 
+    /**
+     * Converts this {@code EnhancedIterable} to a {@code FiniteIterable} if there is enough
+     * information to do so without iterating it.
+     * <p>
+     * Note that if this method returns {@code nothing()}, it does NOT necessarily mean this
+     * {@code EnhancedIterable} is infinite.
+     *
+     * @return a {@code Maybe<FiniteIterable<A>}
+     */
     default Maybe<? extends FiniteIterable<A>> toFinite() {
-        return nothing();
+        return EnhancedIterables.maybeFinite(this);
     }
 
+    /**
+     * Converts this {@code EnhancedIterable} to a {@code NonEmptyIterable} if it contains
+     * one or more elements.
+     *
+     * @return a {@code Maybe<NonEmptyIterable<A>}
+     */
     default Maybe<? extends NonEmptyIterable<A>> toNonEmpty() {
         return EnhancedIterables.maybeNonEmpty(this);
     }

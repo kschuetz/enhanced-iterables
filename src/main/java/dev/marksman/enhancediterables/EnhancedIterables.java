@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
+import static com.jnape.palatable.lambda.adt.Maybe.nothing;
 import static dev.marksman.enhancediterables.ProtectedIterator.protectedIterator;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -53,6 +54,16 @@ final class EnhancedIterables {
             return (ImmutableFiniteIterable<A>) underlying;
         } else {
             return () -> protectedIterator(underlying.iterator());
+        }
+    }
+
+    static <A> Maybe<FiniteIterable<A>> maybeFinite(Iterable<A> iterable) {
+        if (iterable instanceof FiniteIterable<?>) {
+            return just((FiniteIterable<A>) iterable);
+        } else if (iterable instanceof Collection<?>) {
+            return just(finiteIterable(iterable));
+        } else {
+            return nothing();
         }
     }
 

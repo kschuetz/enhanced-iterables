@@ -320,9 +320,26 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
         return EnhancedIterables.finiteIterable(TakeWhile.takeWhile(predicate, this));
     }
 
+    /**
+     * Always succeeds because {@code FiniteIterable}s are always finite.
+     *
+     * @return this {@code FiniteIterable} wrapped in a `just`
+     */
     @Override
     default Maybe<? extends FiniteIterable<A>> toFinite() {
         return just(this);
+    }
+
+    /**
+     * Converts this {@code FiniteIterable} to a {@code NonEmptyFiniteIterable} if it contains
+     * one or more elements.
+     *
+     * @return a {@code Maybe<NonEmptyFiniteIterable<A>}
+     */
+    @Override
+    default Maybe<? extends NonEmptyFiniteIterable<A>> toNonEmpty() {
+        return EnhancedIterables.maybeNonEmpty(this)
+                .fmap(EnhancedIterables::nonEmptyFiniteIterableOrThrow);
     }
 
     /**

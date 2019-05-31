@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
@@ -12,6 +13,7 @@ import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
+import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableFiniteIterable;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyFiniteIterableOrThrow;
 import static java.util.Objects.requireNonNull;
@@ -129,6 +131,26 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
     @Override
     default ImmutableNonEmptyFiniteIterable<A> reverse() {
         return immutableNonEmptyFiniteIterableOrThrow(Reverse.reverse(this));
+    }
+
+    /**
+     * Always succeeds because {@code ImmutableNonEmptyFiniteIterable}s are always finite.
+     *
+     * @return this {@code ImmutableNonEmptyFiniteIterable} wrapped in a `just`
+     */
+    @Override
+    default Maybe<? extends ImmutableNonEmptyFiniteIterable<A>> toFinite() {
+        return just(this);
+    }
+
+    /**
+     * Always succeeds because {@code ImmutableNonEmptyFiniteIterable}s are always non-empty.
+     *
+     * @return this {@code ImmutableNonEmptyFiniteIterable} wrapped in a `just`
+     */
+    @Override
+    default Maybe<? extends ImmutableNonEmptyFiniteIterable<A>> toNonEmpty() {
+        return just(this);
     }
 
     /**

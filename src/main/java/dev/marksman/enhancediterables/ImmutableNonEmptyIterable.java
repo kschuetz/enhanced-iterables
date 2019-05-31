@@ -1,5 +1,6 @@
 package dev.marksman.enhancediterables;
 
+import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
@@ -8,6 +9,7 @@ import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
+import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyFiniteIterableOrThrow;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyIterableOrThrow;
 import static java.util.Objects.requireNonNull;
@@ -81,6 +83,31 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
     @Override
     default ImmutableNonEmptyIterable<A> prependAll(A separator) {
         return immutableNonEmptyIterableOrThrow(PrependAll.prependAll(separator, this));
+    }
+
+    /**
+     * Converts this {@code ImmutableNonEmptyIterable} to an {@code ImmutableNonEmptyFiniteIterable} if there is enough
+     * information to do so without iterating it.
+     * <p>
+     * Note that if this method returns {@code nothing()}, it does NOT necessarily mean this
+     * {@code ImmutableNonEmptyIterable} is infinite.
+     *
+     * @return a {@code Maybe<ImmutableNonEmptyFiniteIterable<A>}
+     */
+    @Override
+    default Maybe<? extends ImmutableNonEmptyFiniteIterable<A>> toFinite() {
+        return EnhancedIterables.maybeFinite(this)
+                .fmap(EnhancedIterables::immutableNonEmptyFiniteIterableOrThrow);
+    }
+
+    /**
+     * Always succeeds because {@code ImmutableNonEmptyFiniteIterable}s are always non-empty.
+     *
+     * @return this {@code ImmutableNonEmptyFiniteIterable} wrapped in a `just`
+     */
+    @Override
+    default Maybe<? extends ImmutableNonEmptyIterable<A>> toNonEmpty() {
+        return just(this);
     }
 
     /**
