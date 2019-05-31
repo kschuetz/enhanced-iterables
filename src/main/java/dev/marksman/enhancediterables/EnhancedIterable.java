@@ -14,10 +14,10 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Collection;
 
+import static com.jnape.palatable.lambda.adt.Maybe.nothing;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
-import static dev.marksman.enhancediterables.ProtectedIterator.protectedIterator;
 import static dev.marksman.enhancediterables.Validation.*;
 import static java.util.Objects.requireNonNull;
 
@@ -290,6 +290,14 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
         return ToCollection.toCollection(cSupplier).apply(this);
     }
 
+    default Maybe<? extends FiniteIterable<A>> toFinite() {
+        return nothing();
+    }
+
+    default Maybe<? extends NonEmptyIterable<A>> toNonEmpty() {
+        return EnhancedIterables.maybeNonEmpty(this);
+    }
+
     /**
      * Zips together this {@code EnhancedIterable} with another {@code Iterable} by applying a zipping function.
      * <p>
@@ -351,6 +359,47 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     }
 
     /**
+     * Creates an {@code ImmutableFiniteIterable} by copying elements from a {@code FiniteIterable}.
+     * <p>
+     * If {@code source} is already an {@code ImmutableFiniteIterable}, this method will return it without copying.
+     *
+     * @param source the source to copy from
+     * @param <A>    the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> copyFrom(FiniteIterable<A> source) {
+        return EnhancedIterables.copyFrom(source);
+    }
+
+    /**
+     * Creates an {@code ImmutableFiniteIterable} by copying elements from a {@code Collection}.
+     *
+     * @param source the source to copy from
+     * @param <A>    the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> copyFrom(Collection<A> source) {
+        return EnhancedIterables.copyFrom(source);
+    }
+
+    /**
+     * Creates an {@code ImmutableFiniteIterable} by copying elements from an {@code Iterable}.
+     * <p>
+     * If {@code source} is already an {@code ImmutableIterable}, no copying will be performed.
+     *
+     * @param maxCount the maximum number of elements to take from the supplied {@link Iterable}.
+     *                 Must be &gt;= 0.
+     *                 May exceed size of the {@code Iterable}, in which case, the result will contain
+     *                 as many elements available.
+     * @param source   the source to copy from
+     * @param <A>      the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> copyFrom(int maxCount, Iterable<A> source) {
+        return EnhancedIterables.copyFrom(maxCount, source);
+    }
+
+    /**
      * Wraps an existing {@code Iterable} in an {@code EnhancedIterable}.
      * <p>
      * If {@code underlying} is already an {@link EnhancedIterable}, returns it directly.
@@ -362,11 +411,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     static <A> EnhancedIterable<A> enhance(Iterable<A> underlying) {
         requireNonNull(underlying);
-        if (underlying instanceof EnhancedIterable<?>) {
-            return (EnhancedIterable<A>) underlying;
-        } else {
-            return () -> protectedIterator(underlying.iterator());
-        }
+        return EnhancedIterables.enhance(underlying);
     }
 
     /**

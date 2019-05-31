@@ -9,6 +9,8 @@ import com.jnape.palatable.lambda.functions.builtin.fn2.*;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
+import java.util.Collection;
+
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterables.*;
 import static dev.marksman.enhancediterables.Validation.*;
@@ -289,6 +291,47 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
         requireNonNull(fn);
         requireNonNull(other);
         return immutableFiniteIterable(ZipWith.zipWith(fn, this, other));
+    }
+
+    /**
+     * Creates an {@code ImmutableFiniteIterable} by copying elements from a {@code FiniteIterable}.
+     * <p>
+     * If {@code source} is already an {@code ImmutableFiniteIterable}, this method will return it without copying.
+     *
+     * @param source the source to copy from
+     * @param <A>    the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> copyFrom(FiniteIterable<A> source) {
+        return EnhancedIterables.copyFrom(source);
+    }
+
+    /**
+     * Creates an {@code ImmutableFiniteIterable} by copying elements from a {@code Collection}.
+     *
+     * @param source the source to copy from
+     * @param <A>    the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> copyFrom(Collection<A> source) {
+        return EnhancedIterables.copyFrom(source);
+    }
+
+    /**
+     * Creates an {@code ImmutableFiniteIterable} by copying elements from an {@code Iterable}.
+     * <p>
+     * If {@code source} is already an {@code ImmutableIterable}, no copying will be performed.
+     *
+     * @param maxCount the maximum number of elements to take from the supplied {@link Iterable}.
+     *                 Must be &gt;= 0.
+     *                 May exceed size of the {@code Iterable}, in which case, the result will contain
+     *                 as many elements available.
+     * @param source   the source to copy from
+     * @param <A>      the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> copyFrom(int maxCount, Iterable<A> source) {
+        return EnhancedIterables.copyFrom(maxCount, source);
     }
 
     /**
