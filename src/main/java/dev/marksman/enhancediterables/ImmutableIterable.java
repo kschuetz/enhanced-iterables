@@ -265,8 +265,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default Maybe<? extends ImmutableFiniteIterable<A>> toFinite() {
-        return EnhancedIterables.maybeFinite(this)
-                .fmap(EnhancedIterables::immutableFiniteIterable);
+        return EnhancedIterables.immutableMaybeFinite(this);
     }
 
     /**

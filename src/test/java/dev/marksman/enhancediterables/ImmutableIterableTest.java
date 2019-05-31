@@ -2,6 +2,7 @@ package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Repeat;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +22,7 @@ import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.consta
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableIterable;
+import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -29,6 +31,7 @@ import static org.hamcrest.collection.IsEmptyIterable.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
+import static testsupport.IterablesContainSameElements.maybeIterablesContainSameElements;
 
 class ImmutableIterableTest {
 
@@ -529,6 +532,24 @@ class ImmutableIterableTest {
         @Test
         void toArrayList() {
             assertThat(immutableIterable(asList(1, 2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("toFinite")
+    class ToFinite {
+
+        @Test
+        void successCase() {
+            assertTrue(maybeIterablesContainSameElements(
+                    just(finiteIterable(asList(1, 2, 3))),
+                    immutableIterable(asList(1, 2, 3)).toFinite()));
+        }
+
+        @Test
+        void failureCase() {
+            assertEquals(nothing(), immutableIterable(Repeat.repeat(1)).toFinite());
         }
 
     }

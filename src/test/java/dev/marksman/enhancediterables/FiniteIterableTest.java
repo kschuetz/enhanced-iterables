@@ -614,6 +614,18 @@ class FiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("toFinite")
+    class ToFinite {
+
+        @Test
+        void alwaysSucceeds() {
+            FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
+            assertSame(subject, subject.toFinite().orElseThrow(AssertionError::new));
+        }
+
+    }
+
+    @Nested
     @DisplayName("zipWith")
     class ZipWith {
 

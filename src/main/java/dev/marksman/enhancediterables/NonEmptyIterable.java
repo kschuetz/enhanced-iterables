@@ -123,8 +123,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default Maybe<? extends NonEmptyFiniteIterable<A>> toFinite() {
-        return EnhancedIterables.maybeFinite(this)
-                .fmap(EnhancedIterables::nonEmptyFiniteIterableOrThrow);
+        return EnhancedIterables.nonEmptyMaybeFinite(head(), tail());
     }
 
     /**

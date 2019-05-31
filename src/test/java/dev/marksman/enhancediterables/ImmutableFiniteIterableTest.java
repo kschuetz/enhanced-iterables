@@ -614,6 +614,18 @@ class ImmutableFiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("toFinite")
+    class ToFinite {
+
+        @Test
+        void alwaysSucceeds() {
+            ImmutableFiniteIterable<Integer> subject = ImmutableFiniteIterable.copyFrom(asList(1, 2, 3));
+            assertSame(subject, subject.toFinite().orElseThrow(AssertionError::new));
+        }
+
+    }
+
+    @Nested
     @DisplayName("zipWith")
     class ZipWith {
 

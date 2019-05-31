@@ -96,8 +96,7 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
      */
     @Override
     default Maybe<? extends ImmutableNonEmptyFiniteIterable<A>> toFinite() {
-        return EnhancedIterables.maybeFinite(this)
-                .fmap(EnhancedIterables::immutableNonEmptyFiniteIterableOrThrow);
+        return EnhancedIterables.immutableNonEmptyMaybeFinite(head(), tail());
     }
 
     /**

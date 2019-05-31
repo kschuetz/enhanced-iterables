@@ -51,9 +51,27 @@ final class EnhancedIterables {
         }
     }
 
-    static <A> ImmutableIterable<A> immutableIterable(Iterable<A> underlying) {
+    static <A> ImmutableIterable<A> immutableIterable2(Iterable<A> underlying) {
         if (underlying instanceof ImmutableIterable<?>) {
             return (ImmutableIterable<A>) underlying;
+        } else {
+            return () -> protectedIterator(underlying.iterator());
+        }
+    }
+
+    static <A> ImmutableIterable<A> immutableIterable(Iterable<A> underlying) {
+        requireNonNull(underlying);
+        if (underlying instanceof ImmutableIterable<?>) {
+            return (ImmutableIterable<A>) underlying;
+        } else if (underlying instanceof Collection<?>) {
+            Collection<A> collection = (Collection<A>) underlying;
+            if (collection.isEmpty()) {
+                return immutableFiniteIterable(collection);
+            } else {
+                return immutableNonEmptyFiniteIterableOrThrow(collection);
+            }
+        } else if (underlying.iterator().hasNext()) {
+            return immutableNonEmptyIterableOrThrow(underlying);
         } else {
             return () -> protectedIterator(underlying.iterator());
         }
@@ -72,6 +90,36 @@ final class EnhancedIterables {
             return just((FiniteIterable<A>) iterable);
         } else if (iterable instanceof Collection<?>) {
             return just(finiteIterable(iterable));
+        } else {
+            return nothing();
+        }
+    }
+
+    static <A> Maybe<NonEmptyFiniteIterable<A>> nonEmptyMaybeFinite(A head, Iterable<A> tail) {
+        if (tail instanceof FiniteIterable<?>) {
+            return just(nonEmptyFiniteIterable(head, (FiniteIterable<A>) tail));
+        } else if (tail instanceof Collection<?>) {
+            return just(nonEmptyFiniteIterable(head, finiteIterable(tail)));
+        } else {
+            return nothing();
+        }
+    }
+
+    static <A> Maybe<ImmutableFiniteIterable<A>> immutableMaybeFinite(Iterable<A> iterable) {
+        if (iterable instanceof ImmutableFiniteIterable<?>) {
+            return just((ImmutableFiniteIterable<A>) iterable);
+        } else if (iterable instanceof Collection<?>) {
+            return just(immutableFiniteIterable(iterable));
+        } else {
+            return nothing();
+        }
+    }
+
+    static <A> Maybe<ImmutableNonEmptyFiniteIterable<A>> immutableNonEmptyMaybeFinite(A head, Iterable<A> tail) {
+        if (tail instanceof ImmutableFiniteIterable<?>) {
+            return just(immutableNonEmptyFiniteIterable(head, (ImmutableFiniteIterable<A>) tail));
+        } else if (tail instanceof Collection<?>) {
+            return just(immutableNonEmptyFiniteIterable(head, immutableFiniteIterable(tail)));
         } else {
             return nothing();
         }
@@ -154,7 +202,7 @@ final class EnhancedIterables {
             return (ImmutableNonEmptyIterable<A>) underlying;
         } else {
             Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return immutableNonEmptyIterable(headTail._1(), immutableIterable(headTail._2()));
+            return immutableNonEmptyIterable(headTail._1(), simpleImmutableIterable(headTail._2()));
         }
     }
 
@@ -223,6 +271,20 @@ final class EnhancedIterables {
             return (EnhancedIterable<A>) underlying;
         } else if (underlying instanceof Collection<?>) {
             return finiteIterable(underlying);
+        } else {
+            return () -> protectedIterator(underlying.iterator());
+        }
+    }
+
+    /**
+     * Does not attempt to promote to NonEmpty.
+     */
+    private static <A> ImmutableIterable<A> simpleImmutableIterable(Iterable<A> underlying) {
+        requireNonNull(underlying);
+        if (underlying instanceof ImmutableIterable<?>) {
+            return (ImmutableIterable<A>) underlying;
+        } else if (underlying instanceof Collection<?>) {
+            return immutableFiniteIterable(underlying);
         } else {
             return () -> protectedIterator(underlying.iterator());
         }

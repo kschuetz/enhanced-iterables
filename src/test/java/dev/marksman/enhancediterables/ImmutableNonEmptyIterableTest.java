@@ -1,6 +1,7 @@
 package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.functions.Fn1;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Repeat;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,6 +17,8 @@ import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
+import static dev.marksman.enhancediterables.EnhancedIterables.immutableFiniteIterable;
+import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,6 +26,7 @@ import static org.hamcrest.collection.IsEmptyIterable.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
+import static testsupport.IterablesContainSameElements.maybeIterablesContainSameElements;
 
 class ImmutableNonEmptyIterableTest {
 
@@ -464,6 +468,24 @@ class ImmutableNonEmptyIterableTest {
         @Test
         void toArrayList() {
             assertThat(immutableNonEmptyIterable(1, asList(2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("toFinite")
+    class ToFinite {
+
+        @Test
+        void successCase() {
+            assertTrue(maybeIterablesContainSameElements(
+                    just(finiteIterable(asList(1, 2, 3))),
+                    immutableNonEmptyIterable(1, immutableFiniteIterable(asList(2, 3))).toFinite()));
+        }
+
+        @Test
+        void failureCase() {
+            assertEquals(nothing(), immutableNonEmptyIterable(1, Repeat.repeat(1)).toFinite());
         }
 
     }

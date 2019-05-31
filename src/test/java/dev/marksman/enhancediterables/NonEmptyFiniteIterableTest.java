@@ -533,6 +533,18 @@ class NonEmptyFiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("toFinite")
+    class ToFinite {
+
+        @Test
+        void alwaysSucceeds() {
+            NonEmptyFiniteIterable<Integer> subject = nonEmptyFiniteIterable(1, asList(2, 3));
+            assertSame(subject, subject.toFinite().orElseThrow(AssertionError::new));
+        }
+
+    }
+
+    @Nested
     @DisplayName("zipWith")
     class ZipWith {
 
