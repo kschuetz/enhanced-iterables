@@ -211,17 +211,17 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
-     * Returns a {@code NonEmptyIterable} containing all of the subsequences of tail
+     * Returns an {@code ImmutableNonEmptyIterable} containing all of the subsequences of tail
      * elements of this {@code ImmutableIterable}, ordered by size, starting with the full list.
      * Example:
      *
      * <code>ImmutableIterable.of(1, 2, 3).tails(); // [[1, 2, 3], [2, 3], [3], []]</code>
      *
-     * @return a {@code NonEmptyIterable<ImmutableIterable<A>>}
+     * @return an {@code ImmutableNonEmptyIterable<ImmutableIterable<A>>}
      */
     @Override
-    default NonEmptyIterable<? extends ImmutableIterable<A>> tails() {
-        return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableIterable, Tails.tails(this)));
+    default ImmutableNonEmptyIterable<? extends ImmutableIterable<A>> tails() {
+        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableIterable, Tails.tails(this)));
     }
 
     /**

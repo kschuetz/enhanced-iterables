@@ -134,16 +134,16 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     }
 
     /**
-     * Returns a {@code NonEmptyIterable} containing all of the subsequences of initial
+     * Returns an {@code ImmutableNonEmptyIterable} containing all of the subsequences of initial
      * elements of this {@code ImmutableFiniteIterable}, ordered by size, starting with the empty list.
      * Example:
      *
      * <code>ImmutableFiniteIterable.of(1, 2, 3).inits(); // [[], [1], [1, 2], [1, 2, 3]]</code>
      *
-     * @return an {@code ImmutableFiniteIterable<FiniteIterable<A>>}
+     * @return an {@code ImmutableNonEmptyIterable<ImmutableFiniteIterable<A>>}
      */
-    default NonEmptyIterable<? extends ImmutableFiniteIterable<A>> inits() {
-        return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Inits.inits(this)));
+    default ImmutableNonEmptyIterable<? extends ImmutableFiniteIterable<A>> inits() {
+        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Inits.inits(this)));
     }
 
     /**
@@ -247,17 +247,17 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     }
 
     /**
-     * Returns a {@code NonEmptyIterable} containing all of the subsequences of tail
+     * Returns an {@code ImmutableNonEmptyIterable} containing all of the subsequences of tail
      * elements of this {@code ImmutableFiniteIterable}, ordered by size, starting with the full list.
      * Example:
      *
      * <code>ImmutableFiniteIterable.of(1, 2, 3).tails(); // [[1, 2, 3], [2, 3], [3], []]</code>
      *
-     * @return a {@code NonEmptyIterable<ImmutableFiniteIterable<A>>}
+     * @return an {@code ImmutableNonEmptyIterable<ImmutableFiniteIterable<A>>}
      */
     @Override
-    default NonEmptyIterable<? extends ImmutableFiniteIterable<A>> tails() {
-        return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Tails.tails(this)));
+    default ImmutableNonEmptyIterable<? extends ImmutableFiniteIterable<A>> tails() {
+        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Tails.tails(this)));
     }
 
     /**

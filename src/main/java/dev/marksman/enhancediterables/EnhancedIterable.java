@@ -15,8 +15,7 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 import java.util.Collection;
 
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
-import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
-import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
+import static dev.marksman.enhancediterables.EnhancedIterables.*;
 import static dev.marksman.enhancediterables.Validation.*;
 import static java.util.Objects.requireNonNull;
 
@@ -224,16 +223,16 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     }
 
     /**
-     * Returns a {@code NonEmptyIterable} containing all of the subsequences of tail
+     * Returns an {@code ImmutableNonEmptyIterable} containing all of the subsequences of tail
      * elements of this {@code EnhancedIterable}, ordered by size, starting with the full list.
      * Example:
      *
      * <code>EnhancedIterable.of(1, 2, 3).tails(); // [[1, 2, 3], [2, 3], [3], []]</code>
      *
-     * @return a {@code NonEmptyIterable<EnhancedIterable<A>>}
+     * @return an {@code ImmutableNonEmptyIterable<EnhancedIterable<A>>}
      */
-    default NonEmptyIterable<? extends EnhancedIterable<A>> tails() {
-        return nonEmptyIterableOrThrow(Map.map(EnhancedIterable::enhance, Tails.tails(this)));
+    default ImmutableNonEmptyIterable<? extends EnhancedIterable<A>> tails() {
+        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterable::enhance, Tails.tails(this)));
     }
 
     /**

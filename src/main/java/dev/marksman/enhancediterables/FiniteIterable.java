@@ -18,8 +18,8 @@ import java.util.Collection;
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
+import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyIterableOrThrow;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
-import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
 import static dev.marksman.enhancediterables.Validation.validateDrop;
 import static dev.marksman.enhancediterables.Validation.validateSlide;
 import static java.util.Objects.requireNonNull;
@@ -180,16 +180,16 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
-     * Returns a {@code NonEmptyIterable} containing all of the subsequences of initial
+     * Returns a {@code ImmutableNonEmptyIterable} containing all of the subsequences of initial
      * elements of this {@code FiniteIterable}, ordered by size, starting with the empty list.
      * Example:
      *
      * <code>FiniteIterable.of(1, 2, 3).inits(); // [[], [1], [1, 2], [1, 2, 3]]</code>
      *
-     * @return a {@code NonEmptyIterable<FiniteIterable<A>>}
+     * @return a {@code ImmutableNonEmptyIterable<FiniteIterable<A>>}
      */
-    default NonEmptyIterable<? extends FiniteIterable<A>> inits() {
-        return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Inits.inits(this)));
+    default ImmutableNonEmptyIterable<? extends FiniteIterable<A>> inits() {
+        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Inits.inits(this)));
     }
 
     /**
@@ -292,17 +292,17 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
-     * Returns a {@code NonEmptyIterable} containing all of the subsequences of tail
+     * Returns an {@code ImmutableNonEmptyIterable} containing all of the subsequences of tail
      * elements of this {@code FiniteIterable}, ordered by size, starting with the full list.
      * Example:
      *
      * <code>FiniteIterable.of(1, 2, 3).tails(); // [[1, 2, 3], [2, 3], [3], []]</code>
      *
-     * @return a {@code NonEmptyIterable<FiniteIterable<A>>}
+     * @return an {@code ImmutableNonEmptyIterable<FiniteIterable<A>>}
      */
     @Override
-    default NonEmptyIterable<? extends FiniteIterable<A>> tails() {
-        return nonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Tails.tails(this)));
+    default ImmutableNonEmptyIterable<? extends FiniteIterable<A>> tails() {
+        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Tails.tails(this)));
     }
 
     /**
