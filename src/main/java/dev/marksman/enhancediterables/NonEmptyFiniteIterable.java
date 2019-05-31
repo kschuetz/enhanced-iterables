@@ -184,18 +184,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * @return a {@code NonEmptyFiniteIterable<A>}
      */
     static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterable(A head, FiniteIterable<A> tail) {
-        requireNonNull(tail);
-        return new NonEmptyFiniteIterable<A>() {
-            @Override
-            public A head() {
-                return head;
-            }
-
-            @Override
-            public FiniteIterable<A> tail() {
-                return tail;
-            }
-        };
+        return EnhancedIterables.nonEmptyFiniteIterable(head, tail);
     }
 
     /**

@@ -20,12 +20,22 @@ final class EnhancedIterables {
     private EnhancedIterables() {
     }
 
+    /**
+     * Note: Includes an attempt to promote to NonEmptyIterable, so be careful
+     * not to call this recursively in the non-empty constructors.  Call simpleEnhance
+     * in those cases.
+     */
     static <A> EnhancedIterable<A> enhance(Iterable<A> underlying) {
         requireNonNull(underlying);
         if (underlying instanceof EnhancedIterable<?>) {
             return (EnhancedIterable<A>) underlying;
         } else if (underlying instanceof Collection<?>) {
-            return finiteIterable(underlying);
+            Collection<A> collection = (Collection<A>) underlying;
+            if (collection.isEmpty()) {
+                return finiteIterable(collection);
+            } else {
+                return nonEmptyFiniteIterableOrThrow(collection);
+            }
         } else if (underlying.iterator().hasNext()) {
             return nonEmptyIterableOrThrow(underlying);
         } else {
@@ -72,8 +82,23 @@ final class EnhancedIterables {
             return just((NonEmptyIterable<A>) iterable);
         } else {
             return Uncons.uncons(iterable)
-                    .fmap(headTail -> NonEmptyIterable.nonEmptyIterable(headTail._1(), headTail._2()));
+                    .fmap(headTail -> nonEmptyIterable(headTail._1(), headTail._2()));
         }
+    }
+
+    static <A> NonEmptyIterable<A> nonEmptyIterable(A head, Iterable<A> tail) {
+        EnhancedIterable<A> enhancedTail = simpleEnhance(tail);
+        return new NonEmptyIterable<A>() {
+            @Override
+            public A head() {
+                return head;
+            }
+
+            @Override
+            public EnhancedIterable<A> tail() {
+                return enhancedTail;
+            }
+        };
     }
 
     static <A> NonEmptyIterable<A> nonEmptyIterableOrThrow(Iterable<A> underlying) {
@@ -81,17 +106,23 @@ final class EnhancedIterables {
             return (NonEmptyIterable<A>) underlying;
         } else {
             Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return NonEmptyIterable.nonEmptyIterable(headTail._1(), headTail._2());
+            return nonEmptyIterable(headTail._1(), headTail._2());
         }
     }
 
-    static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterableOrThrow(Iterable<A> underlying) {
-        if (underlying instanceof ImmutableNonEmptyIterable<?>) {
-            return (ImmutableNonEmptyIterable<A>) underlying;
-        } else {
-            Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return ImmutableNonEmptyIterable.immutableNonEmptyIterable(headTail._1(), immutableIterable(headTail._2()));
-        }
+    static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterable(A head, FiniteIterable<A> tail) {
+        requireNonNull(tail);
+        return new NonEmptyFiniteIterable<A>() {
+            @Override
+            public A head() {
+                return head;
+            }
+
+            @Override
+            public FiniteIterable<A> tail() {
+                return tail;
+            }
+        };
     }
 
     static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterableOrThrow(Iterable<A> underlying) {
@@ -99,8 +130,47 @@ final class EnhancedIterables {
             return (NonEmptyFiniteIterable<A>) underlying;
         } else {
             Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return NonEmptyFiniteIterable.nonEmptyFiniteIterable(headTail._1(), finiteIterable(headTail._2()));
+            return nonEmptyFiniteIterable(headTail._1(), finiteIterable(headTail._2()));
         }
+    }
+
+    static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterable(A head, ImmutableIterable<A> tail) {
+        requireNonNull(tail);
+        return new ImmutableNonEmptyIterable<A>() {
+            @Override
+            public A head() {
+                return head;
+            }
+
+            @Override
+            public ImmutableIterable<A> tail() {
+                return tail;
+            }
+        };
+    }
+
+    static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterableOrThrow(Iterable<A> underlying) {
+        if (underlying instanceof ImmutableNonEmptyIterable<?>) {
+            return (ImmutableNonEmptyIterable<A>) underlying;
+        } else {
+            Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
+            return immutableNonEmptyIterable(headTail._1(), immutableIterable(headTail._2()));
+        }
+    }
+
+    static <A> ImmutableNonEmptyFiniteIterable<A> immutableNonEmptyFiniteIterable(A head, ImmutableFiniteIterable<A> tail) {
+        requireNonNull(tail);
+        return new ImmutableNonEmptyFiniteIterable<A>() {
+            @Override
+            public A head() {
+                return head;
+            }
+
+            @Override
+            public ImmutableFiniteIterable<A> tail() {
+                return tail;
+            }
+        };
     }
 
     static <A> ImmutableNonEmptyFiniteIterable<A> immutableNonEmptyFiniteIterableOrThrow(Iterable<A> underlying) {
@@ -108,7 +178,7 @@ final class EnhancedIterables {
             return (ImmutableNonEmptyFiniteIterable<A>) underlying;
         } else {
             Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return ImmutableNonEmptyFiniteIterable.immutableNonEmptyFiniteIterable(headTail._1(),
+            return immutableNonEmptyFiniteIterable(headTail._1(),
                     immutableFiniteIterable(headTail._2()));
         }
     }
@@ -116,18 +186,7 @@ final class EnhancedIterables {
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         ImmutableFiniteIterable<A> tail = immutableFiniteIterable(asList(more));
-        return new ImmutableNonEmptyFiniteIterable<A>() {
-            @Override
-            public A head() {
-                return first;
-            }
-
-            @Override
-            public ImmutableFiniteIterable<A> tail() {
-                return tail;
-            }
-
-        };
+        return immutableNonEmptyFiniteIterable(first, tail);
     }
 
     static <A> ImmutableFiniteIterable<A> copyFrom(FiniteIterable<A> source) {
@@ -144,7 +203,7 @@ final class EnhancedIterables {
     }
 
     static <A> ImmutableFiniteIterable<A> copyFrom(Collection<A> source) {
-        return copyFrom(FiniteIterable.finiteIterable(source));
+        return copyFrom(finiteIterable(source));
     }
 
     static <A> ImmutableFiniteIterable<A> copyFrom(int maxCount, Iterable<A> source) {
@@ -152,6 +211,20 @@ final class EnhancedIterables {
             return ((ImmutableIterable<A>) source).take(maxCount);
         } else {
             return copyFrom(FiniteIterable.finiteIterable(maxCount, source));
+        }
+    }
+
+    /**
+     * Does not attempt to promote to NonEmpty.
+     */
+    private static <A> EnhancedIterable<A> simpleEnhance(Iterable<A> underlying) {
+        requireNonNull(underlying);
+        if (underlying instanceof EnhancedIterable<?>) {
+            return (EnhancedIterable<A>) underlying;
+        } else if (underlying instanceof Collection<?>) {
+            return finiteIterable(underlying);
+        } else {
+            return () -> protectedIterator(underlying.iterator());
         }
     }
 

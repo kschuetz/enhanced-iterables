@@ -13,7 +13,6 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 import java.util.Iterator;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
-import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
 import static java.util.Objects.requireNonNull;
@@ -188,18 +187,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      * @return a {@code NonEmptyIterable<A>}
      */
     static <A> NonEmptyIterable<A> nonEmptyIterable(A head, Iterable<A> tail) {
-        EnhancedIterable<A> enhancedTail = enhance(tail);
-        return new NonEmptyIterable<A>() {
-            @Override
-            public A head() {
-                return head;
-            }
-
-            @Override
-            public EnhancedIterable<A> tail() {
-                return enhancedTail;
-            }
-        };
+        return EnhancedIterables.nonEmptyIterable(head, tail);
     }
 
     /**

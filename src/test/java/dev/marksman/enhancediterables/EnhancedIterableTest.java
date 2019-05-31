@@ -2,6 +2,7 @@ package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Repeat;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +22,7 @@ import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.consta
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
+import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -29,6 +31,7 @@ import static org.hamcrest.collection.IsEmptyIterable.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
+import static testsupport.IterablesContainSameElements.maybeIterablesContainSameElements;
 
 class EnhancedIterableTest {
 
@@ -40,6 +43,12 @@ class EnhancedIterableTest {
     @Test
     void multipleIteration() {
         assertThat(enhance(asList(1, 2, 3, 4, 5, 6)), contains(1, 2, 3, 4, 5, 6));
+    }
+
+    @Test
+    void canWrapInfiniteIterables() {
+        EnhancedIterable<Integer> subject = enhance(Repeat.repeat(1));
+        assertEquals(1, subject.iterator().next());
     }
 
     @Test
@@ -529,6 +538,24 @@ class EnhancedIterableTest {
         @Test
         void toArrayList() {
             assertThat(enhance(asList(1, 2, 3)).toCollection(ArrayList::new), contains(1, 2, 3));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("toFinite")
+    class ToFinite {
+
+        @Test
+        void successCase() {
+            assertTrue(maybeIterablesContainSameElements(
+                    just(finiteIterable(asList(1, 2, 3))),
+                    enhance(asList(1, 2, 3)).toFinite()));
+        }
+
+        @Test
+        void failureCase() {
+            assertEquals(nothing(), enhance(Repeat.repeat(1)).toFinite());
         }
 
     }

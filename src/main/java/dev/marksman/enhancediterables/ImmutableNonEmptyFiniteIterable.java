@@ -182,18 +182,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
      * @return a {@code ImmutableNonEmptyFiniteIterable<A>}
      */
     static <A> ImmutableNonEmptyFiniteIterable<A> immutableNonEmptyFiniteIterable(A head, ImmutableFiniteIterable<A> tail) {
-        requireNonNull(tail);
-        return new ImmutableNonEmptyFiniteIterable<A>() {
-            @Override
-            public A head() {
-                return head;
-            }
-
-            @Override
-            public ImmutableFiniteIterable<A> tail() {
-                return tail;
-            }
-        };
+        return EnhancedIterables.immutableNonEmptyFiniteIterable(head, tail);
     }
 
     /**
@@ -208,4 +197,5 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         return EnhancedIterables.of(first, more);
     }
+
 }

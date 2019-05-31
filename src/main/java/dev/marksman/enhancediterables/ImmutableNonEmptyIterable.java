@@ -159,18 +159,7 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
      * @return a {@code ImmutableNonEmptyIterable<A>}
      */
     static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterable(A head, ImmutableIterable<A> tail) {
-        requireNonNull(tail);
-        return new ImmutableNonEmptyIterable<A>() {
-            @Override
-            public A head() {
-                return head;
-            }
-
-            @Override
-            public ImmutableIterable<A> tail() {
-                return tail;
-            }
-        };
+        return EnhancedIterables.immutableNonEmptyIterable(head, tail);
     }
 
     /**
