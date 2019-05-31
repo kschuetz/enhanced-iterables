@@ -170,8 +170,8 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 
 ### Constructing
 - `ImmutableIterable.of` static method
-- It is not possible to convert an `Iterable` to an `ImmutableIterable` directly; you must implement the interface instead.
-The [*collection-views*](https://github.com/kschuetz/collection-views) library provides some implementations of `ImmutableIterable` (e.g. `ImmutableVector`).
+- `ImmutableIterable.copyFrom` static method constructs `ImmutableFiniteIterable`s by copying from existing finite iterables (such as `Collection`s) 
+- The [*collection-views*](https://github.com/kschuetz/collection-views) library provides some implementations of `ImmutableIterable` (e.g. `ImmutableVector`).
 
 ## <a name="immutable-finite-iterable">`ImmutableFiniteIterable<A>`</a>
 
@@ -203,8 +203,8 @@ In addition to all methods on `ImmutableIterable<A>` and `FiniteIterable<A>`, pr
 
 ### Constructing
 - `ImmutableFiniteIterable.of` static method
-- It is not possible to convert an `Iterable` to an `ImmutableFiniteIterable` directly; you must implement the interface instead.
-The [*collection-views*](https://github.com/kschuetz/collection-views) library provides some implementations of `ImmutableFiniteIterable` (e.g. `ImmutableVector`).
+- `ImmutableIterable.copyFrom` static method constructs `ImmutableFiniteIterable`s by copying from existing finite iterables (such as `Collection`s) 
+- The [*collection-views*](https://github.com/kschuetz/collection-views) library provides some implementations of `ImmutableFiniteIterable` (e.g. `ImmutableVector`).
 
 ## <a name="immutable-non-empty-iterable">`ImmutableNonEmptyIterable<A>`</a>
 
@@ -226,6 +226,7 @@ In addition to all methods on `ImmutableIterable<A>` and `NonEmptyIterable<A>`, 
 ### Constructing
 - `ImmutableNonEmptyIterable.of` static method
 - An `ImmutableIterable<A>` can converted to a `ImmutableNonEmptyIterable<A>` by calling `ImmutableNonEmptyIterable.immutableNonEmptyIterable` and providing an additional element for the head.
+- The [*collection-views*](https://github.com/kschuetz/collection-views) library provides some implementations of `ImmutableNonEmptyIterable` (e.g. `ImmutableNonEmptyVector`).
 
 ## <a name="immutable-non-empty-finite-iterable">`ImmutableNonEmptyFiniteIterable<A>`</a>
 
@@ -249,6 +250,7 @@ In addition to all methods on `ImmutableFiniteIterable<A>` and `ImmutableNonEmpt
 ### Constructing
 - `ImmutableNonEmptyFiniteIterable.of` static method
 - An `ImmutableFiniteIterable<A>` can converted to a `ImmutableNonEmptyFiniteIterable<A>` by calling `ImmutableNonEmptyFiniteIterable.immutableNonEmptyFiniteIterable` and providing an additional element for the head.
+- The [*collection-views*](https://github.com/kschuetz/collection-views) library provides some implementations of `ImmutableNonEmptyFiniteIterable` (e.g. `ImmutableNonEmptyVector`).
 
 # <a name="license">License</a>
 
