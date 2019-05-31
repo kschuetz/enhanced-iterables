@@ -218,6 +218,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      *
      * @param first the first element
      * @param more  the remaining elements
+     * @param <A>   the element type
      * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
      */
     @SafeVarargs

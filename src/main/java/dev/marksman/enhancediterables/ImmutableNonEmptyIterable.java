@@ -181,6 +181,7 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
      *
      * @param first the first element
      * @param more  the remaining elements
+     * @param <A>   the element type
      * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
      */
     @SafeVarargs

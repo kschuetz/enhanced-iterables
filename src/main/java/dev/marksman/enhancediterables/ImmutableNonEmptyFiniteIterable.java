@@ -201,6 +201,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
      *
      * @param first the first element
      * @param more  the remaining elements
+     * @param <A>   the element type
      * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
      */
     @SafeVarargs
