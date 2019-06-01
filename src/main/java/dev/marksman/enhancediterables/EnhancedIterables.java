@@ -30,12 +30,7 @@ final class EnhancedIterables {
         if (underlying instanceof EnhancedIterable<?>) {
             return (EnhancedIterable<A>) underlying;
         } else if (underlying instanceof Collection<?>) {
-            Collection<A> collection = (Collection<A>) underlying;
-            if (collection.isEmpty()) {
-                return finiteIterable(collection);
-            } else {
-                return nonEmptyFiniteIterableOrThrow(collection);
-            }
+            return finiteIterableFromCollection((Collection<A>) underlying);
         } else if (underlying.iterator().hasNext()) {
             return nonEmptyIterableOrThrow(underlying);
         } else {
@@ -51,25 +46,12 @@ final class EnhancedIterables {
         }
     }
 
-    static <A> ImmutableIterable<A> immutableIterable2(Iterable<A> underlying) {
-        if (underlying instanceof ImmutableIterable<?>) {
-            return (ImmutableIterable<A>) underlying;
-        } else {
-            return () -> protectedIterator(underlying.iterator());
-        }
-    }
-
     static <A> ImmutableIterable<A> immutableIterable(Iterable<A> underlying) {
         requireNonNull(underlying);
         if (underlying instanceof ImmutableIterable<?>) {
             return (ImmutableIterable<A>) underlying;
         } else if (underlying instanceof Collection<?>) {
-            Collection<A> collection = (Collection<A>) underlying;
-            if (collection.isEmpty()) {
-                return immutableFiniteIterable(collection);
-            } else {
-                return immutableNonEmptyFiniteIterableOrThrow(collection);
-            }
+            return immutableFiniteIterableFromCollection((Collection<A>) underlying);
         } else if (underlying.iterator().hasNext()) {
             return immutableNonEmptyIterableOrThrow(underlying);
         } else {
@@ -287,6 +269,22 @@ final class EnhancedIterables {
             return immutableFiniteIterable(underlying);
         } else {
             return () -> protectedIterator(underlying.iterator());
+        }
+    }
+
+    private static <A> FiniteIterable<A> finiteIterableFromCollection(Collection<A> collection) {
+        if (collection.isEmpty()) {
+            return finiteIterable(collection);
+        } else {
+            return nonEmptyFiniteIterableOrThrow(collection);
+        }
+    }
+
+    private static <A> ImmutableIterable<A> immutableFiniteIterableFromCollection(Collection<A> collection) {
+        if (collection.isEmpty()) {
+            return immutableFiniteIterable(collection);
+        } else {
+            return immutableNonEmptyFiniteIterableOrThrow(collection);
         }
     }
 
