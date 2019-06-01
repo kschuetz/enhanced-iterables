@@ -555,6 +555,24 @@ class ImmutableIterableTest {
     }
 
     @Nested
+    @DisplayName("toNonEmpty")
+    class ToNonEmpty {
+
+        @Test
+        void successCase() {
+            assertTrue(maybeIterablesContainSameElements(
+                    just(ImmutableNonEmptyIterable.of(1, 2, 3)),
+                    ImmutableIterable.copyFrom(asList(1, 2, 3)).toNonEmpty()));
+        }
+
+        @Test
+        void failureCase() {
+            assertEquals(nothing(), ImmutableIterable.copyFrom(emptyList()).toNonEmpty());
+        }
+
+    }
+
+    @Nested
     @DisplayName("zipWith")
     class ZipWith {
 

@@ -17,7 +17,6 @@ import java.util.Collection;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
-import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -196,7 +195,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * @return a {@code NonEmptyFiniteIterable<A>}
      */
     static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterable(A head, Collection<A> tail) {
-        return nonEmptyFiniteIterable(head, finiteIterable(tail));
+        return EnhancedIterables.nonEmptyFiniteIterable(head, tail);
     }
 
     /**

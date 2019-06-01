@@ -22,6 +22,7 @@ import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.consta
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -30,6 +31,7 @@ import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
+import static testsupport.IterablesContainSameElements.maybeIterablesContainSameElements;
 
 class FiniteIterableTest {
 
@@ -621,6 +623,24 @@ class FiniteIterableTest {
         void alwaysSucceeds() {
             FiniteIterable<Integer> subject = finiteIterable(asList(1, 2, 3));
             assertSame(subject, subject.toFinite().orElseThrow(AssertionError::new));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("toNonEmpty")
+    class ToNonEmpty {
+
+        @Test
+        void successCase() {
+            assertTrue(maybeIterablesContainSameElements(
+                    just(nonEmptyFiniteIterable(1, asList(2, 3))),
+                    finiteIterable(asList(1, 2, 3)).toNonEmpty()));
+        }
+
+        @Test
+        void failureCase() {
+            assertEquals(nothing(), finiteIterable(emptyList()).toNonEmpty());
         }
 
     }

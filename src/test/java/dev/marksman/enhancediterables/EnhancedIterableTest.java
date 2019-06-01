@@ -22,6 +22,7 @@ import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.consta
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
+import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterable;
 import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -556,6 +557,24 @@ class EnhancedIterableTest {
         @Test
         void failureCase() {
             assertEquals(nothing(), enhance(Repeat.repeat(1)).toFinite());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("toNonEmpty")
+    class ToNonEmpty {
+
+        @Test
+        void successCase() {
+            assertTrue(maybeIterablesContainSameElements(
+                    just(nonEmptyIterable(1, asList(2, 3))),
+                    enhance(asList(1, 2, 3)).toNonEmpty()));
+        }
+
+        @Test
+        void failureCase() {
+            assertEquals(nothing(), enhance(emptyList()).toNonEmpty());
         }
 
     }

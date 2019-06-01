@@ -30,6 +30,7 @@ import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.jupiter.api.Assertions.*;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
+import static testsupport.IterablesContainSameElements.maybeIterablesContainSameElements;
 
 class ImmutableFiniteIterableTest {
 
@@ -621,6 +622,24 @@ class ImmutableFiniteIterableTest {
         void alwaysSucceeds() {
             ImmutableFiniteIterable<Integer> subject = ImmutableFiniteIterable.copyFrom(asList(1, 2, 3));
             assertSame(subject, subject.toFinite().orElseThrow(AssertionError::new));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("toNonEmpty")
+    class ToNonEmpty {
+
+        @Test
+        void successCase() {
+            assertTrue(maybeIterablesContainSameElements(
+                    just(ImmutableNonEmptyFiniteIterable.of(1, 2, 3)),
+                    immutableFiniteIterable(asList(1, 2, 3)).toNonEmpty()));
+        }
+
+        @Test
+        void failureCase() {
+            assertEquals(nothing(), immutableFiniteIterable(emptyList()).toNonEmpty());
         }
 
     }

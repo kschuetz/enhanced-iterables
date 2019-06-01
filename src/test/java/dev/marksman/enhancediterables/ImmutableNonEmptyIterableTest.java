@@ -491,6 +491,18 @@ class ImmutableNonEmptyIterableTest {
     }
 
     @Nested
+    @DisplayName("toNonEmpty")
+    class ToNonEmpty {
+
+        @Test
+        void alwaysSucceeds() {
+            ImmutableNonEmptyIterable<Integer> subject = immutableNonEmptyIterable(1, Repeat.repeat(1));
+            assertSame(subject, subject.toNonEmpty().orElseThrow(AssertionError::new));
+        }
+
+    }
+
+    @Nested
     @DisplayName("zipWith")
     class ZipWith {
 

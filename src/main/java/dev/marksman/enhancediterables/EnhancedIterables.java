@@ -155,6 +155,10 @@ final class EnhancedIterables {
         };
     }
 
+    static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterable(A head, Collection<A> tail) {
+        return nonEmptyFiniteIterable(head, finiteIterable(tail));
+    }
+
     static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterableOrThrow(Iterable<A> underlying) {
         if (underlying instanceof NonEmptyFiniteIterable<?>) {
             return (NonEmptyFiniteIterable<A>) underlying;
