@@ -134,7 +134,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * Returns a new {@code EnhancedIterable} with the provided separator value injected between each value of this
      * {@code EnhancedIterable}.
      * <p>
-     * If this {@code EnhancedIterable} contains fewer than two elements, it is left untouched.
+     * If this {@link EnhancedIterable} contains fewer than two elements, it is left untouched.
      *
      * @param separator the separator value
      * @return an {@code EnhancedIterable<A>}
@@ -146,7 +146,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     /**
      * Tests whether this {@code EnhancedIterable} is empty.
      *
-     * @return true if this {@code EnhancedIterable} contains no elements, false otherwise
+     * @return true if this {@link EnhancedIterable} contains no elements, false otherwise
      */
     default boolean isEmpty() {
         return !iterator().hasNext();
@@ -184,7 +184,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * Returns a new {@code EnhancedIterable} with the provided separator value injected before each value of this
      * {@code EnhancedIterable}.
      * <p>
-     * If this {@code EnhancedIterable} is empty, it is left untouched.
+     * If this {@link EnhancedIterable} is empty, it is left untouched.
      *
      * @param separator the separator value
      * @return an {@code EnhancedIterable<A>}
@@ -238,7 +238,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     /**
      * Returns a new {@code FiniteIterable} that takes the first {@code count} elements of this {@code EnhancedIterable}.
      *
-     * @param count the number of elements to take from this {@code EnhancedIterable}.
+     * @param count the number of elements to take from this {@link EnhancedIterable}.
      *              Must be &gt;= 0.
      *              May exceed size of this {@code EnhancedIterable}, in which case, the result will contain
      *              as many elements available.
@@ -314,7 +314,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     /**
      * Zips together this {@code EnhancedIterable} with another {@code Iterable} by applying a zipping function.
      * <p>
-     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     * Applies the function to the successive elements of each {@link Iterable} until one of them runs out of elements.
      *
      * @param fn    the zipping function.
      *              Not null.
@@ -334,7 +334,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     /**
      * Zips together this {@code EnhancedIterable} with a {@code FiniteIterable} by applying a zipping function.
      * <p>
-     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     * Applies the function to the successive elements of each {@link Iterable} until one of them runs out of elements.
      *
      * @param fn    the zipping function.
      *              Not null.
@@ -354,7 +354,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     /**
      * Zips together this {@code EnhancedIterable} with a {@code Collection} by applying a zipping function.
      * <p>
-     * Applies the function to the successive elements of each {@code Iterable} until one of them runs out of elements.
+     * Applies the function to the successive elements of each {@link Iterable} until one of them runs out of elements.
      *
      * @param fn    the zipping function.
      *              Not null.
@@ -374,7 +374,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     /**
      * Creates an {@code ImmutableFiniteIterable} by copying elements from a {@code FiniteIterable}.
      * <p>
-     * If {@code source} is already an {@code ImmutableFiniteIterable}, this method will return it without copying.
+     * If {@code source} is already an {@link ImmutableFiniteIterable}, this method will return it without copying.
      *
      * @param source the source to copy from
      * @param <A>    the element type
@@ -398,7 +398,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     /**
      * Creates an {@code ImmutableFiniteIterable} by copying elements from an {@code Iterable}.
      * <p>
-     * If {@code source} is already an {@code ImmutableIterable}, no copying will be performed.
+     * If {@code source} is already an {@link ImmutableIterable}, no copying will be performed.
      *
      * @param maxCount the maximum number of elements to take from the supplied {@link Iterable}.
      *                 Must be &gt;= 0.
