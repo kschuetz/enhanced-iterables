@@ -66,7 +66,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return an <code>ImmutableNonEmptyFiniteIterable&lt;B&gt;</code>
+     * @return an {@code ImmutableNonEmptyFiniteIterable<B>}
      */
     @Override
     default <B> ImmutableNonEmptyFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -91,7 +91,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
      * If this {@code ImmutableNonEmptyFiniteIterable} contains only one element, it is left untouched.
      *
      * @param separator the separator value
-     * @return an <code>ImmutableNonEmptyFiniteIterable&lt;A&gt;</code>
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
      */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> intersperse(A separator) {
@@ -102,7 +102,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
      * Lazily prepends an element to the front of this {@code ImmutableNonEmptyFiniteIterable}, yielding a new {@code ImmutableNonEmptyFiniteIterable}.
      *
      * @param element the element to prepend
-     * @return a <code>ImmutableNonEmptyFiniteIterable&lt;A&gt;</code>
+     * @return a {@code ImmutableNonEmptyFiniteIterable<A>}
      */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> prepend(A element) {
@@ -114,7 +114,7 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
      * {@code ImmutableNonEmptyFiniteIterable}.
      *
      * @param separator the separator value
-     * @return an <code>ImmutableNonEmptyFiniteIterable&lt;A&gt;</code>
+     * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
      */
     @Override
     default ImmutableNonEmptyFiniteIterable<A> prependAll(A separator) {

@@ -35,7 +35,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Lazily appends an element to the end of this {@code FiniteIterable}, yielding a new {@code NonEmptyFiniteIterable}.
      *
      * @param element the element to append
-     * @return a <code>NonEmptyFiniteIterable&lt;A&gt;</code>
+     * @return a {@code NonEmptyFiniteIterable<A>}
      */
     @Override
     default NonEmptyFiniteIterable<A> append(A element) {
@@ -124,7 +124,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a <code>FiniteIterable&lt;A&gt;</code>
+     * @return a {@code FiniteIterable<A>}
      */
     @Override
     default FiniteIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -137,7 +137,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * that satisfy a predicate.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a <code>FiniteIterable&lt;A&gt;</code>
+     * @return a {@code FiniteIterable<A>}
      */
     @Override
     default FiniteIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
@@ -152,7 +152,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return a <code>FiniteIterableonEmptyFiniteIterable&lt;B&gt;</code>
+     * @return a {@code FiniteIterableonEmptyFiniteIterable<B>}
      */
     @Override
     default <B> FiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -199,7 +199,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * If this {@code FiniteIterable} contains fewer than two elements, it is left untouched.
      *
      * @param separator the separator value
-     * @return a <code>FiniteIterable&lt;A&gt;</code>
+     * @return a {@code FiniteIterable<A>}
      */
     @Override
     default FiniteIterable<A> intersperse(A separator) {
@@ -212,7 +212,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * @param function the mapping function
      * @param <B>      the output left Iterable element type, as well as the CoProduct2 A type
      * @param <C>      the output right Iterable element type, as well as the CoProduct2 B type
-     * @return a <code>Tuple2&lt;FiniteIterable&lt;B&gt;, FiniteIterable&lt;C&gt;&gt;</code>
+     * @return a {@code Tuple2<FiniteIterable&lt;B&gt;, FiniteIterable&lt;C&gt;>}
      */
     @Override
     default <B, C> Tuple2<? extends FiniteIterable<B>, ? extends FiniteIterable<C>> partition(
@@ -227,7 +227,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * Lazily prepends an element to the front of this {@code FiniteIterable}, yielding a new {@code NonEmptyFiniteIterable}.
      *
      * @param element the element to prepend
-     * @return a <code>NonEmptyFiniteIterable&lt;A&gt;</code>
+     * @return a {@code NonEmptyFiniteIterable<A>}
      */
     @Override
     default NonEmptyFiniteIterable<A> prepend(A element) {
@@ -241,7 +241,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * If this {@code FiniteIterable} is empty, it is left untouched.
      *
      * @param separator the separator value
-     * @return a <code>FiniteIterable&lt;A&gt;</code>
+     * @return a {@code FiniteIterable<A>}
      */
     @Override
     default FiniteIterable<A> prependAll(A separator) {
@@ -281,7 +281,7 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      * {@code FiniteIterable} matching a predicate and the second slot is all the remaining elements.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a <code>Tuple2&lt;FiniteIterable&lt;B&gt;, FiniteIterable&lt;C&gt;&gt;</code>
+     * @return a {@code Tuple2<FiniteIterable&lt;B&gt;, FiniteIterable&lt;C&gt;>}
      */
     @Override
     default Tuple2<? extends FiniteIterable<A>, ? extends FiniteIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {

@@ -30,7 +30,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Lazily appends an element to the end of this {@code ImmutableIterable}, yielding a new {@code ImmutableNonEmptyIterable}.
      *
      * @param element the element to append
-     * @return a <code>ImmutableNonEmptyIterable&lt;A&gt;</code>
+     * @return a {@code ImmutableNonEmptyIterable<A>}
      */
     @Override
     default ImmutableNonEmptyIterable<A> append(A element) {
@@ -83,7 +83,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Iteration begins at the first element for which the predicate evaluates to false.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a <code>ImmutableIterable&lt;A&gt;</code>
+     * @return a {@code ImmutableIterable<A>}
      */
     @Override
     default ImmutableIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
@@ -96,7 +96,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * that satisfy a predicate.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a <code>ImmutableIterable&lt;A&gt;</code>
+     * @return a {@code ImmutableIterable<A>}
      */
     @Override
     default ImmutableIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
@@ -111,7 +111,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      *            This function should be referentially transparent and not perform side-effects.
      *            It may be called zero or more times for each element.
      * @param <B> the type returned by {@code f}
-     * @return a <code>ImmutableIterable&lt;B&gt;</code>
+     * @return a {@code ImmutableIterable<B>}
      */
     @Override
     default <B> ImmutableIterable<B> fmap(Fn1<? super A, ? extends B> f) {
@@ -126,7 +126,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * If this {@code ImmutableIterable} contains fewer than two elements, it is left untouched.
      *
      * @param separator the separator value
-     * @return a <code>ImmutableIterable&lt;A&gt;</code>
+     * @return a {@code ImmutableIterable<A>}
      */
     @Override
     default ImmutableIterable<A> intersperse(A separator) {
@@ -142,7 +142,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * @param function the mapping function
      * @param <B>      the output left Iterable element type, as well as the CoProduct2 A type
      * @param <C>      the output right Iterable element type, as well as the CoProduct2 B type
-     * @return a <code>Tuple2&lt;ImmutableIterable&lt;B&gt;, ImmutableIterable&lt;C&gt;&gt;</code>
+     * @return a {@code Tuple2<ImmutableIterable&lt;B&gt;, ImmutableIterable&lt;C&gt;>}
      */
     @Override
     default <B, C> Tuple2<? extends ImmutableIterable<B>, ? extends ImmutableIterable<C>> partition(
@@ -157,7 +157,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * Lazily prepends an element to the front of this {@code ImmutableIterable}, yielding a new {@code ImmutableNonEmptyIterable}.
      *
      * @param element the element to prepend
-     * @return an <code>ImmutableNonEmptyIterable&lt;A&gt;</code>
+     * @return an {@code ImmutableNonEmptyIterable<A>}
      */
     @Override
     default ImmutableNonEmptyIterable<A> prepend(A element) {
@@ -171,7 +171,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * If this {@code ImmutableIterable} is empty, it is left untouched.
      *
      * @param separator the separator value
-     * @return a <code>ImmutableIterable&lt;A&gt;</code>
+     * @return a {@code ImmutableIterable<A>}
      */
     @Override
     default ImmutableIterable<A> prependAll(A separator) {
@@ -200,7 +200,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * {@code ImmutableIterable} matching a predicate and the second slot is all the remaining elements.
      *
      * @param predicate a predicate; should be referentially transparent and not have side-effects
-     * @return a <code>Tuple2&lt;ImmutableIterable&lt;B&gt;, ImmutableIterable&lt;C&gt;&gt;</code>
+     * @return a {@code Tuple2<ImmutableIterable&lt;B&gt;, ImmutableIterable&lt;C&gt;>}
      */
     @Override
     default Tuple2<? extends ImmutableIterable<A>, ? extends ImmutableIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
