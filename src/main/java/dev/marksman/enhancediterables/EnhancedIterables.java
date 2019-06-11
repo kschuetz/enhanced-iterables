@@ -1,13 +1,14 @@
 package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.Maybe;
-import com.jnape.palatable.lambda.adt.hlist.Tuple2;
+import com.jnape.palatable.lambda.functions.Fn0;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Uncons;
 import com.jnape.palatable.lambda.functions.builtin.fn2.ToCollection;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
@@ -135,8 +136,26 @@ final class EnhancedIterables {
         if (underlying instanceof NonEmptyIterable<?>) {
             return (NonEmptyIterable<A>) underlying;
         } else {
-            Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return nonEmptyIterable(headTail._1(), headTail._2());
+            if (!underlying.iterator().hasNext()) {
+                throw nonEmptyError().apply();
+            }
+
+            return new NonEmptyIterable<A>() {
+                @Override
+                public A head() {
+                    return iterator().next();
+                }
+
+                @Override
+                public EnhancedIterable<A> tail() {
+                    return this.drop(1);
+                }
+
+                @Override
+                public Iterator<A> iterator() {
+                    return underlying.iterator();
+                }
+            };
         }
     }
 
@@ -163,8 +182,26 @@ final class EnhancedIterables {
         if (underlying instanceof NonEmptyFiniteIterable<?>) {
             return (NonEmptyFiniteIterable<A>) underlying;
         } else {
-            Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return nonEmptyFiniteIterable(headTail._1(), finiteIterable(headTail._2()));
+            if (!underlying.iterator().hasNext()) {
+                throw nonEmptyError().apply();
+            }
+
+            return new NonEmptyFiniteIterable<A>() {
+                @Override
+                public A head() {
+                    return iterator().next();
+                }
+
+                @Override
+                public FiniteIterable<A> tail() {
+                    return this.drop(1);
+                }
+
+                @Override
+                public Iterator<A> iterator() {
+                    return underlying.iterator();
+                }
+            };
         }
     }
 
@@ -187,8 +224,26 @@ final class EnhancedIterables {
         if (underlying instanceof ImmutableNonEmptyIterable<?>) {
             return (ImmutableNonEmptyIterable<A>) underlying;
         } else {
-            Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return immutableNonEmptyIterable(headTail._1(), simpleImmutableIterable(headTail._2()));
+            if (!underlying.iterator().hasNext()) {
+                throw nonEmptyError().apply();
+            }
+
+            return new ImmutableNonEmptyIterable<A>() {
+                @Override
+                public A head() {
+                    return iterator().next();
+                }
+
+                @Override
+                public ImmutableIterable<A> tail() {
+                    return this.drop(1);
+                }
+
+                @Override
+                public Iterator<A> iterator() {
+                    return underlying.iterator();
+                }
+            };
         }
     }
 
@@ -211,9 +266,26 @@ final class EnhancedIterables {
         if (underlying instanceof ImmutableNonEmptyFiniteIterable<?>) {
             return (ImmutableNonEmptyFiniteIterable<A>) underlying;
         } else {
-            Tuple2<A, Iterable<A>> headTail = unconsOrThrow(underlying);
-            return immutableNonEmptyFiniteIterable(headTail._1(),
-                    immutableFiniteIterable(headTail._2()));
+            if (!underlying.iterator().hasNext()) {
+                throw nonEmptyError().apply();
+            }
+
+            return new ImmutableNonEmptyFiniteIterable<A>() {
+                @Override
+                public A head() {
+                    return iterator().next();
+                }
+
+                @Override
+                public ImmutableFiniteIterable<A> tail() {
+                    return this.drop(1);
+                }
+
+                @Override
+                public Iterator<A> iterator() {
+                    return underlying.iterator();
+                }
+            };
         }
     }
 
@@ -292,9 +364,8 @@ final class EnhancedIterables {
         }
     }
 
-    private static <A> Tuple2<A, Iterable<A>> unconsOrThrow(Iterable<A> iterable) {
-        return Uncons.uncons(iterable)
-                .orElseThrow(() -> new IllegalArgumentException("iterable is empty"));
+    private static Fn0<IllegalArgumentException> nonEmptyError() {
+        return () -> new IllegalArgumentException("Cannot construct NonEmptyIterable from empty input");
     }
 
 }
