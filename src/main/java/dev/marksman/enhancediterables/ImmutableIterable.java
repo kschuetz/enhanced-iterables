@@ -372,6 +372,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      * @param <A>   the element type
      * @return an {@code ImmutableNonEmptyFiniteIterable<A>}
      */
+    @SuppressWarnings("varargs")
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         return EnhancedIterables.of(first, more);

@@ -289,6 +289,7 @@ final class EnhancedIterables {
         }
     }
 
+    @SuppressWarnings("varargs")
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
         ImmutableFiniteIterable<A> tail = immutableFiniteIterable(asList(more));
