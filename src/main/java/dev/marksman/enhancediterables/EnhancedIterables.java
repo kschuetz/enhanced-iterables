@@ -153,7 +153,7 @@ final class EnhancedIterables {
 
                 @Override
                 public Iterator<A> iterator() {
-                    return underlying.iterator();
+                    return protectedIterator(underlying.iterator());
                 }
             };
         }
@@ -199,7 +199,7 @@ final class EnhancedIterables {
 
                 @Override
                 public Iterator<A> iterator() {
-                    return underlying.iterator();
+                    return protectedIterator(underlying.iterator());
                 }
             };
         }
@@ -241,7 +241,7 @@ final class EnhancedIterables {
 
                 @Override
                 public Iterator<A> iterator() {
-                    return underlying.iterator();
+                    return protectedIterator(underlying.iterator());
                 }
             };
         }
@@ -283,7 +283,7 @@ final class EnhancedIterables {
 
                 @Override
                 public Iterator<A> iterator() {
-                    return underlying.iterator();
+                    return protectedIterator(underlying.iterator());
                 }
             };
         }
