@@ -161,6 +161,22 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     }
 
     /**
+     * Returns an {@code Iterable} of contiguous groups of elements in this {@code ImmutableFiniteIterable} that match a
+     * predicate pairwise.
+     *
+     * @param predicate the predicate function.
+     *                  This function should be referentially transparent and not perform side-effects.
+     *                  It may be called zero or more times for each element.
+     * @return an {@code ImmutableFiniteIterable<ImmutableNonEmptyFiniteIterable<A>>} containing the contiguous groups
+     */
+    @Override
+    default ImmutableFiniteIterable<? extends ImmutableNonEmptyFiniteIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
+        requireNonNull(predicate);
+        return EnhancedIterables.immutableFiniteIterable(MagnetizeBy.magnetizeBy(predicate, this))
+                .fmap(EnhancedIterables::immutableNonEmptyFiniteIterableOrThrow);
+    }
+
+    /**
      * Partitions this {@code ImmutableFiniteIterable} given a disjoint mapping function.
      *
      * @param function the mapping function

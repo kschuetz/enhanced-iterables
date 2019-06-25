@@ -1,7 +1,10 @@
 package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.functions.Fn1;
+import com.jnape.palatable.lambda.functions.Fn2;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Cycle;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Repeat;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Eq;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,6 +21,7 @@ import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.consta
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableFiniteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyIterableOrThrow;
 import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -311,6 +315,44 @@ class ImmutableNonEmptyIterableTest {
         @Test
         void negative() {
             assertFalse(immutableNonEmptyIterable("foo", emptyList()).isEmpty());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("magnetizeBy")
+    class MagnetizeBy {
+
+        @Test
+        void throwsOnNullArgument() {
+            assertThrows(NullPointerException.class, () -> immutableNonEmptyIterable("foo", emptyList()).magnetizeBy(null));
+        }
+
+        @Test
+        void lambdaTestCase() {
+            Fn2<Integer, Integer, Boolean> lte = (x, y) -> x <= y;
+            assertThat(immutableNonEmptyIterable(1, emptyList()).magnetizeBy(lte), contains(contains(1)));
+            assertThat(immutableNonEmptyIterable(1, asList(2, 3, 2, 2, 3, 2, 1)).magnetizeBy(lte),
+                    contains(contains(1, 2, 3),
+                            contains(2, 2, 3),
+                            contains(2),
+                            contains(1)));
+        }
+
+        @Test
+        void worksWithInfinite() {
+            assertThat(immutableNonEmptyIterableOrThrow(Cycle.cycle(1, 1, 2, 2, 3))
+                            .magnetizeBy(Eq.eq()).take(10),
+                    contains(contains(1, 1),
+                            contains(2, 2),
+                            contains(3),
+                            contains(1, 1),
+                            contains(2, 2),
+                            contains(3),
+                            contains(1, 1),
+                            contains(2, 2),
+                            contains(3),
+                            contains(1, 1)));
         }
 
     }

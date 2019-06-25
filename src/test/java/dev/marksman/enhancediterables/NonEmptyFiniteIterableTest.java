@@ -1,6 +1,7 @@
 package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.functions.Fn1;
+import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -360,6 +361,28 @@ class NonEmptyFiniteIterableTest {
         @Test
         void negative() {
             assertFalse(nonEmptyFiniteIterable("foo", emptyList()).isEmpty());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("magnetizeBy")
+    class MagnetizeBy {
+
+        @Test
+        void throwsOnNullArgument() {
+            assertThrows(NullPointerException.class, () -> nonEmptyFiniteIterable("foo", emptyList()).magnetizeBy(null));
+        }
+
+        @Test
+        void lambdaTestCase() {
+            Fn2<Integer, Integer, Boolean> lte = (x, y) -> x <= y;
+            assertThat(nonEmptyFiniteIterable(1, emptyList()).magnetizeBy(lte), contains(contains(1)));
+            assertThat(nonEmptyFiniteIterable(1, asList(2, 3, 2, 2, 3, 2, 1)).magnetizeBy(lte),
+                    contains(contains(1, 2, 3),
+                            contains(2, 2, 3),
+                            contains(2),
+                            contains(1)));
         }
 
     }

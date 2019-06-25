@@ -134,6 +134,22 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Returns an {@code Iterable} of contiguous groups of elements in this {@code ImmutableIterable} that match a
+     * predicate pairwise.
+     *
+     * @param predicate the predicate function.
+     *                  This function should be referentially transparent and not perform side-effects.
+     *                  It may be called zero or more times for each element.
+     * @return an {@code ImmutableIterable<ImmutableNonEmptyIterable<A>>} containing the contiguous groups
+     */
+    @Override
+    default ImmutableIterable<? extends ImmutableNonEmptyIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
+        requireNonNull(predicate);
+        return EnhancedIterables.immutableIterable(MagnetizeBy.magnetizeBy(predicate, this))
+                .fmap(EnhancedIterables::immutableNonEmptyIterableOrThrow);
+    }
+
+    /**
      * Partitions this {@code ImmutableIterable} given a disjoint mapping function.
      * <p>
      * Note that while the returned tuple must be constructed eagerly, the left and right iterables contained therein

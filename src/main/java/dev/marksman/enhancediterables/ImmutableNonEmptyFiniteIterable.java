@@ -6,10 +6,7 @@ import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Init;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Reverse;
-import com.jnape.palatable.lambda.functions.builtin.fn2.CartesianProduct;
-import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
-import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
-import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
+import com.jnape.palatable.lambda.functions.builtin.fn2.*;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
@@ -96,6 +93,22 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
     @Override
     default ImmutableNonEmptyFiniteIterable<A> intersperse(A separator) {
         return immutableNonEmptyFiniteIterableOrThrow(Intersperse.intersperse(separator, this));
+    }
+
+    /**
+     * Returns an {@code Iterable} of contiguous groups of elements in this {@code ImmutableNonEmptyFiniteIterable} that match a
+     * predicate pairwise.
+     *
+     * @param predicate the predicate function.
+     *                  This function should be referentially transparent and not perform side-effects.
+     *                  It may be called zero or more times for each element.
+     * @return an {@code ImmutableNonEmptyFiniteIterable<ImmutableNonEmptyFiniteIterable<A>>} containing the contiguous groups
+     */
+    @Override
+    default ImmutableNonEmptyFiniteIterable<? extends ImmutableNonEmptyFiniteIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
+        requireNonNull(predicate);
+        return immutableNonEmptyFiniteIterableOrThrow(MagnetizeBy.magnetizeBy(predicate, this))
+                .fmap(EnhancedIterables::immutableNonEmptyFiniteIterableOrThrow);
     }
 
     /**

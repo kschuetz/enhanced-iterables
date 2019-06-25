@@ -4,6 +4,7 @@ import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
+import com.jnape.palatable.lambda.functions.builtin.fn2.MagnetizeBy;
 import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
 import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
@@ -71,6 +72,22 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
     @Override
     default ImmutableNonEmptyIterable<A> intersperse(A separator) {
         return immutableNonEmptyIterableOrThrow(Intersperse.intersperse(separator, this));
+    }
+
+    /**
+     * Returns an {@code Iterable} of contiguous groups of elements in this {@code ImmutableNonEmptyIterable} that match a
+     * predicate pairwise.
+     *
+     * @param predicate the predicate function.
+     *                  This function should be referentially transparent and not perform side-effects.
+     *                  It may be called zero or more times for each element.
+     * @return an {@code ImmutableNonEmptyIterable<ImmutableNonEmptyIterable<A>>} containing the contiguous groups
+     */
+    @Override
+    default ImmutableNonEmptyIterable<? extends ImmutableNonEmptyIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
+        requireNonNull(predicate);
+        return immutableNonEmptyIterableOrThrow(MagnetizeBy.magnetizeBy(predicate, this))
+                .fmap(EnhancedIterables::immutableNonEmptyIterableOrThrow);
     }
 
     /**

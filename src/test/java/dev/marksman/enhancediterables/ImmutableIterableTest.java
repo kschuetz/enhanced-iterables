@@ -2,16 +2,16 @@ package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
+import com.jnape.palatable.lambda.functions.Fn2;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Cycle;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Repeat;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Eq;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
@@ -321,6 +321,45 @@ class ImmutableIterableTest {
         @Test
         void negative() {
             assertFalse(immutableIterable(asList(1, 2, 3)).isEmpty());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("magnetizeBy")
+    class MagnetizeBy {
+
+        @Test
+        void throwsOnNullArgument() {
+            assertThrows(NullPointerException.class, () -> immutableIterable(emptyList()).magnetizeBy(null));
+        }
+
+        @Test
+        void lambdaTestCase() {
+            Fn2<Integer, Integer, Boolean> lte = (x, y) -> x <= y;
+            assertThat(immutableIterable(Collections.<Integer>emptyList()).magnetizeBy(lte), emptyIterable());
+            assertThat(immutableIterable(singletonList(1)).magnetizeBy(lte), contains(contains(1)));
+            assertThat(immutableIterable(asList(1, 2, 3, 2, 2, 3, 2, 1)).magnetizeBy(lte),
+                    contains(contains(1, 2, 3),
+                            contains(2, 2, 3),
+                            contains(2),
+                            contains(1)));
+        }
+
+        @Test
+        void worksWithInfinite() {
+            assertThat(immutableIterable(Cycle.cycle(1, 1, 2, 2, 3))
+                            .magnetizeBy(Eq.eq()).take(10),
+                    contains(contains(1, 1),
+                            contains(2, 2),
+                            contains(3),
+                            contains(1, 1),
+                            contains(2, 2),
+                            contains(3),
+                            contains(1, 1),
+                            contains(2, 2),
+                            contains(3),
+                            contains(1, 1)));
         }
 
     }

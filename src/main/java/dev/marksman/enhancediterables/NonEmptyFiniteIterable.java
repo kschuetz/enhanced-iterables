@@ -6,10 +6,7 @@ import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Init;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Reverse;
-import com.jnape.palatable.lambda.functions.builtin.fn2.CartesianProduct;
-import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
-import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
-import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
+import com.jnape.palatable.lambda.functions.builtin.fn2.*;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
@@ -108,6 +105,22 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default NonEmptyFiniteIterable<A> intersperse(A separator) {
         return nonEmptyFiniteIterableOrThrow(Intersperse.intersperse(separator, this));
+    }
+
+    /**
+     * Returns an {@code Iterable} of contiguous groups of elements in this {@code NonEmptyFiniteIterable} that match a
+     * predicate pairwise.
+     *
+     * @param predicate the predicate function.
+     *                  This function should be referentially transparent and not perform side-effects.
+     *                  It may be called zero or more times for each element.
+     * @return an {@code NonEmptyFiniteIterable<NonEmptyFiniteIterable<A>>} containing the contiguous groups
+     */
+    @Override
+    default NonEmptyFiniteIterable<? extends NonEmptyFiniteIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
+        requireNonNull(predicate);
+        return nonEmptyFiniteIterableOrThrow(MagnetizeBy.magnetizeBy(predicate, this))
+                .fmap(EnhancedIterables::nonEmptyFiniteIterableOrThrow);
     }
 
     /**

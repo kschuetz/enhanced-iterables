@@ -3,10 +3,7 @@ package dev.marksman.enhancediterables;
 import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
-import com.jnape.palatable.lambda.functions.builtin.fn2.Cons;
-import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
-import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
-import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
+import com.jnape.palatable.lambda.functions.builtin.fn2.*;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
@@ -98,6 +95,22 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     @Override
     default Iterator<A> iterator() {
         return Cons.cons(head(), tail()).iterator();
+    }
+
+    /**
+     * Returns an {@code Iterable} of contiguous groups of elements in this {@code NonEmptyIterable} that match a
+     * predicate pairwise.
+     *
+     * @param predicate the predicate function.
+     *                  This function should be referentially transparent and not perform side-effects.
+     *                  It may be called zero or more times for each element.
+     * @return an {@code NonEmptyIterable<NonEmptyIterable<A>>} containing the contiguous groups
+     */
+    @Override
+    default NonEmptyIterable<? extends NonEmptyIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
+        requireNonNull(predicate);
+        return nonEmptyIterableOrThrow(MagnetizeBy.magnetizeBy(predicate, this))
+                .fmap(EnhancedIterables::nonEmptyIterableOrThrow);
     }
 
     /**

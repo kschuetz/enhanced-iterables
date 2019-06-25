@@ -207,6 +207,22 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Returns an {@code Iterable} of contiguous groups of elements in this {@code FiniteIterable} that match a
+     * predicate pairwise.
+     *
+     * @param predicate the predicate function.
+     *                  This function should be referentially transparent and not perform side-effects.
+     *                  It may be called zero or more times for each element.
+     * @return a {@code FiniteIterable<NonEmptyFiniteIterable<A>>} containing the contiguous groups
+     */
+    @Override
+    default FiniteIterable<? extends NonEmptyFiniteIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
+        requireNonNull(predicate);
+        return EnhancedIterables.finiteIterable(MagnetizeBy.magnetizeBy(predicate, this))
+                .fmap(EnhancedIterables::nonEmptyFiniteIterableOrThrow);
+    }
+
+    /**
      * Partitions this {@code FiniteIterable} given a disjoint mapping function.
      *
      * @param function the mapping function

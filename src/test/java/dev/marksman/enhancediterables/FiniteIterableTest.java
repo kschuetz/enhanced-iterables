@@ -2,16 +2,14 @@ package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
+import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.hamcrest.collection.IsEmptyIterable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
@@ -389,6 +387,29 @@ class FiniteIterableTest {
         @Test
         void negative() {
             assertFalse(finiteIterable(asList(1, 2, 3)).isEmpty());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("magnetizeBy")
+    class MagnetizeBy {
+
+        @Test
+        void throwsOnNullArgument() {
+            assertThrows(NullPointerException.class, () -> finiteIterable(emptyList()).magnetizeBy(null));
+        }
+
+        @Test
+        void lambdaTestCase() {
+            Fn2<Integer, Integer, Boolean> lte = (x, y) -> x <= y;
+            assertThat(finiteIterable(Collections.<Integer>emptyList()).magnetizeBy(lte), IsEmptyIterable.emptyIterable());
+            assertThat(finiteIterable(singletonList(1)).magnetizeBy(lte), contains(contains(1)));
+            assertThat(finiteIterable(asList(1, 2, 3, 2, 2, 3, 2, 1)).magnetizeBy(lte),
+                    contains(contains(1, 2, 3),
+                            contains(2, 2, 3),
+                            contains(2),
+                            contains(1)));
         }
 
     }
