@@ -2,7 +2,7 @@
 
 [![enhanced-iterables](https://img.shields.io/maven-central/v/dev.marksman/enhanced-iterables.svg)](http://search.maven.org/#search%7Cga%7C1%7Cdev.marksman.enhanced-iterables)
 [![Javadoc](https://javadoc-badge.appspot.com/dev.marksman/enhanced-iterables.svg?label=javadoc)](https://kschuetz.github.io/enhanced-iterables/javadoc/)
-[![Build Status](https://travis-ci.org/kschuetz/enhanced-iterables.svg?branch=master)](https://travis-ci.org/kschuetz/enhanced-iterables)
+[![CircleCI](https://circleci.com/gh/kschuetz/enhanced-iterables.svg?style=svg)](https://circleci.com/gh/kschuetz/enhanced-iterables)
 [![Maintainability](https://api.codeclimate.com/v1/badges/02d956357e0a4eb21d20/maintainability)](https://codeclimate.com/github/kschuetz/enhanced-iterables/maintainability)
 
 #### Table of Contents
