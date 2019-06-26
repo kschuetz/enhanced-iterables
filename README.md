@@ -136,6 +136,7 @@ In addition to all methods on `FiniteIterable<A>` and `NonEmptyIterable<A>`, pro
 | `fmap` | `NonEmptyFiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `init` | `FiniteIterable<A>`| [`Init.init`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Init.html)|
 | `intersperse` | `NonEmptyFiniteIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `last` | `A`| [`Last.last`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Last.html) |
 | `magnetizeBy` | `NonEmptyFiniteIterable<NonEmptyFiniteIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `prependAll` | `NonEmptyFiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `reverse` | `NonEmptyFiniteIterable<A>`| [`Reverse.reverse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Reverse.html) |

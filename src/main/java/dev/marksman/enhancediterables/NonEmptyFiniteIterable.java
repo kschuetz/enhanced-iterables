@@ -5,6 +5,7 @@ import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Init;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Last;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Reverse;
 import com.jnape.palatable.lambda.functions.builtin.fn2.*;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
@@ -105,6 +106,15 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default NonEmptyFiniteIterable<A> intersperse(A separator) {
         return nonEmptyFiniteIterableOrThrow(Intersperse.intersperse(separator, this));
+    }
+
+    /**
+     * Returns the last element.
+     *
+     * @return an element of type {@code A}
+     */
+    default A last() {
+        return Last.last(this).orElseThrow(AssertionError::new);
     }
 
     /**

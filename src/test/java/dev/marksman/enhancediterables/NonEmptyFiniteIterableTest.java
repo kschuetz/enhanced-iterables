@@ -366,6 +366,22 @@ class NonEmptyFiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("last")
+    class Last {
+
+        @Test
+        void singleton() {
+            assertEquals("foo", nonEmptyFiniteIterable("foo", emptyList()).last());
+        }
+
+        @Test
+        void size3() {
+            assertEquals("baz", nonEmptyFiniteIterable("foo", asList("bar", "baz")).last());
+        }
+
+    }
+
+    @Nested
     @DisplayName("magnetizeBy")
     class MagnetizeBy {
 
