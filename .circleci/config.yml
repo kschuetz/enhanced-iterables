@@ -33,3 +33,10 @@ jobs: # a collection of steps
     docker:
       - image: circleci/openjdk:11-jdk
     <<: *shared
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - java-8
+      - java-11
