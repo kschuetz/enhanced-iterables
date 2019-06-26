@@ -2,7 +2,7 @@
 
 [![enhanced-iterables](https://img.shields.io/maven-central/v/dev.marksman/enhanced-iterables.svg)](http://search.maven.org/#search%7Cga%7C1%7Cdev.marksman.enhanced-iterables)
 [![Javadoc](https://javadoc-badge.appspot.com/dev.marksman/enhanced-iterables.svg?label=javadoc)](https://kschuetz.github.io/enhanced-iterables/javadoc/)
-[![Build Status](https://travis-ci.org/kschuetz/enhanced-iterables.svg?branch=master)](https://travis-ci.org/kschuetz/enhanced-iterables)
+[![CircleCI](https://circleci.com/gh/kschuetz/enhanced-iterables.svg?style=svg)](https://circleci.com/gh/kschuetz/enhanced-iterables)
 [![Maintainability](https://api.codeclimate.com/v1/badges/02d956357e0a4eb21d20/maintainability)](https://codeclimate.com/github/kschuetz/enhanced-iterables/maintainability)
 
 #### Table of Contents
@@ -46,6 +46,7 @@ The base functionality that can be added to any `Iterable`.  Can be infinite, fi
 | `fmap` | `EnhancedIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `intersperse` | `EnhancedIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
 | `isEmpty` | `boolean`| -- |
+| `magnetizeBy` | `EnhancedIterable<NonEmptyIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `partition` | `Tuple2<EnhancedIterable<B>, EnhancedIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `NonEmptyIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `EnhancedIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
@@ -81,6 +82,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `foldLeft` | `B` | [`FoldLeft.foldLeft`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn3/FoldLeft.html) |
 | `inits` | `NonEmptyIterable<FiniteIterable<A>>`| [`Inits.inits`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Inits.html) |
 | `intersperse` | `FiniteIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `magnetizeBy` | `FiniteIterable<NonEmptyFiniteIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `partition` | `Tuple2<FiniteIterable<B>, FiniteIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `NonEmptyFiniteIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `FiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
@@ -110,6 +112,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `fmap` | `NonEmptyIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `head` | `A`| [`Head.head`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Head.html)|
 | `intersperse` | `NonEmptyIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `magnetizeBy` | `NonEmptyIterable<NonEmptyIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `prependAll` | `NonEmptyIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `tail` | `EnhancedIterable<A>`| [`Tail.tail`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Tail.html) |
 | `zipWith` | `NonEmptyIterable<C>`| [`ZipWith.zipWith`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn3/ZipWith.html) |
@@ -133,6 +136,7 @@ In addition to all methods on `FiniteIterable<A>` and `NonEmptyIterable<A>`, pro
 | `fmap` | `NonEmptyFiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `init` | `FiniteIterable<A>`| [`Init.init`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Init.html)|
 | `intersperse` | `NonEmptyFiniteIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `magnetizeBy` | `NonEmptyFiniteIterable<NonEmptyFiniteIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `prependAll` | `NonEmptyFiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `reverse` | `NonEmptyFiniteIterable<A>`| [`Reverse.reverse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Reverse.html) |
 | `tail` | `FiniteIterable<A>`| [`Tail.tail`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Tail.html) |
@@ -159,6 +163,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `filter` | `ImmutableIterable<A>`| [`Filter.filter`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Filter.html) |
 | `fmap` | `ImmutableIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `intersperse` | `ImmutableIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `magnetizeBy` | `ImmutableIterable<ImmutableNonEmptyIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `partition` | `Tuple2<ImmutableIterable<B>, ImmutableIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `ImmutableNonEmptyIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `ImmutableIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
@@ -191,6 +196,7 @@ In addition to all methods on `ImmutableIterable<A>` and `FiniteIterable<A>`, pr
 | `filter` | `ImmutableFiniteIterable<A>`| [`Filter.filter`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Filter.html) |
 | `fmap` | `ImmutableFiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `intersperse` | `ImmutableFiniteIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `magnetizeBy` | `ImmutableFiniteIterable<ImmutableNonEmptyFiniteIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `partition` | `Tuple2<ImmutableFiniteIterable<B>, ImmutableFiniteIterable<C>>`| [`Partition.partition`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Partition.html) |
 | `prepend` | `ImmutableNonEmptyFiniteIterable<A>`| [`Cons.cons`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Cons.html) |
 | `prependAll` | `ImmutableFiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
@@ -219,6 +225,7 @@ In addition to all methods on `ImmutableIterable<A>` and `NonEmptyIterable<A>`, 
 | `concat` | `ImmutableNonEmptyIterable<A>`| [`Concat.concat`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/monoid/builtin/Concat.html) |
 | `fmap` | `ImmutableNonEmptyIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `intersperse` | `ImmutableNonEmptyIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `magnetizeBy` | `ImmutableNonEmptyIterable<ImmutableNonEmptyIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `prependAll` | `ImmutableNonEmptyIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `tail` | `ImmutableIterable<A>`| [`Tail.tail`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Tail.html) |
 | `zipWith` | `ImmutableNonEmptyIterable<C>`| [`ZipWith.zipWith`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn3/ZipWith.html) |
@@ -243,6 +250,7 @@ In addition to all methods on `ImmutableFiniteIterable<A>` and `ImmutableNonEmpt
 | `fmap` | `ImmutableNonEmptyFiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `init` | `ImmutableFiniteIterable<A>`| [`Init.init`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Init.html)|
 | `intersperse` | `ImmutableNonEmptyFiniteIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
+| `magnetizeBy` | `ImmutableFiniteIterable<ImmutableNonEmptyFiniteIterable<A>> `| [`MagnetizeBy.magnetizeBy`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/MagnetizeBy.html) |
 | `prependAll` | `ImmutableNonEmptyFiniteIterable<A>`| [`PrependAll.prependAll`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/PrependAll.html) |
 | `reverse` | `ImmutableNonEmptyFiniteIterable<A>`| [`Reverse.reverse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Reverse.html) |
 | `zipWith` | `ImmutableNonEmptyFiniteIterable<C>`| [`ZipWith.zipWith`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn3/ZipWith.html) |
