@@ -8,7 +8,7 @@ No changes yet
 
 ## [1.0.2] - 2019-06-26
 ### Changed
-- `inits` method now returns an `ImmutableNonEmptyIterable`
+- `inits` method now returns an `ImmutableNonEmptyFiniteIterable`
 
 ### Added
 - `last` method
