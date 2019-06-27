@@ -23,7 +23,7 @@ No changes yet
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/kschuetz/enhanced-iterables/compare/v1.0.2...HEAD
-[1.0.2]: https://github.com/kschuetz/enhanced-iterables/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/kschuetz/enhanced-iterables/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/kschuetz/enhanced-iterables/commits/v1.0.0
+[Unreleased]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.2...HEAD
+[1.0.2]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.1...enhanced-iterables-1.0.2
+[1.0.1]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.0...enhanced-iterables-1.0.1
+[1.0.0]: https://github.com/kschuetz/enhanced-iterables/commits/enhanced-iterables-1.0.0
