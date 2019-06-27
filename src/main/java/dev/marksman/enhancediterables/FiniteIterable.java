@@ -18,8 +18,7 @@ import java.util.Collection;
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static dev.marksman.enhancediterables.EnhancedIterable.enhance;
-import static dev.marksman.enhancediterables.EnhancedIterables.immutableNonEmptyIterableOrThrow;
-import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
+import static dev.marksman.enhancediterables.EnhancedIterables.*;
 import static dev.marksman.enhancediterables.Validation.validateDrop;
 import static dev.marksman.enhancediterables.Validation.validateSlide;
 import static java.util.Objects.requireNonNull;
@@ -186,10 +185,10 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
      *
      * <code>FiniteIterable.of(1, 2, 3).inits(); // [[], [1], [1, 2], [1, 2, 3]]</code>
      *
-     * @return a {@code ImmutableNonEmptyIterable<FiniteIterable<A>>}
+     * @return a {@code ImmutableNonEmptyFiniteIterable<FiniteIterable<A>>}
      */
-    default ImmutableNonEmptyIterable<? extends FiniteIterable<A>> inits() {
-        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Inits.inits(this)));
+    default ImmutableNonEmptyFiniteIterable<? extends FiniteIterable<A>> inits() {
+        return immutableNonEmptyFiniteIterableOrThrow(Map.map(EnhancedIterables::finiteIterable, Inits.inits(this)));
     }
 
     /**

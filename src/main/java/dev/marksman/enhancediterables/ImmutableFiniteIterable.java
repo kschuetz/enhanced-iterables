@@ -140,10 +140,10 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
      *
      * <code>ImmutableFiniteIterable.of(1, 2, 3).inits(); // [[], [1], [1, 2], [1, 2, 3]]</code>
      *
-     * @return an {@code ImmutableNonEmptyIterable<ImmutableFiniteIterable<A>>}
+     * @return an {@code ImmutableNonEmptyFiniteIterable<ImmutableFiniteIterable<A>>}
      */
-    default ImmutableNonEmptyIterable<? extends ImmutableFiniteIterable<A>> inits() {
-        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Inits.inits(this)));
+    default ImmutableNonEmptyFiniteIterable<? extends ImmutableFiniteIterable<A>> inits() {
+        return immutableNonEmptyFiniteIterableOrThrow(Map.map(EnhancedIterables::immutableFiniteIterable, Inits.inits(this)));
     }
 
     /**
