@@ -375,6 +375,16 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     }
 
     /**
+     * Creates an empty {@code ImmutableFiniteIterable}.
+     *
+     * @param <A> the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> emptyImmutableFiniteIterable() {
+        return EnhancedIterables.emptyEnhancedIterable();
+    }
+
+    /**
      * Creates an {@code ImmutableFiniteIterable} containing the given elements.
      * <p>
      * Note that this method actually returns an {@link ImmutableNonEmptyFiniteIterable}, which is

@@ -17,8 +17,14 @@ import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 final class EnhancedIterables {
+    private static final ImmutableFiniteIterable<?> EMPTY = () -> protectedIterator(Collections.emptyIterator());
 
     private EnhancedIterables() {
+    }
+
+    @SuppressWarnings("unchecked")
+    static <A> ImmutableFiniteIterable<A> emptyEnhancedIterable() {
+        return (ImmutableFiniteIterable<A>) EMPTY;
     }
 
     /**

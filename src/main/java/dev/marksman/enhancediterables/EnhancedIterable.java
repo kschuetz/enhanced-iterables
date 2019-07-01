@@ -387,6 +387,16 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     }
 
     /**
+     * Creates an empty {@code EnhancedIterable}.
+     *
+     * @param <A> the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> emptyEnhancedIterable() {
+        return EnhancedIterables.emptyEnhancedIterable();
+    }
+
+    /**
      * Creates an {@code ImmutableFiniteIterable} by copying elements from a {@code FiniteIterable}.
      * <p>
      * If {@code source} is already an {@link ImmutableFiniteIterable}, this method will return it without copying.

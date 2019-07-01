@@ -24,4 +24,3 @@ final class ProtectedIterator<A> implements Iterator<A> {
     }
 
 }
-

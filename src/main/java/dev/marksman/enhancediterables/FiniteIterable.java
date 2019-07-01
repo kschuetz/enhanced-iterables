@@ -419,6 +419,16 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Creates an empty {@code FiniteIterable}.
+     *
+     * @param <A> the element type
+     * @return an {@code ImmutableFiniteIterable<A>}
+     */
+    static <A> ImmutableFiniteIterable<A> emptyFiniteIterable() {
+        return EnhancedIterables.emptyEnhancedIterable();
+    }
+
+    /**
      * Creates a {@code FiniteIterable} by wrapping a {@code Collection}.
      * <p>
      * Does not make a copy of the {@link Collection}.
