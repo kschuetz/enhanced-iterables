@@ -27,6 +27,12 @@ It provides interfaces that add some useful methods to `Iterable`s.  Most of the
 
 For more details, check out the [javadoc](https://kschuetz.github.io/enhanced-iterables/javadoc/).
 
+# [lambda](https://github.com/palatable/lambda) version compatibility
+
+| enhanced-iterables | lambda 5.0.0 | lambda 4.0.0 |
+|---|---|---|
+|1.0.x|:heavy_check_mark:|:heavy_check_mark:|
+
 # Types
 
 ## <a name="enhanced-iterable">`EnhancedIterable<A>`</a>
