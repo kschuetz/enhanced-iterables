@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## [Unreleased]
 No changes yet
 
+## [1.0.4] - 2019-10-01
+###
+- Upgrade lambda to 5.0.0
+
 ## [1.0.3] - 2019-06-30
 ### Added
 - Constructors for empty `EnhancedIterable`s
@@ -28,7 +32,8 @@ No changes yet
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.3...HEAD
+[Unreleased]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.4...HEAD
+[1.0.4]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.3...enhanced-iterables-1.0.4
 [1.0.3]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.2...enhanced-iterables-1.0.3
 [1.0.2]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.1...enhanced-iterables-1.0.2
 [1.0.1]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.0...enhanced-iterables-1.0.1
