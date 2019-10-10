@@ -401,7 +401,11 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @SuppressWarnings("varargs")
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
-        return EnhancedIterables.of(first, more);
+        if (more.length > 0) {
+            return EnhancedIterables.of(first, more);
+        } else {
+            return EnhancedIterables.singleton(first);
+        }
     }
 
 }

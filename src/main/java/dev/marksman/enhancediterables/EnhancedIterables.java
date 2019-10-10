@@ -298,8 +298,16 @@ final class EnhancedIterables {
     @SuppressWarnings("varargs")
     @SafeVarargs
     static <A> ImmutableNonEmptyFiniteIterable<A> of(A first, A... more) {
-        ImmutableFiniteIterable<A> tail = immutableFiniteIterable(asList(more));
-        return immutableNonEmptyFiniteIterable(first, tail);
+        if (more.length > 0) {
+            ImmutableFiniteIterable<A> tail = immutableFiniteIterable(asList(more));
+            return immutableNonEmptyFiniteIterable(first, tail);
+        } else {
+            return singleton(first);
+        }
+    }
+
+    static <A> ImmutableNonEmptyFiniteIterable<A> singleton(A value) {
+        return new Singleton<>(value);
     }
 
     static <A> ImmutableFiniteIterable<A> copyFrom(FiniteIterable<A> source) {
@@ -373,6 +381,24 @@ final class EnhancedIterables {
 
     private static Fn0<IllegalArgumentException> nonEmptyError() {
         return () -> new IllegalArgumentException("Cannot construct NonEmptyIterable from empty input");
+    }
+
+    private static class Singleton<A> implements ImmutableNonEmptyFiniteIterable<A> {
+        private final A value;
+
+        private Singleton(A value) {
+            this.value = value;
+        }
+
+        @Override
+        public ImmutableFiniteIterable<A> tail() {
+            return EnhancedIterables.emptyEnhancedIterable();
+        }
+
+        @Override
+        public A head() {
+            return value;
+        }
     }
 
 }
