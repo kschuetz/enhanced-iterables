@@ -335,6 +335,20 @@ final class EnhancedIterables {
         }
     }
 
+    static <A> ImmutableNonEmptyIterable<A> repeat(A element) {
+        return new ImmutableNonEmptyIterable<A>() {
+            @Override
+            public ImmutableIterable<A> tail() {
+                return this;
+            }
+
+            @Override
+            public A head() {
+                return element;
+            }
+        };
+    }
+
     /**
      * Does not attempt to promote to NonEmpty.
      */
