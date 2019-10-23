@@ -61,6 +61,12 @@ class EnhancedIterableTest {
         assertEquals("baz", iterator.next());
     }
 
+    @Test
+    void constructedUsingRepeatRepeatsTheSameValueForever() {
+        assertThat(EnhancedIterables.repeat(1).take(10),
+                contains(1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void iteratorHasNextCanBeCalledMultipleTimes() {

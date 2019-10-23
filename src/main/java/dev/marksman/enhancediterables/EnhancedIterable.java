@@ -453,6 +453,17 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     }
 
     /**
+     * Returns an infinite {@code ImmutableNonEmptyIterable} that repeatedly iterates a given element.
+     *
+     * @param element the value to repeat
+     * @param <A>     the element type
+     * @return an {@code ImmutableNonEmptyIterable<A>}
+     */
+    static <A> ImmutableNonEmptyIterable<A> repeat(A element) {
+        return EnhancedIterables.repeat(element);
+    }
+
+    /**
      * Creates an {@code EnhancedIterable} containing the given elements.
      * <p>
      * Note that this method actually returns an {@link ImmutableNonEmptyFiniteIterable}, which is

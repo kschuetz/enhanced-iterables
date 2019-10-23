@@ -199,4 +199,15 @@ public interface ImmutableNonEmptyIterable<A> extends ImmutableIterable<A>, NonE
         }
     }
 
+    /**
+     * Returns an infinite {@code ImmutableNonEmptyIterable} that repeatedly iterates a given element.
+     *
+     * @param element the value to repeat
+     * @param <A>     the element type
+     * @return an {@code ImmutableNonEmptyIterable<A>}
+     */
+    static <A> ImmutableNonEmptyIterable<A> repeat(A element) {
+        return EnhancedIterables.repeat(element);
+    }
+
 }
