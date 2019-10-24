@@ -49,4 +49,5 @@ class EmptyEnhancedIterableTest {
         assertThrows(UnsupportedOperationException.class, iterator::remove);
     }
 
+
 }

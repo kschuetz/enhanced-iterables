@@ -6,8 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## [Unreleased]
 ### Added
 - `repeat` constructors
+- `cycle` method for `FiniteIterable`s
 
 ### Changed
+- Upgrade lambda to 5.1.0
 - Singletons now require less memory
 
 ## [1.0.4] - 2019-10-01

@@ -176,6 +176,29 @@ class FiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("cycle")
+    class Cycle {
+
+        @Test
+        void cycleEmpty() {
+            assertThat(finiteIterable(emptyList()).cycle(), emptyIterable());
+        }
+
+        @Test
+        void cycleSingleton() {
+            assertThat(finiteIterable(singletonList(1)).cycle().drop(10000).take(10),
+                    contains(1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
+        }
+
+        @Test
+        void cycleSize3() {
+            assertThat(finiteIterable(asList(1, 2, 3)).cycle().drop(9999).take(10),
+                    contains(1, 2, 3, 1, 2, 3, 1, 2, 3, 1));
+        }
+
+    }
+
+    @Nested
     @DisplayName("drop")
     class Drop {
 

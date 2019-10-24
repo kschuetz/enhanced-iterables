@@ -57,6 +57,16 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
     }
 
     /**
+     * Returns an infinite {@code ImmutableNonEmptyIterable} that repeatedly cycles this {@code ImmutableNonEmptyFiniteIterable}'s elements,
+     * in order.
+     *
+     * @return an {@code ImmutableNonEmptyIterable<A>}
+     */
+    default ImmutableNonEmptyIterable<A> cycle() {
+        return EnhancedIterables.nonEmptyCycle(this);
+    }
+
+    /**
      * Returns a new {@code ImmutableNonEmptyFiniteIterable} by applying a function to all elements of this {@code ImmutableNonEmptyFiniteIterable}.
      *
      * @param f   a function from {@code A} to {@code B}.

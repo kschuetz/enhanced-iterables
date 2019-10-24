@@ -71,6 +71,16 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     }
 
     /**
+     * Returns an infinite {@code NonEmptyIterable} that repeatedly cycles this {@code NonEmptyFiniteIterable}'s elements,
+     * in order.
+     *
+     * @return an {@code NonEmptyIterable<A>}
+     */
+    default NonEmptyIterable<A> cycle() {
+        return EnhancedIterables.nonEmptyCycle(this);
+    }
+
+    /**
      * Returns a new {@code NonEmptyFiniteIterable} by applying a function to all elements of this {@code NonEmptyFiniteIterable}.
      *
      * @param f   a function from {@code A} to {@code B}.
