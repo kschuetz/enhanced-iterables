@@ -2,6 +2,7 @@ package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn0;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Cycle;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Uncons;
 import com.jnape.palatable.lambda.functions.builtin.fn2.ToCollection;
 
@@ -362,6 +363,28 @@ final class EnhancedIterables {
                 };
             }
         };
+    }
+
+    static <A> EnhancedIterable<A> cycle(FiniteIterable<A> underlying) {
+        return underlying.toNonEmpty()
+                .match(__ -> emptyEnhancedIterable(),
+                        EnhancedIterables::nonEmptyCycle);
+    }
+
+    static <A> ImmutableIterable<A> cycle(ImmutableFiniteIterable<A> underlying) {
+        return underlying.toNonEmpty()
+                .match(__ -> emptyEnhancedIterable(),
+                        EnhancedIterables::nonEmptyCycle);
+    }
+
+    static <A> NonEmptyIterable<A> nonEmptyCycle(NonEmptyFiniteIterable<A> underlying) {
+        requireNonNull(underlying);
+        return nonEmptyIterableOrThrow(Cycle.cycle(underlying));
+    }
+
+    static <A> ImmutableNonEmptyIterable<A> nonEmptyCycle(ImmutableNonEmptyFiniteIterable<A> underlying) {
+        requireNonNull(underlying);
+        return immutableNonEmptyIterableOrThrow(Cycle.cycle(underlying));
     }
 
     /**

@@ -102,6 +102,16 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Returns an infinite {@code EnhancedIterable} that repeatedly cycles this {@code FiniteIterable}'s elements,
+     * in order.
+     *
+     * @return an {@code EnhancedIterable<A>}
+     */
+    default EnhancedIterable<A> cycle() {
+        return EnhancedIterables.cycle(this);
+    }
+
+    /**
      * Returns a new {@code FiniteIterable} that drops the first {@code count} elements of this {@code FiniteIterable}.
      *
      * @param count the number of elements to drop from this {@code FiniteIterable}.

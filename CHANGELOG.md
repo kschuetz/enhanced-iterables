@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## [Unreleased]
 ### Added
 - `repeat` constructors
+- `cycle` method for `FiniteIterable`s
 
 ### Changed
 - Singletons now require less memory

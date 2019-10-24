@@ -76,6 +76,16 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     }
 
     /**
+     * Returns an infinite {@code ImmutableIterable} that repeatedly cycles this {@code ImmutableFiniteIterable}'s elements,
+     * in order.
+     *
+     * @return an {@code ImmutableIterable<A>}
+     */
+    default ImmutableIterable<A> cycle() {
+        return EnhancedIterables.cycle(this);
+    }
+
+    /**
      * Returns a new {@code ImmutableFiniteIterable} that drops the first {@code count} elements of this {@code ImmutableFiniteIterable}.
      *
      * @param count the number of elements to drop from this {@code ImmutableFiniteIterable}.
