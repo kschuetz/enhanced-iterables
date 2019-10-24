@@ -86,6 +86,15 @@ public interface ImmutableFiniteIterable<A> extends ImmutableIterable<A>, Finite
     }
 
     /**
+     * Returns a {@code ImmutableFiniteIterable} of the distinct values from this {@link ImmutableFiniteIterable}.
+     *
+     * @return a {@code ImmutableFiniteIterable<A>}
+     */
+    default ImmutableFiniteIterable<A> distinct() {
+        return EnhancedIterables.distinct(this);
+    }
+
+    /**
      * Returns a new {@code ImmutableFiniteIterable} that drops the first {@code count} elements of this {@code ImmutableFiniteIterable}.
      *
      * @param count the number of elements to drop from this {@code ImmutableFiniteIterable}.

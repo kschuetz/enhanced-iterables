@@ -3,6 +3,7 @@ package dev.marksman.enhancediterables;
 import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn0;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Cycle;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Distinct;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Uncons;
 import com.jnape.palatable.lambda.functions.builtin.fn2.ToCollection;
 
@@ -366,12 +367,14 @@ final class EnhancedIterables {
     }
 
     static <A> EnhancedIterable<A> cycle(FiniteIterable<A> underlying) {
+        requireNonNull(underlying);
         return underlying.toNonEmpty()
                 .match(__ -> emptyEnhancedIterable(),
                         EnhancedIterables::nonEmptyCycle);
     }
 
     static <A> ImmutableIterable<A> cycle(ImmutableFiniteIterable<A> underlying) {
+        requireNonNull(underlying);
         return underlying.toNonEmpty()
                 .match(__ -> emptyEnhancedIterable(),
                         EnhancedIterables::nonEmptyCycle);
@@ -385,6 +388,30 @@ final class EnhancedIterables {
     static <A> ImmutableNonEmptyIterable<A> nonEmptyCycle(ImmutableNonEmptyFiniteIterable<A> underlying) {
         requireNonNull(underlying);
         return immutableNonEmptyIterableOrThrow(Cycle.cycle(underlying));
+    }
+
+    static <A> FiniteIterable<A> distinct(FiniteIterable<A> underlying) {
+        requireNonNull(underlying);
+        return underlying.toNonEmpty()
+                .match(__ -> emptyEnhancedIterable(),
+                        EnhancedIterables::nonEmptyDistinct);
+    }
+
+    static <A> ImmutableFiniteIterable<A> distinct(ImmutableFiniteIterable<A> underlying) {
+        requireNonNull(underlying);
+        return underlying.toNonEmpty()
+                .match(__ -> emptyEnhancedIterable(),
+                        EnhancedIterables::nonEmptyDistinct);
+    }
+
+    static <A> NonEmptyFiniteIterable<A> nonEmptyDistinct(NonEmptyFiniteIterable<A> underlying) {
+        requireNonNull(underlying);
+        return nonEmptyFiniteIterableOrThrow(Distinct.distinct(underlying));
+    }
+
+    static <A> ImmutableNonEmptyFiniteIterable<A> nonEmptyDistinct(ImmutableNonEmptyFiniteIterable<A> underlying) {
+        requireNonNull(underlying);
+        return immutableNonEmptyFiniteIterableOrThrow(Distinct.distinct(underlying));
     }
 
     /**

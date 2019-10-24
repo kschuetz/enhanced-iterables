@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 - `repeat` constructors
 - `cycle` method for `FiniteIterable`s
+- `distinct` method for `FiniteIterable`s
 
 ### Changed
 - Upgrade lambda to 5.1.0

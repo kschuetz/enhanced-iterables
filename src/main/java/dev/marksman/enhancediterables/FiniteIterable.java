@@ -112,6 +112,15 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Returns a {@code FiniteIterable} of the distinct values from this {@link FiniteIterable}.
+     *
+     * @return a {@code FiniteIterable<A>}
+     */
+    default FiniteIterable<A> distinct() {
+        return EnhancedIterables.distinct(this);
+    }
+
+    /**
      * Returns a new {@code FiniteIterable} that drops the first {@code count} elements of this {@code FiniteIterable}.
      *
      * @param count the number of elements to drop from this {@code FiniteIterable}.

@@ -199,6 +199,23 @@ class FiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("distinct")
+    class Distinct {
+
+        @Test
+        void empty() {
+            assertThat(finiteIterable(emptyList()).distinct(), emptyIterable());
+        }
+
+        @Test
+        void removesRepeatedElementsAndRetainsOrder() {
+            assertThat(finiteIterable(asList(1, 2, 2, 3, 3, 3, 2, 2, 1, 4)).distinct(),
+                    contains(1, 2, 3, 4));
+        }
+
+    }
+
+    @Nested
     @DisplayName("drop")
     class Drop {
 

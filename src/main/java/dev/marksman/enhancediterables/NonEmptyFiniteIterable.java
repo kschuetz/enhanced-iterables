@@ -81,6 +81,15 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     }
 
     /**
+     * Returns a {@code NonEmptyFiniteIterable} of the distinct values from this {@link NonEmptyFiniteIterable}.
+     *
+     * @return a {@code NonEmptyFiniteIterable<A>}
+     */
+    default NonEmptyFiniteIterable<A> distinct() {
+        return EnhancedIterables.nonEmptyDistinct(this);
+    }
+
+    /**
      * Returns a new {@code NonEmptyFiniteIterable} by applying a function to all elements of this {@code NonEmptyFiniteIterable}.
      *
      * @param f   a function from {@code A} to {@code B}.
