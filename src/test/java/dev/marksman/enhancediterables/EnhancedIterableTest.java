@@ -63,7 +63,7 @@ class EnhancedIterableTest {
 
     @Test
     void constructedUsingRepeatRepeatsTheSameValueForever() {
-        assertThat(EnhancedIterables.repeat(1).take(10),
+        assertThat(EnhancedIterables.repeat(1).drop(10000).take(10),
                 contains(1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
     }
 

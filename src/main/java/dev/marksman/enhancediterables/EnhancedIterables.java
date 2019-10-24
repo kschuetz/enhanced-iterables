@@ -346,6 +346,21 @@ final class EnhancedIterables {
             public A head() {
                 return element;
             }
+
+            @Override
+            public Iterator<A> iterator() {
+                return new Iterator<A>() {
+                    @Override
+                    public boolean hasNext() {
+                        return true;
+                    }
+
+                    @Override
+                    public A next() {
+                        return element;
+                    }
+                };
+            }
         };
     }
 
