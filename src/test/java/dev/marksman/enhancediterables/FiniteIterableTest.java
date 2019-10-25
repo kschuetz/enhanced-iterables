@@ -19,6 +19,7 @@ import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
+import static com.jnape.palatable.lambda.functor.builtin.Lazy.lazy;
 import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
 import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterable;
 import static java.util.Arrays.asList;
@@ -199,6 +200,23 @@ class FiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("distinct")
+    class Distinct {
+
+        @Test
+        void empty() {
+            assertThat(finiteIterable(emptyList()).distinct(), emptyIterable());
+        }
+
+        @Test
+        void removesRepeatedElementsAndRetainsOrder() {
+            assertThat(finiteIterable(asList(1, 2, 2, 3, 3, 3, 2, 2, 1, 4)).distinct(),
+                    contains(1, 2, 3, 4));
+        }
+
+    }
+
+    @Nested
     @DisplayName("drop")
     class Drop {
 
@@ -363,6 +381,30 @@ class FiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("foldRight")
+    class FoldRight {
+
+        @Test
+        void throwsOnNullOperator() {
+            FiniteIterable<Integer> ints = finiteIterable(asList(1, 2, 3));
+            assertThrows(NullPointerException.class, () -> ints.foldRight(null, lazy(0)));
+        }
+
+        @Test
+        void onEmpty() {
+            FiniteIterable<Integer> ints = finiteIterable(emptyList());
+            assertEquals(999, ints.foldRight((x, acc) -> acc.fmap(y -> y + x), lazy(999)).value());
+        }
+
+        @Test
+        void onSize5() {
+            FiniteIterable<String> items = finiteIterable(asList("1", "2", "3", "4", "5"));
+            assertEquals("6,5,4,3,2,1", items.foldRight((x, acc) -> acc.fmap(s -> s + "," + x), lazy("6")).value());
+        }
+
+    }
+
+    @Nested
     @DisplayName("inits")
     class Inits {
 
@@ -505,6 +547,99 @@ class FiniteIterableTest {
         @Test
         void testCase1() {
             assertThat(finiteIterable(asList(1, 2, 3, 4, 5)).reverse(), contains(5, 4, 3, 2, 1));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("size")
+    class Size {
+
+        @Test
+        void empty() {
+            assertEquals(0, finiteIterable(emptyList()).size());
+        }
+
+        @Test
+        void singleton() {
+            assertEquals(1, finiteIterable(singletonList(1)).size());
+        }
+
+        @Test
+        void size8() {
+            assertEquals(8, finiteIterable(asList(1, 2, 3, 4, 5, 6, 7, 8)).size());
+        }
+
+        @Test
+        void delegatesToUnderlyingCollection() {
+            int WEIRD_SIZE_VALUE = 1234567;
+            Collection<Integer> collection = new Collection<Integer>() {
+                @Override
+                public int size() {
+                    return WEIRD_SIZE_VALUE;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public boolean contains(Object o) {
+                    return false;
+                }
+
+                @Override
+                public Iterator<Integer> iterator() {
+                    return null;
+                }
+
+                @Override
+                public Object[] toArray() {
+                    return new Object[0];
+                }
+
+                @Override
+                public <T> T[] toArray(T[] a) {
+                    return null;
+                }
+
+                @Override
+                public boolean add(Integer integer) {
+                    return false;
+                }
+
+                @Override
+                public boolean remove(Object o) {
+                    return false;
+                }
+
+                @Override
+                public boolean containsAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean addAll(Collection<? extends Integer> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean removeAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean retainAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public void clear() {
+
+                }
+            };
+            assertEquals(WEIRD_SIZE_VALUE, finiteIterable(collection).size());
         }
 
     }
