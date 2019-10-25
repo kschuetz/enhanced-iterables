@@ -19,6 +19,7 @@ import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
+import static com.jnape.palatable.lambda.functor.builtin.Lazy.lazy;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -183,6 +184,18 @@ class ImmutableNonEmptyFiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("distinct")
+    class Distinct {
+
+        @Test
+        void removesRepeatedElementsAndRetainsOrder() {
+            assertThat(immutableNonEmptyFiniteIterable(1, asList(2, 2, 3, 3, 3, 2, 2, 1, 4)).distinct(),
+                    contains(1, 2, 3, 4));
+        }
+
+    }
+
+    @Nested
     @DisplayName("drop")
     class Drop {
 
@@ -341,6 +354,24 @@ class ImmutableNonEmptyFiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("foldRight")
+    class FoldRight {
+
+        @Test
+        void throwsOnNullOperator() {
+            FiniteIterable<Integer> ints = immutableNonEmptyFiniteIterable(1, asList(2, 3));
+            assertThrows(NullPointerException.class, () -> ints.foldRight(null, lazy(0)));
+        }
+
+        @Test
+        void onSize5() {
+            FiniteIterable<String> items = immutableNonEmptyFiniteIterable("1", asList("2", "3", "4", "5"));
+            assertEquals("6,5,4,3,2,1", items.foldRight((x, acc) -> acc.fmap(s -> s + "," + x), lazy("6")).value());
+        }
+
+    }
+
+    @Nested
     @DisplayName("inits")
     class Inits {
 
@@ -431,6 +462,25 @@ class ImmutableNonEmptyFiniteIterableTest {
         void testCase2() {
             assertThat(immutableNonEmptyFiniteIterable("foo", asList("bar", "baz")).prependAll("*"),
                     contains("*", "foo", "*", "bar", "*", "baz"));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("reduceRight")
+    class ReduceRight {
+
+        @Test
+        void throwsOnNullOperator() {
+            NonEmptyFiniteIterable<Integer> ints = immutableNonEmptyFiniteIterable(1, asList(2, 3));
+            //noinspection ConstantConditions
+            assertThrows(NullPointerException.class, () -> ints.reduceRight(null));
+        }
+
+        @Test
+        void onSize5() {
+            NonEmptyFiniteIterable<String> items = immutableNonEmptyFiniteIterable("1", asList("2", "3", "4", "5"));
+            assertEquals("5,4,3,2,1", items.reduceRight((x, acc) -> acc + "," + x));
         }
 
     }

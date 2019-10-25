@@ -29,9 +29,9 @@ For more details, check out the [javadoc](https://kschuetz.github.io/enhanced-it
 
 # [lambda](https://github.com/palatable/lambda) version compatibility
 
-| enhanced-iterables | lambda 5.0.0 | lambda 4.0.0 |
-|---|---|---|
-|1.0.x|:heavy_check_mark:|:heavy_check_mark:|
+| enhanced-iterables | lambda 5.1.0 | lambda 5.0.0 | lambda 4.0.0 |
+|---|---|---|---|
+|1.0.x|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 
 # Types
 
@@ -82,6 +82,7 @@ In addition to all methods on `EnhancedIterable<A>`, provides the following:
 | `concat` | `FiniteIterable<A>`| [`Concat.concat`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/monoid/builtin/Concat.html) |
 | `cross` | `FiniteIterable<Tuple2<A, B>>>`| [`CartestianProduct.cartesianProduct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/CartesianProduct.html) |
 | `cycle` | `EnhancedIterable<A>`| [`Cycle.cycle`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Cycle.html) |
+| `distinct` | `FiniteIterable<A>`| [`Distinct.distinct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Distinct.html) |
 | `drop` | `FiniteIterable<A>`| [`Drop.drop`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Drop.html) |
 | `dropWhile` | `FiniteIterable<A>`| [`DropWhile.dropWhile`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/DropWhile.html) |
 | `filter` | `FiniteIterable<A>`| [`Filter.filter`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Filter.html) |
@@ -141,6 +142,7 @@ In addition to all methods on `FiniteIterable<A>` and `NonEmptyIterable<A>`, pro
 | `concat` | `NonEmptyFiniteIterable<A>`| [`Concat.concat`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/monoid/builtin/Concat.html) |
 | `cross` | `NonEmptyFiniteIterable<Tuple2<A, B>>>`| [`CartestianProduct.cartesianProduct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/CartesianProduct.html) |
 | `cycle` | `NonEmptyIterable<A>`| [`Cycle.cycle`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Cycle.html) |
+| `distinct` | `NonEmptyFiniteIterable<A>`| [`Distinct.distinct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Distinct.html) |
 | `fmap` | `NonEmptyFiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `init` | `FiniteIterable<A>`| [`Init.init`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Init.html)|
 | `intersperse` | `NonEmptyFiniteIterable<A>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |
@@ -201,6 +203,7 @@ In addition to all methods on `ImmutableIterable<A>` and `FiniteIterable<A>`, pr
 | `concat` | `ImmutableFiniteIterable<A>`| [`Concat.concat`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/monoid/builtin/Concat.html) |
 | `cross` | `ImmutableFiniteIterable<Tuple2<A, B>>>`| [`CartestianProduct.cartesianProduct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/CartesianProduct.html) |
 | `cycle` | `ImmutableIterable<A>`| [`Cycle.cycle`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Cycle.html) |
+| `distinct` | `ImmutableFiniteIterable<A>`| [`Distinct.distinct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Distinct.html) |
 | `drop` | `ImmutableFiniteIterable<A>`| [`Drop.drop`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Drop.html) |
 | `dropWhile` | `ImmutableFiniteIterable<A>`| [`DropWhile.dropWhile`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/DropWhile.html) |
 | `filter` | `ImmutableFiniteIterable<A>`| [`Filter.filter`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Filter.html) |
@@ -258,6 +261,7 @@ In addition to all methods on `ImmutableFiniteIterable<A>` and `ImmutableNonEmpt
 | `concat` | `ImmutableNonEmptyFiniteIterable<A>`| [`Concat.concat`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/monoid/builtin/Concat.html) |
 | `cross` | `ImmutableNonEmptyFiniteIterable<Tuple2<A, B>>>`| [`CartestianProduct.cartesianProduct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/CartesianProduct.html) |
 | `cycle` | `ImmutableNonEmptyIterable<A>`| [`Cycle.cycle`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Cycle.html) |
+| `distinct` | `ImmutableFiniteIterable<A>`| [`Distinct.distinct`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Distinct.html) |
 | `fmap` | `ImmutableNonEmptyFiniteIterable<B>`| [`Map.map`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Map.html) |
 | `init` | `ImmutableFiniteIterable<A>`| [`Init.init`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn1/Init.html)|
 | `intersperse` | `ImmutableNonEmptyFiniteIterable<B>`| [`Intersperse.intersperse`](https://palatable.github.io/lambda/javadoc/com/jnape/palatable/lambda/functions/builtin/fn2/Intersperse.html) |

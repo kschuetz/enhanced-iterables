@@ -81,6 +81,15 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     }
 
     /**
+     * Returns a {@code NonEmptyFiniteIterable} of the distinct values from this {@link NonEmptyFiniteIterable}.
+     *
+     * @return a {@code NonEmptyFiniteIterable<A>}
+     */
+    default NonEmptyFiniteIterable<A> distinct() {
+        return EnhancedIterables.nonEmptyDistinct(this);
+    }
+
+    /**
      * Returns a new {@code NonEmptyFiniteIterable} by applying a function to all elements of this {@code NonEmptyFiniteIterable}.
      *
      * @param f   a function from {@code A} to {@code B}.
@@ -153,6 +162,36 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default NonEmptyFiniteIterable<A> prependAll(A separator) {
         return nonEmptyFiniteIterableOrThrow(PrependAll.prependAll(separator, this));
+    }
+
+    /**
+     * Applies a binary operator to all elements of this {@code NonEmptyFiniteIterable}, going left to right.
+     *
+     * @param op the binary operator (accumulator on the left, item on the right)
+     * @return the result of inserting {@code op} between consecutive elements of this {@code NonEmptyFiniteIterable},
+     * going left to right:
+     * <code>
+     * op( op( ... op(x_1, x_2) ..., x_{n-1}), x_n)
+     * </code>
+     * where <code>x,,1,,, ..., x,,n,,</code> are the elements of this {@code NonEmptyFiniteIterable}
+     */
+    default A reduceLeft(Fn2<? super A, ? super A, ? extends A> op) {
+        return tail().foldLeft(op, head());
+    }
+
+    /**
+     * Applies a binary operator to all elements of this {@code NonEmptyFiniteIterable}, going right to left.
+     *
+     * @param op the binary operator (item on the left, accumulator on the right)
+     * @return the result of inserting {@code op} between consecutive elements of this {@code NonEmptyFiniteIterable},
+     * going right to left:
+     * <code>
+     * op(x_1, op(x_2, ..., op(x_{n-1}, x_n)...))
+     * </code>
+     * where <code>x,,1,,, ..., x,,n,,</code> are the elements of this {@code NonEmptyFiniteIterable}
+     */
+    default A reduceRight(Fn2<? super A, ? super A, ? extends A> op) {
+        return reverse().reduceLeft(op.flip());
     }
 
     /**

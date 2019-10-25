@@ -67,6 +67,15 @@ public interface ImmutableNonEmptyFiniteIterable<A> extends ImmutableFiniteItera
     }
 
     /**
+     * Returns a {@code ImmutableNonEmptyFiniteIterable} of the distinct values from this {@link ImmutableNonEmptyFiniteIterable}.
+     *
+     * @return a {@code ImmutableNonEmptyFiniteIterable<A>}
+     */
+    default ImmutableNonEmptyFiniteIterable<A> distinct() {
+        return EnhancedIterables.nonEmptyDistinct(this);
+    }
+
+    /**
      * Returns a new {@code ImmutableNonEmptyFiniteIterable} by applying a function to all elements of this {@code ImmutableNonEmptyFiniteIterable}.
      *
      * @param f   a function from {@code A} to {@code B}.
