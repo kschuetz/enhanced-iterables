@@ -10,7 +10,9 @@ import com.jnape.palatable.lambda.functions.builtin.fn1.Reverse;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Tails;
 import com.jnape.palatable.lambda.functions.builtin.fn2.*;
 import com.jnape.palatable.lambda.functions.builtin.fn3.FoldLeft;
+import com.jnape.palatable.lambda.functions.builtin.fn3.FoldRight;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
+import com.jnape.palatable.lambda.functor.builtin.Lazy;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Collection;
@@ -195,6 +197,28 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     default <B> B foldLeft(Fn2<? super B, ? super A, ? extends B> op, B z) {
         requireNonNull(op);
         return FoldLeft.<A, B>foldLeft(op, z).apply(this);
+    }
+
+    /**
+     * Applies a binary operator to a start value and all elements of this {@code FiniteIterable}, going right to left.
+     * <p>
+     * This method is computationally the iterative inverse of {@link FiniteIterable#foldLeft}, but uses {@code Lazy} to support stack-safe
+     * execution.
+     *
+     * @param z   the start value
+     * @param op  the binary operator
+     * @param <B> the result type of the binary operator
+     * @return a {@code Lazy<B>} that evaluates to the result of inserting {@code op} between consecutive elements of
+     * this {@code FiniteIterable}, going right to left with the start value {@code z} on the right:
+     * <code>
+     * op(x_1, op(x_2, ... op(x_n, z)...))
+     * </code>
+     * where <code>x,,1,,, ..., x,,n,,</code> are the elements of this {@code FiniteIterable}
+     * Returns {@code z} if this {@code FiniteIterable} is empty.
+     */
+    default <B> Lazy<B> foldRight(Fn2<? super A, ? super Lazy<B>, ? extends Lazy<B>> op, Lazy<B> z) {
+        requireNonNull(op);
+        return FoldRight.<A, B>foldRight(op, z).apply(this);
     }
 
     /**

@@ -19,6 +19,7 @@ import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
+import static com.jnape.palatable.lambda.functor.builtin.Lazy.lazy;
 import static dev.marksman.enhancediterables.EnhancedIterables.immutableFiniteIterable;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -374,6 +375,30 @@ class ImmutableFiniteIterableTest {
         void onSize5() {
             FiniteIterable<Integer> ints = immutableFiniteIterable(asList(1, 2, 3, 4, 5));
             assertEquals(25, ints.foldLeft(Integer::sum, 10));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("foldRight")
+    class FoldRight {
+
+        @Test
+        void throwsOnNullOperator() {
+            FiniteIterable<Integer> ints = immutableFiniteIterable(asList(1, 2, 3));
+            assertThrows(NullPointerException.class, () -> ints.foldRight(null, lazy(0)));
+        }
+
+        @Test
+        void onEmpty() {
+            FiniteIterable<Integer> ints = immutableFiniteIterable(emptyList());
+            assertEquals(999, ints.foldRight((x, acc) -> acc.fmap(y -> y + x), lazy(999)).value());
+        }
+
+        @Test
+        void onSize5() {
+            FiniteIterable<String> items = immutableFiniteIterable(asList("1", "2", "3", "4", "5"));
+            assertEquals("6,5,4,3,2,1", items.foldRight((x, acc) -> acc.fmap(s -> s + "," + x), lazy("6")).value());
         }
 
     }
