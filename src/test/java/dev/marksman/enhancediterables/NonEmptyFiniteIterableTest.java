@@ -483,6 +483,43 @@ class NonEmptyFiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("reduceLeft")
+    class ReduceLeft {
+
+        @Test
+        void throwsOnNullOperator() {
+            NonEmptyFiniteIterable<Integer> ints = nonEmptyFiniteIterable(1, asList(2, 3));
+            assertThrows(NullPointerException.class, () -> ints.reduceLeft(null));
+        }
+
+        @Test
+        void onSize5() {
+            NonEmptyFiniteIterable<Integer> ints = nonEmptyFiniteIterable(1, asList(2, 3, 4, 5));
+            assertEquals(15, ints.reduceLeft(Integer::sum));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("reduceRight")
+    class ReduceRight {
+
+        @Test
+        void throwsOnNullOperator() {
+            NonEmptyFiniteIterable<Integer> ints = nonEmptyFiniteIterable(1, asList(2, 3));
+            //noinspection ConstantConditions
+            assertThrows(NullPointerException.class, () -> ints.reduceRight(null));
+        }
+
+        @Test
+        void onSize5() {
+            NonEmptyFiniteIterable<String> items = nonEmptyFiniteIterable("1", asList("2", "3", "4", "5"));
+            assertEquals("5,4,3,2,1", items.reduceRight((x, acc) -> acc + "," + x));
+        }
+
+    }
+
+    @Nested
     @DisplayName("reverse")
     class Reverse {
 
