@@ -4,6 +4,7 @@ import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn0;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Cycle;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Distinct;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Size;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Uncons;
 import com.jnape.palatable.lambda.functions.builtin.fn2.ToCollection;
 
@@ -48,8 +49,21 @@ final class EnhancedIterables {
     }
 
     static <A> FiniteIterable<A> finiteIterable(Iterable<A> underlying) {
+        requireNonNull(underlying);
         if (underlying instanceof FiniteIterable<?>) {
             return (FiniteIterable<A>) underlying;
+        } else if (underlying instanceof Collection<?>) {
+            return new FiniteIterable<A>() {
+                @Override
+                public Iterator<A> iterator() {
+                    return protectedIterator(underlying.iterator());
+                }
+
+                @Override
+                public int size() {
+                    return ((Collection<A>) underlying).size();
+                }
+            };
         } else {
             return () -> protectedIterator(underlying.iterator());
         }
@@ -187,7 +201,9 @@ final class EnhancedIterables {
     }
 
     static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterableOrThrow(Iterable<A> underlying) {
-        if (underlying instanceof NonEmptyFiniteIterable<?>) {
+        if (underlying instanceof Collection<?>) {
+            return nonEmptyFiniteIterableFromCollectionOrThrow((Collection<A>) underlying);
+        } else if (underlying instanceof NonEmptyFiniteIterable<?>) {
             return (NonEmptyFiniteIterable<A>) underlying;
         } else {
             if (!underlying.iterator().hasNext()) {
@@ -212,6 +228,7 @@ final class EnhancedIterables {
             };
         }
     }
+
 
     static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterable(A head, ImmutableIterable<A> tail) {
         requireNonNull(tail);
@@ -414,6 +431,16 @@ final class EnhancedIterables {
         return immutableNonEmptyFiniteIterableOrThrow(Distinct.distinct(underlying));
     }
 
+    static <A> int size(FiniteIterable<A> as) {
+        requireNonNull(as);
+        Long longSize = Size.size(as);
+        if (longSize > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        } else {
+            return longSize.intValue();
+        }
+    }
+
     /**
      * Does not attempt to promote to NonEmpty.
      */
@@ -446,7 +473,7 @@ final class EnhancedIterables {
         if (collection.isEmpty()) {
             return finiteIterable(collection);
         } else {
-            return nonEmptyFiniteIterableOrThrow(collection);
+            return nonEmptyFiniteIterableFromCollectionOrThrow(collection);
         }
     }
 
@@ -456,6 +483,35 @@ final class EnhancedIterables {
         } else {
             return immutableNonEmptyFiniteIterableOrThrow(collection);
         }
+    }
+
+    private static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterableFromCollectionOrThrow(Collection<A> underlying) {
+        if (underlying.isEmpty()) {
+            throw nonEmptyError().apply();
+        }
+
+        return new NonEmptyFiniteIterable<A>() {
+            @Override
+            public A head() {
+                return iterator().next();
+            }
+
+            @Override
+            public FiniteIterable<A> tail() {
+                return this.drop(1);
+            }
+
+            @Override
+            public Iterator<A> iterator() {
+                return protectedIterator(underlying.iterator());
+            }
+
+            @Override
+            public int size() {
+                return underlying.size();
+            }
+        };
+
     }
 
     private static Fn0<IllegalArgumentException> nonEmptyError() {

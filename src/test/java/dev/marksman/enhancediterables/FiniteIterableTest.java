@@ -527,6 +527,99 @@ class FiniteIterableTest {
     }
 
     @Nested
+    @DisplayName("size")
+    class Size {
+
+        @Test
+        void empty() {
+            assertEquals(0, finiteIterable(emptyList()).size());
+        }
+
+        @Test
+        void singleton() {
+            assertEquals(1, finiteIterable(singletonList(1)).size());
+        }
+
+        @Test
+        void size8() {
+            assertEquals(8, finiteIterable(asList(1, 2, 3, 4, 5, 6, 7, 8)).size());
+        }
+
+        @Test
+        void delegatesToUnderlyingCollection() {
+            int WEIRD_SIZE_VALUE = 1234567;
+            Collection<Integer> collection = new Collection<Integer>() {
+                @Override
+                public int size() {
+                    return WEIRD_SIZE_VALUE;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public boolean contains(Object o) {
+                    return false;
+                }
+
+                @Override
+                public Iterator<Integer> iterator() {
+                    return null;
+                }
+
+                @Override
+                public Object[] toArray() {
+                    return new Object[0];
+                }
+
+                @Override
+                public <T> T[] toArray(T[] a) {
+                    return null;
+                }
+
+                @Override
+                public boolean add(Integer integer) {
+                    return false;
+                }
+
+                @Override
+                public boolean remove(Object o) {
+                    return false;
+                }
+
+                @Override
+                public boolean containsAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean addAll(Collection<? extends Integer> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean removeAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean retainAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public void clear() {
+
+                }
+            };
+            assertEquals(WEIRD_SIZE_VALUE, finiteIterable(collection).size());
+        }
+
+    }
+
+    @Nested
     @DisplayName("slide")
     class Slide {
 

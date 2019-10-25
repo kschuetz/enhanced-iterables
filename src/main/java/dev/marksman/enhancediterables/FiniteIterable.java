@@ -294,6 +294,18 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     }
 
     /**
+     * Returns the number of elements in this {@code FiniteIterable}.
+     * <p>
+     * If this {@code FiniteIterable} contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
+     * <tt>Integer.MAX_VALUE</tt>.
+     *
+     * @return the number of elements in this {@code FiniteIterable}
+     */
+    default int size() {
+        return EnhancedIterables.size(this);
+    }
+
+    /**
      * "Slides" a window of {@code k} elements across the {@code FiniteIterable} by one element at a time.
      * <p>
      * Example:
