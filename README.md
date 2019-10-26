@@ -31,6 +31,7 @@ For more details, check out the [javadoc](https://kschuetz.github.io/enhanced-it
 
 | enhanced-iterables | lambda 5.1.0 | lambda 5.0.0 | lambda 4.0.0 |
 |---|---|---|---|
+|1.1.x|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 |1.0.x|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 
 # Types
