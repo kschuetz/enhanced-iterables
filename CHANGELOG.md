@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
+No changes yet
+
+## [1.1.0] - 2019-10-25
+### Changed
+- Upgrade lambda to 5.1.0
+- Singletons now require less memory
+
 ### Added
 - `repeat` constructors
 - `cycle` method for `FiniteIterable`s
@@ -12,10 +19,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - `reduceLeft` method for `NonEmptyFiniteIterable`s
 - `reduceRight` method for `NonEmptyFiniteIterable`s
 - `size` method for `FiniteIterable`s
-
-### Changed
-- Upgrade lambda to 5.1.0
-- Singletons now require less memory
 
 ## [1.0.4] - 2019-10-01
 ###
