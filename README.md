@@ -30,7 +30,7 @@ For more details, check out the [javadoc](https://kschuetz.github.io/enhanced-it
 # [lambda](https://github.com/palatable/lambda) version compatibility
 
 | enhanced-iterables | lambda 5.2.0 | lambda 5.1.0 | lambda 5.0.0 | lambda 4.0.0 |
-|---|---|---|---|
+|---|---|---|---|---|
 |1.1.x|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 |1.0.x|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 
