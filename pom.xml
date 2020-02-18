@@ -15,7 +15,7 @@
     <url>http://www.github.com/kschuetz/enhanced-iterables</url>
 
     <properties>
-        <lambda.version>5.1.0</lambda.version>
+        <lambda.version>5.2.0</lambda.version>
         <junit.version>5.4.0</junit.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
