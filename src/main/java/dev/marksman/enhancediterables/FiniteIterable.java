@@ -320,8 +320,8 @@ public interface FiniteIterable<A> extends EnhancedIterable<A> {
     /**
      * Returns the number of elements in this {@code FiniteIterable}.
      * <p>
-     * If this {@code FiniteIterable} contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
-     * <tt>Integer.MAX_VALUE</tt>.
+     * If this {@code FiniteIterable} contains more than <code>Integer.MAX_VALUE</code> elements, returns
+     * <code>Integer.MAX_VALUE</code>.
      *
      * @return the number of elements in this {@code FiniteIterable}
      */
