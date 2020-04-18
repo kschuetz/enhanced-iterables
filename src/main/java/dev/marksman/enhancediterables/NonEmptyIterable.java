@@ -3,15 +3,20 @@ package dev.marksman.enhancediterables;
 import com.jnape.palatable.lambda.adt.Maybe;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
-import com.jnape.palatable.lambda.functions.builtin.fn2.*;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Cons;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
+import com.jnape.palatable.lambda.functions.builtin.fn2.MagnetizeBy;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
+import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Iterator;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
-import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
-import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeNonEmptyFiniteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeNonEmptyIterable;
+import static dev.marksman.enhancediterables.Wrapped.unwrap;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -47,7 +52,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     @Override
     default NonEmptyIterable<A> concat(Iterable<A> other) {
         requireNonNull(other);
-        return nonEmptyIterableOrThrow(Concat.concat(this, other));
+        return unsafeNonEmptyIterable(Concat.concat(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -62,7 +67,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     @Override
     default <B> NonEmptyIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);
-        return nonEmptyIterable(f.apply(head()), Map.map(f, tail()));
+        return unsafeNonEmptyIterable(Map.map(f, unwrap(this)));
     }
 
     /**
@@ -86,7 +91,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default NonEmptyIterable<A> intersperse(A separator) {
-        return nonEmptyIterableOrThrow(Intersperse.intersperse(separator, this));
+        return unsafeNonEmptyIterable(Intersperse.intersperse(separator, unwrap(this)));
     }
 
     /**
@@ -109,8 +114,8 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     @Override
     default NonEmptyIterable<? extends NonEmptyIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
         requireNonNull(predicate);
-        return nonEmptyIterableOrThrow(MagnetizeBy.magnetizeBy(predicate, this))
-                .fmap(EnhancedIterables::nonEmptyIterableOrThrow);
+        return unsafeNonEmptyIterable(MagnetizeBy.magnetizeBy(predicate, unwrap(this)))
+                .fmap(EnhancedIterables::unsafeNonEmptyIterable);
     }
 
     /**
@@ -122,7 +127,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default NonEmptyIterable<A> prependAll(A separator) {
-        return nonEmptyIterableOrThrow(PrependAll.prependAll(separator, this));
+        return unsafeNonEmptyIterable(PrependAll.prependAll(separator, unwrap(this)));
     }
 
     /**
@@ -187,7 +192,7 @@ public interface NonEmptyIterable<A> extends EnhancedIterable<A> {
     default <B, C> NonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyFiniteIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return nonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn, this, other));
+        return unsafeNonEmptyFiniteIterable(ZipWith.zipWith(fn, unwrap(this), unwrap(other)));
     }
 
     /**
