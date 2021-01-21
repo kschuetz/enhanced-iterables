@@ -6,15 +6,34 @@ import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Tails;
-import com.jnape.palatable.lambda.functions.builtin.fn2.*;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Cons;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Drop;
+import com.jnape.palatable.lambda.functions.builtin.fn2.DropWhile;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Filter;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
+import com.jnape.palatable.lambda.functions.builtin.fn2.MagnetizeBy;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Partition;
+import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Slide;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Snoc;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Span;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Take;
+import com.jnape.palatable.lambda.functions.builtin.fn2.TakeWhile;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Collection;
 
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
-import static dev.marksman.enhancediterables.EnhancedIterables.*;
-import static dev.marksman.enhancediterables.Validation.*;
+import static dev.marksman.enhancediterables.EnhancedIterables.immutableFiniteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.immutableIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeImmutableNonEmptyFiniteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeImmutableNonEmptyIterable;
+import static dev.marksman.enhancediterables.Validation.validateDrop;
+import static dev.marksman.enhancediterables.Validation.validateSlide;
+import static dev.marksman.enhancediterables.Validation.validateTake;
+import static dev.marksman.enhancediterables.Wrapped.unwrap;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,7 +53,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default ImmutableNonEmptyIterable<A> append(A element) {
-        return immutableNonEmptyIterableOrThrow(Snoc.snoc(element, this));
+        return unsafeImmutableNonEmptyIterable(Snoc.snoc(element, unwrap(this)));
     }
 
     /**
@@ -46,7 +65,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     default ImmutableIterable<A> concat(ImmutableIterable<A> other) {
         requireNonNull(other);
-        return EnhancedIterables.immutableIterable(Concat.concat(this, other));
+        return immutableIterable(Concat.concat(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -58,7 +77,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     default ImmutableNonEmptyIterable<A> concat(ImmutableNonEmptyIterable<A> other) {
         requireNonNull(other);
-        return EnhancedIterables.immutableNonEmptyIterableOrThrow(Concat.concat(this, other));
+        return unsafeImmutableNonEmptyIterable(Concat.concat(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -73,7 +92,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<A> drop(int count) {
         validateDrop(count);
-        return immutableIterable(Drop.drop(count, this));
+        return immutableIterable(Drop.drop(count, unwrap(this)));
     }
 
     /**
@@ -88,7 +107,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        return immutableIterable(DropWhile.dropWhile(predicate, this));
+        return immutableIterable(DropWhile.dropWhile(predicate, unwrap(this)));
     }
 
     /**
@@ -101,7 +120,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        return immutableIterable(Filter.<A>filter(predicate).apply(this));
+        return immutableIterable(Filter.<A>filter(predicate).apply(unwrap(this)));
     }
 
     /**
@@ -116,7 +135,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default <B> ImmutableIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);
-        return immutableIterable(Map.map(f, this));
+        return immutableIterable(Map.map(f, unwrap(this)));
     }
 
     /**
@@ -130,7 +149,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default ImmutableIterable<A> intersperse(A separator) {
-        return immutableIterable(Intersperse.intersperse(separator, this));
+        return immutableIterable(Intersperse.intersperse(separator, unwrap(this)));
     }
 
     /**
@@ -145,8 +164,8 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<? extends ImmutableNonEmptyIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
         requireNonNull(predicate);
-        return EnhancedIterables.immutableIterable(MagnetizeBy.magnetizeBy(predicate, this))
-                .fmap(EnhancedIterables::immutableNonEmptyIterableOrThrow);
+        return EnhancedIterables.immutableIterable(MagnetizeBy.magnetizeBy(predicate, unwrap(this)))
+                .fmap(EnhancedIterables::unsafeImmutableNonEmptyIterable);
     }
 
     /**
@@ -164,7 +183,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     default <B, C> Tuple2<? extends ImmutableIterable<B>, ? extends ImmutableIterable<C>> partition(
             Fn1<? super A, ? extends CoProduct2<B, C, ?>> function) {
         requireNonNull(function);
-        Tuple2<Iterable<B>, Iterable<C>> partitionResult = Partition.partition(function, this);
+        Tuple2<Iterable<B>, Iterable<C>> partitionResult = Partition.partition(function, unwrap(this));
         return tuple(immutableIterable(partitionResult._1()),
                 immutableIterable(partitionResult._2()));
     }
@@ -177,7 +196,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default ImmutableNonEmptyIterable<A> prepend(A element) {
-        return ImmutableNonEmptyIterable.immutableNonEmptyIterable(element, this);
+        return unsafeImmutableNonEmptyIterable(Cons.cons(element, unwrap(this)));
     }
 
     /**
@@ -191,7 +210,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default ImmutableIterable<A> prependAll(A separator) {
-        return immutableIterable(PrependAll.prependAll(separator, this));
+        return immutableIterable(PrependAll.prependAll(separator, unwrap(this)));
     }
 
     /**
@@ -207,8 +226,8 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<? extends ImmutableNonEmptyFiniteIterable<A>> slide(int k) {
         validateSlide(k);
-        return immutableIterable(Map.map(EnhancedIterables::immutableNonEmptyFiniteIterableOrThrow,
-                Slide.slide(k, this)));
+        return immutableIterable(Map.map(EnhancedIterables::unsafeImmutableNonEmptyFiniteIterable,
+                Slide.slide(k, unwrap(this))));
     }
 
     /**
@@ -221,7 +240,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default Tuple2<? extends ImmutableIterable<A>, ? extends ImmutableIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        Tuple2<Iterable<A>, Iterable<A>> spanResult = Span.<A>span(predicate).apply(this);
+        Tuple2<Iterable<A>, Iterable<A>> spanResult = Span.<A>span(predicate).apply(unwrap(this));
         return tuple(immutableIterable(spanResult._1()),
                 immutableIterable(spanResult._2()));
     }
@@ -237,7 +256,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
      */
     @Override
     default ImmutableNonEmptyIterable<? extends ImmutableIterable<A>> tails() {
-        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterables::immutableIterable, Tails.tails(this)));
+        return unsafeImmutableNonEmptyFiniteIterable(Map.map(EnhancedIterables::immutableIterable, Tails.tails(unwrap(this))));
     }
 
     /**
@@ -252,7 +271,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableFiniteIterable<A> take(int count) {
         validateTake(count);
-        return immutableFiniteIterable(Take.take(count, this));
+        return immutableFiniteIterable(Take.take(count, unwrap(this)));
     }
 
     /**
@@ -267,7 +286,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default ImmutableIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        return immutableIterable(TakeWhile.takeWhile(predicate, this));
+        return immutableIterable(TakeWhile.takeWhile(predicate, unwrap(this)));
     }
 
     /**
@@ -293,7 +312,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     @Override
     default Maybe<? extends ImmutableNonEmptyIterable<A>> toNonEmpty() {
         return EnhancedIterables.maybeNonEmpty(this)
-                .fmap(EnhancedIterables::immutableNonEmptyIterableOrThrow);
+                .fmap(EnhancedIterables::unsafeImmutableNonEmptyIterable);
     }
 
     /**
@@ -313,7 +332,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     default <B, C> ImmutableIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return immutableIterable(ZipWith.zipWith(fn, this, other));
+        return immutableIterable(ZipWith.zipWith(fn, unwrap(this), unwrap(other)));
     }
 
     /**
@@ -333,7 +352,7 @@ public interface ImmutableIterable<A> extends EnhancedIterable<A> {
     default <B, C> ImmutableFiniteIterable<C> zipWith(Fn2<A, B, C> fn, ImmutableFiniteIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return immutableFiniteIterable(ZipWith.zipWith(fn, this, other));
+        return immutableFiniteIterable(ZipWith.zipWith(fn, unwrap(this), unwrap(other)));
     }
 
     /**

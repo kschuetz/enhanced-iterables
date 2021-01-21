@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
+No changes yet
+
+## [1.2.0] - 2020-04-18
+### Changed
+- Improved stack-safety
+- An attempt to automatically promote to NonEmpty is no longer made on construction, unless the underlying Iterable is a Collection
+
+## [1.1.1] - 2020-02-18
+### Changed
+- Upgrade lambda to 5.2.0
+
+## [1.1.0] - 2019-10-25
+### Changed
+- Upgrade lambda to 5.1.0
+- Singletons now require less memory
+
 ### Added
 - `repeat` constructors
 - `cycle` method for `FiniteIterable`s
@@ -12,10 +28,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - `reduceLeft` method for `NonEmptyFiniteIterable`s
 - `reduceRight` method for `NonEmptyFiniteIterable`s
 - `size` method for `FiniteIterable`s
-
-### Changed
-- Upgrade lambda to 5.1.0
-- Singletons now require less memory
 
 ## [1.0.4] - 2019-10-01
 ###
@@ -43,7 +55,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.4...HEAD
+[Unreleased]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.2.0...HEAD
+[1.2.0]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.1.1...enhanced-iterables-1.2.0
+[1.1.1]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.1.0...enhanced-iterables-1.1.1
+[1.1.0]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.4...enhanced-iterables-1.1.0
 [1.0.4]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.3...enhanced-iterables-1.0.4
 [1.0.3]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.2...enhanced-iterables-1.0.3
 [1.0.2]: https://github.com/kschuetz/enhanced-iterables/compare/enhanced-iterables-1.0.1...enhanced-iterables-1.0.2
