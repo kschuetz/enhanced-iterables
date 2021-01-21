@@ -7,14 +7,19 @@ import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Init;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Last;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Reverse;
-import com.jnape.palatable.lambda.functions.builtin.fn2.*;
+import com.jnape.palatable.lambda.functions.builtin.fn2.CartesianProduct;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
+import com.jnape.palatable.lambda.functions.builtin.fn2.MagnetizeBy;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
+import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
 
 import java.util.Collection;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
-import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyFiniteIterableOrThrow;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeNonEmptyFiniteIterable;
+import static dev.marksman.enhancediterables.Wrapped.unwrap;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -42,7 +47,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default NonEmptyFiniteIterable<A> concat(FiniteIterable<A> other) {
         requireNonNull(other);
-        return nonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
+        return unsafeNonEmptyFiniteIterable(Concat.concat(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -55,7 +60,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default NonEmptyFiniteIterable<A> concat(Collection<A> other) {
         requireNonNull(other);
-        return nonEmptyFiniteIterableOrThrow(Concat.concat(this, other));
+        return unsafeNonEmptyFiniteIterable(Concat.concat(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -67,7 +72,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      */
     default <B> NonEmptyFiniteIterable<Tuple2<A, B>> cross(NonEmptyFiniteIterable<B> other) {
         requireNonNull(other);
-        return nonEmptyFiniteIterableOrThrow(CartesianProduct.cartesianProduct(this, other));
+        return unsafeNonEmptyFiniteIterable(CartesianProduct.cartesianProduct(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -101,7 +106,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default <B> NonEmptyFiniteIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);
-        return nonEmptyFiniteIterableOrThrow(Map.map(f, this));
+        return unsafeNonEmptyFiniteIterable(Map.map(f, unwrap(this)));
     }
 
     /**
@@ -110,7 +115,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * @return a {@code FiniteIterable<A>}
      */
     default FiniteIterable<A> init() {
-        return EnhancedIterables.finiteIterable(Init.init(this));
+        return EnhancedIterables.finiteIterable(Init.init(unwrap(this)));
     }
 
     /**
@@ -124,7 +129,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      */
     @Override
     default NonEmptyFiniteIterable<A> intersperse(A separator) {
-        return nonEmptyFiniteIterableOrThrow(Intersperse.intersperse(separator, this));
+        return unsafeNonEmptyFiniteIterable(Intersperse.intersperse(separator, unwrap(this)));
     }
 
     /**
@@ -133,7 +138,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      * @return an element of type {@code A}
      */
     default A last() {
-        return Last.last(this).orElseThrow(AssertionError::new);
+        return Last.last(unwrap(this)).orElseThrow(AssertionError::new);
     }
 
     /**
@@ -148,8 +153,8 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     @Override
     default NonEmptyFiniteIterable<? extends NonEmptyFiniteIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
         requireNonNull(predicate);
-        return nonEmptyFiniteIterableOrThrow(MagnetizeBy.magnetizeBy(predicate, this))
-                .fmap(EnhancedIterables::nonEmptyFiniteIterableOrThrow);
+        return unsafeNonEmptyFiniteIterable(MagnetizeBy.magnetizeBy(predicate, unwrap(this)))
+                .fmap(EnhancedIterables::unsafeNonEmptyFiniteIterable);
     }
 
     /**
@@ -161,7 +166,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      */
     @Override
     default NonEmptyFiniteIterable<A> prependAll(A separator) {
-        return nonEmptyFiniteIterableOrThrow(PrependAll.prependAll(separator, this));
+        return unsafeNonEmptyFiniteIterable(PrependAll.prependAll(separator, unwrap(this)));
     }
 
     /**
@@ -203,7 +208,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
      */
     @Override
     default NonEmptyFiniteIterable<A> reverse() {
-        return nonEmptyFiniteIterableOrThrow(Reverse.reverse(this));
+        return unsafeNonEmptyFiniteIterable(Reverse.reverse(unwrap(this)));
     }
 
     /**
@@ -243,7 +248,7 @@ public interface NonEmptyFiniteIterable<A> extends FiniteIterable<A>, NonEmptyIt
     default <B, C> NonEmptyFiniteIterable<C> zipWith(Fn2<A, B, C> fn, NonEmptyIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return nonEmptyFiniteIterableOrThrow(ZipWith.zipWith(fn, this, other));
+        return unsafeNonEmptyFiniteIterable(ZipWith.zipWith(fn, unwrap(this), unwrap(other)));
     }
 
     /**

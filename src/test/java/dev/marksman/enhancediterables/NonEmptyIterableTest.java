@@ -9,7 +9,9 @@ import com.jnape.palatable.lambda.functions.builtin.fn2.LT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import testsupport.IntSequence;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -19,8 +21,9 @@ import static com.jnape.palatable.lambda.adt.Maybe.nothing;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
+import static com.jnape.palatable.lambda.functions.builtin.fn1.Size.size;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
-import static dev.marksman.enhancediterables.EnhancedIterables.nonEmptyIterableOrThrow;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeNonEmptyIterable;
 import static dev.marksman.enhancediterables.FiniteIterable.finiteIterable;
 import static dev.marksman.enhancediterables.NonEmptyIterable.nonEmptyIterable;
 import static java.util.Arrays.asList;
@@ -28,9 +31,16 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyIterable.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
 import static testsupport.IterablesContainSameElements.maybeIterablesContainSameElements;
+import static testsupport.IterateN.iterateN;
 
 class NonEmptyIterableTest {
 
@@ -135,6 +145,16 @@ class NonEmptyIterableTest {
                     contains("foo", "bar", "baz", "qux"));
         }
 
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                NonEmptyIterable<Integer> result = iterateN(50_000,
+                        nonEmptyIterable(1, emptyList()),
+                        acc -> acc.append(1));
+                assertEquals(50_001, size(result));
+            });
+        }
+
     }
 
     @Nested
@@ -151,6 +171,17 @@ class NonEmptyIterableTest {
             NonEmptyIterable<String> subject = nonEmptyIterable("foo", asList("bar", "baz"));
             assertThat(subject.concat(subject),
                     contains("foo", "bar", "baz", "foo", "bar", "baz"));
+        }
+
+        @Test
+        void stackSafe() {
+            NonEmptyIterable<Integer> xs = nonEmptyIterable(0, asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                NonEmptyIterable<Integer> result = iterateN(9999,
+                        xs,
+                        acc -> acc.concat(xs));
+                assertEquals(100_000, size(result));
+            });
         }
 
     }
@@ -180,6 +211,16 @@ class NonEmptyIterableTest {
         void countExceedingSize() {
             NonEmptyIterable<Integer> subject = nonEmptyIterable(1, asList(2, 3));
             assertThat(subject.drop(10000), emptyIterable());
+        }
+
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                EnhancedIterable<Integer> result = iterateN(10_000,
+                        (EnhancedIterable<Integer>) nonEmptyIterable(1, IntSequence.integers(2, 10_003)),
+                        acc -> acc.drop(1));
+                assertThat(result, contains(10_001, 10_002, 10_003));
+            });
         }
 
     }
@@ -240,6 +281,16 @@ class NonEmptyIterableTest {
             assertThat(subject.filter(n -> n % 2 == 1), contains(1, 3));
         }
 
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                EnhancedIterable<Integer> result = iterateN(10_000,
+                        (EnhancedIterable<Integer>) nonEmptyIterable(1, IntSequence.integers(2, 10)),
+                        acc -> acc.filter(x -> x % 2 == 0));
+                assertThat(result, contains(2, 4, 6, 8, 10));
+            });
+        }
+
     }
 
     @Nested
@@ -291,6 +342,16 @@ class NonEmptyIterableTest {
             Fn1<Integer, Integer> f = n -> n * 2;
             Fn1<Integer, String> g = Object::toString;
             assertTrue(iterablesContainSameElements(subject.fmap(f).fmap(g), subject.fmap(f.fmap(g))));
+        }
+
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                NonEmptyIterable<Integer> result = iterateN(10_000,
+                        nonEmptyIterable(0, asList(1, 2)),
+                        acc -> acc.fmap(x -> x + 1));
+                assertThat(result, contains(10_000, 10_001, 10_002));
+            });
         }
 
     }
@@ -346,7 +407,7 @@ class NonEmptyIterableTest {
 
         @Test
         void worksWithInfinite() {
-            assertThat(nonEmptyIterableOrThrow(Cycle.cycle(1, 1, 2, 2, 3))
+            assertThat(unsafeNonEmptyIterable(Cycle.cycle(1, 1, 2, 2, 3))
                             .magnetizeBy(Eq.eq()).take(10),
                     contains(contains(1, 1),
                             contains(2, 2),
@@ -366,11 +427,20 @@ class NonEmptyIterableTest {
     @DisplayName("prepend")
     class Prepend {
 
-
         @Test
         void toSize3() {
             assertThat(nonEmptyIterable("foo", asList("bar", "baz")).prepend("qux"),
                     contains("qux", "foo", "bar", "baz"));
+        }
+
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                NonEmptyIterable<Integer> result = iterateN(50_000,
+                        nonEmptyIterable(1, emptyList()),
+                        acc -> acc.prepend(1));
+                assertEquals(50_001, size(result));
+            });
         }
 
     }

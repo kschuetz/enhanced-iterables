@@ -8,8 +8,15 @@ import org.hamcrest.collection.IsEmptyIterable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import testsupport.IntSequence;
 
-import java.util.*;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
@@ -18,6 +25,7 @@ import static com.jnape.palatable.lambda.adt.choice.Choice2.b;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Id.id;
+import static com.jnape.palatable.lambda.functions.builtin.fn1.Size.size;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Tupler2.tupler;
 import static com.jnape.palatable.lambda.functor.builtin.Lazy.lazy;
 import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
@@ -28,9 +36,16 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static testsupport.IterablesContainSameElements.iterablesContainSameElements;
 import static testsupport.IterablesContainSameElements.maybeIterablesContainSameElements;
+import static testsupport.IterateN.iterateN;
 
 class FiniteIterableTest {
 
@@ -108,6 +123,16 @@ class FiniteIterableTest {
                     contains("foo", "bar", "baz", "qux"));
         }
 
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                FiniteIterable<Integer> result = iterateN(50_000,
+                        finiteIterable(emptyList()),
+                        acc -> acc.append(1));
+                assertEquals(50_000, size(result));
+            });
+        }
+
     }
 
     @Nested
@@ -142,6 +167,17 @@ class FiniteIterableTest {
             List<String> underlying = asList("foo", "bar", "baz");
             assertThat(finiteIterable(underlying).concat(underlying),
                     contains("foo", "bar", "baz", "foo", "bar", "baz"));
+        }
+
+        @Test
+        void stackSafe() {
+            FiniteIterable<Integer> xs = finiteIterable(asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                FiniteIterable<Integer> result = iterateN(10_000,
+                        finiteIterable(emptyList()),
+                        acc -> acc.concat(xs));
+                assertEquals(100_000, size(result));
+            });
         }
 
     }
@@ -243,6 +279,16 @@ class FiniteIterableTest {
             assertThat(subject.drop(10000), IsEmptyIterable.emptyIterable());
         }
 
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                FiniteIterable<Integer> result = iterateN(10_000,
+                        finiteIterable(IntSequence.integers(1, 10_003)),
+                        acc -> acc.drop(1));
+                assertThat(result, contains(10_001, 10_002, 10_003));
+            });
+        }
+
     }
 
     @Nested
@@ -301,6 +347,16 @@ class FiniteIterableTest {
             assertThat(subject.filter(n -> n % 2 == 1), contains(1, 3));
         }
 
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                FiniteIterable<Integer> result = iterateN(10_000,
+                        finiteIterable(IntSequence.integers(1, 10)),
+                        acc -> acc.filter(x -> x % 2 == 0));
+                assertThat(result, contains(2, 4, 6, 8, 10));
+            });
+        }
+
     }
 
     @Nested
@@ -352,6 +408,16 @@ class FiniteIterableTest {
             Fn1<Integer, Integer> f = n -> n * 2;
             Fn1<Integer, String> g = Object::toString;
             assertTrue(iterablesContainSameElements(subject.fmap(f).fmap(g), subject.fmap(f.fmap(g))));
+        }
+
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                FiniteIterable<Integer> result = iterateN(10_000,
+                        finiteIterable(asList(0, 1, 2)),
+                        acc -> acc.fmap(x -> x + 1));
+                assertThat(result, contains(10_000, 10_001, 10_002));
+            });
         }
 
     }
@@ -513,6 +579,16 @@ class FiniteIterableTest {
         void toSize3() {
             assertThat(finiteIterable(asList("foo", "bar", "baz")).prepend("qux"),
                     contains("qux", "foo", "bar", "baz"));
+        }
+
+        @Test
+        void stackSafe() {
+            assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
+                FiniteIterable<Integer> result = iterateN(50_000,
+                        finiteIterable(emptyList()),
+                        acc -> acc.prepend(1));
+                assertEquals(50_000, size(result));
+            });
         }
 
     }

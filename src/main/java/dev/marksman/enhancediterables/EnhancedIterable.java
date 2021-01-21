@@ -7,7 +7,23 @@ import com.jnape.palatable.lambda.functions.Fn0;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functions.Fn2;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Tails;
-import com.jnape.palatable.lambda.functions.builtin.fn2.*;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Cons;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Drop;
+import com.jnape.palatable.lambda.functions.builtin.fn2.DropWhile;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Filter;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Find;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Intersperse;
+import com.jnape.palatable.lambda.functions.builtin.fn2.MagnetizeBy;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Partition;
+import com.jnape.palatable.lambda.functions.builtin.fn2.PrependAll;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Slide;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Snoc;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Span;
+import com.jnape.palatable.lambda.functions.builtin.fn2.Take;
+import com.jnape.palatable.lambda.functions.builtin.fn2.TakeWhile;
+import com.jnape.palatable.lambda.functions.builtin.fn2.ToArray;
+import com.jnape.palatable.lambda.functions.builtin.fn2.ToCollection;
 import com.jnape.palatable.lambda.functions.builtin.fn3.ZipWith;
 import com.jnape.palatable.lambda.functor.Functor;
 import com.jnape.palatable.lambda.monoid.builtin.Concat;
@@ -15,8 +31,13 @@ import com.jnape.palatable.lambda.monoid.builtin.Concat;
 import java.util.Collection;
 
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
-import static dev.marksman.enhancediterables.EnhancedIterables.*;
-import static dev.marksman.enhancediterables.Validation.*;
+import static dev.marksman.enhancediterables.EnhancedIterables.finiteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeImmutableNonEmptyFiniteIterable;
+import static dev.marksman.enhancediterables.EnhancedIterables.unsafeNonEmptyIterable;
+import static dev.marksman.enhancediterables.Validation.validateDrop;
+import static dev.marksman.enhancediterables.Validation.validateSlide;
+import static dev.marksman.enhancediterables.Validation.validateTake;
+import static dev.marksman.enhancediterables.Wrapped.unwrap;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,7 +58,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * @return a {@code NonEmptyIterable<A>}
      */
     default NonEmptyIterable<A> append(A element) {
-        return nonEmptyIterableOrThrow(Snoc.snoc(element, this));
+        return unsafeNonEmptyIterable(Snoc.snoc(element, unwrap(this)));
     }
 
     /**
@@ -49,7 +70,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default EnhancedIterable<A> concat(Iterable<A> other) {
         requireNonNull(other);
-        return enhance(Concat.concat(this, other));
+        return enhance(Concat.concat(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -61,7 +82,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default NonEmptyIterable<A> concat(NonEmptyIterable<A> other) {
         requireNonNull(other);
-        return nonEmptyIterableOrThrow(Concat.concat(this, other));
+        return unsafeNonEmptyIterable(Concat.concat(unwrap(this), unwrap(other)));
     }
 
     /**
@@ -75,7 +96,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default EnhancedIterable<A> drop(int count) {
         validateDrop(count);
-        return enhance(Drop.drop(count, this));
+        return enhance(Drop.drop(count, unwrap(this)));
     }
 
     /**
@@ -89,7 +110,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default EnhancedIterable<A> dropWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        return enhance(DropWhile.dropWhile(predicate, this));
+        return enhance(DropWhile.dropWhile(predicate, unwrap(this)));
     }
 
     /**
@@ -101,7 +122,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default EnhancedIterable<A> filter(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        return enhance(Filter.<A>filter(predicate).apply(this));
+        return enhance(Filter.<A>filter(predicate).apply(unwrap(this)));
     }
 
     /**
@@ -113,7 +134,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default Maybe<A> find(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        return Find.find(predicate, this);
+        return Find.find(predicate, unwrap(this));
     }
 
     /**
@@ -127,7 +148,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default <B> EnhancedIterable<B> fmap(Fn1<? super A, ? extends B> f) {
         requireNonNull(f);
-        return enhance(Map.map(f, this));
+        return enhance(Map.map(f, unwrap(this)));
     }
 
     /**
@@ -140,7 +161,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * @return an {@code EnhancedIterable<A>}
      */
     default EnhancedIterable<A> intersperse(A separator) {
-        return enhance(Intersperse.intersperse(separator, this));
+        return enhance(Intersperse.intersperse(separator, unwrap(this)));
     }
 
     /**
@@ -163,8 +184,8 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default EnhancedIterable<? extends NonEmptyIterable<A>> magnetizeBy(Fn2<A, A, Boolean> predicate) {
         requireNonNull(predicate);
-        return enhance(MagnetizeBy.magnetizeBy(predicate, this))
-                .fmap(EnhancedIterables::nonEmptyIterableOrThrow);
+        return enhance(MagnetizeBy.magnetizeBy(predicate, unwrap(this)))
+                .fmap(EnhancedIterables::unsafeNonEmptyIterable);
     }
 
     /**
@@ -181,7 +202,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     default <B, C> Tuple2<? extends EnhancedIterable<B>, ? extends EnhancedIterable<C>> partition(
             Fn1<? super A, ? extends CoProduct2<B, C, ?>> function) {
         requireNonNull(function);
-        Tuple2<Iterable<B>, Iterable<C>> partitionResult = Partition.partition(function, this);
+        Tuple2<Iterable<B>, Iterable<C>> partitionResult = Partition.partition(function, unwrap(this));
         return tuple(enhance(partitionResult._1()), enhance(partitionResult._2()));
     }
 
@@ -192,7 +213,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * @return a {@code NonEmptyIterable<A>}
      */
     default NonEmptyIterable<A> prepend(A element) {
-        return NonEmptyIterable.nonEmptyIterable(element, this);
+        return unsafeNonEmptyIterable(Cons.cons(element, unwrap(this)));
     }
 
     /**
@@ -205,7 +226,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * @return an {@code EnhancedIterable<A>}
      */
     default EnhancedIterable<A> prependAll(A separator) {
-        return enhance(PrependAll.prependAll(separator, this));
+        return enhance(PrependAll.prependAll(separator, unwrap(this)));
     }
 
     /**
@@ -220,8 +241,8 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default EnhancedIterable<? extends NonEmptyFiniteIterable<A>> slide(int k) {
         validateSlide(k);
-        return enhance(Map.map(EnhancedIterables::nonEmptyFiniteIterableOrThrow,
-                Slide.slide(k, this)));
+        return enhance(Map.map(EnhancedIterables::unsafeNonEmptyFiniteIterable,
+                Slide.slide(k, unwrap(this))));
     }
 
     /**
@@ -233,7 +254,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default Tuple2<? extends EnhancedIterable<A>, ? extends EnhancedIterable<A>> span(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        Tuple2<Iterable<A>, Iterable<A>> spanResult = Span.<A>span(predicate).apply(this);
+        Tuple2<Iterable<A>, Iterable<A>> spanResult = Span.<A>span(predicate).apply(unwrap(this));
         return tuple(enhance(spanResult._1()), enhance(spanResult._2()));
     }
 
@@ -247,7 +268,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      * @return an {@code ImmutableNonEmptyIterable<EnhancedIterable<A>>}
      */
     default ImmutableNonEmptyIterable<? extends EnhancedIterable<A>> tails() {
-        return immutableNonEmptyIterableOrThrow(Map.map(EnhancedIterable::enhance, Tails.tails(this)));
+        return unsafeImmutableNonEmptyFiniteIterable(Map.map(EnhancedIterable::enhance, Tails.tails(unwrap(this))));
     }
 
     /**
@@ -261,7 +282,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default FiniteIterable<A> take(int count) {
         validateTake(count);
-        return finiteIterable(Take.take(count, this));
+        return finiteIterable(Take.take(count, unwrap(this)));
     }
 
     /**
@@ -275,7 +296,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default EnhancedIterable<A> takeWhile(Fn1<? super A, ? extends Boolean> predicate) {
         requireNonNull(predicate);
-        return enhance(TakeWhile.takeWhile(predicate, this));
+        return enhance(TakeWhile.takeWhile(predicate, unwrap(this)));
     }
 
     /**
@@ -286,7 +307,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default A[] toArray(Class<A[]> arrayType) {
         requireNonNull(arrayType);
-        return ToArray.toArray(arrayType).apply(this);
+        return ToArray.toArray(arrayType).apply(unwrap(this));
     }
 
     /**
@@ -300,7 +321,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
      */
     default <C extends Collection<A>> C toCollection(Fn0<C> cSupplier) {
         requireNonNull(cSupplier);
-        return ToCollection.toCollection(cSupplier).apply(this);
+        return ToCollection.toCollection(cSupplier).apply(unwrap(this));
     }
 
     /**
@@ -343,7 +364,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     default <B, C> EnhancedIterable<C> zipWith(Fn2<A, B, C> fn, Iterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return enhance(ZipWith.zipWith(fn, this, other));
+        return enhance(ZipWith.zipWith(fn, unwrap(this), unwrap(other)));
     }
 
     /**
@@ -363,7 +384,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, FiniteIterable<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
+        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, unwrap(this), unwrap(other)));
     }
 
     /**
@@ -383,7 +404,7 @@ public interface EnhancedIterable<A> extends Iterable<A>, Functor<A, EnhancedIte
     default <B, C> FiniteIterable<C> zipWith(Fn2<A, B, C> fn, Collection<B> other) {
         requireNonNull(fn);
         requireNonNull(other);
-        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, this, other));
+        return EnhancedIterables.finiteIterable(ZipWith.zipWith(fn, unwrap(this), unwrap(other)));
     }
 
     /**

@@ -1,7 +1,6 @@
 package dev.marksman.enhancediterables;
 
 import com.jnape.palatable.lambda.adt.Maybe;
-import com.jnape.palatable.lambda.functions.Fn0;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Cycle;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Distinct;
 import com.jnape.palatable.lambda.functions.builtin.fn1.Size;
@@ -15,7 +14,9 @@ import java.util.Iterator;
 
 import static com.jnape.palatable.lambda.adt.Maybe.just;
 import static com.jnape.palatable.lambda.adt.Maybe.nothing;
+import static dev.marksman.enhancediterables.ImmutableFiniteIterable.emptyImmutableFiniteIterable;
 import static dev.marksman.enhancediterables.ProtectedIterator.protectedIterator;
+import static dev.marksman.enhancediterables.Wrapped.unwrap;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
@@ -30,21 +31,14 @@ final class EnhancedIterables {
         return (ImmutableFiniteIterable<A>) EMPTY;
     }
 
-    /**
-     * Note: Includes an attempt to promote to NonEmptyIterable, so be careful
-     * not to call this recursively in the non-empty constructors.  Call simpleEnhance
-     * in those cases.
-     */
     static <A> EnhancedIterable<A> enhance(Iterable<A> underlying) {
         requireNonNull(underlying);
         if (underlying instanceof EnhancedIterable<?>) {
             return (EnhancedIterable<A>) underlying;
         } else if (underlying instanceof Collection<?>) {
             return finiteIterableFromCollection((Collection<A>) underlying);
-        } else if (underlying.iterator().hasNext()) {
-            return nonEmptyIterableOrThrow(underlying);
         } else {
-            return () -> protectedIterator(underlying.iterator());
+            return EnhancedWrapper.wrap(underlying);
         }
     }
 
@@ -53,19 +47,9 @@ final class EnhancedIterables {
         if (underlying instanceof FiniteIterable<?>) {
             return (FiniteIterable<A>) underlying;
         } else if (underlying instanceof Collection<?>) {
-            return new FiniteIterable<A>() {
-                @Override
-                public Iterator<A> iterator() {
-                    return protectedIterator(underlying.iterator());
-                }
-
-                @Override
-                public int size() {
-                    return ((Collection<A>) underlying).size();
-                }
-            };
+            return CollectionWrapper.wrap((Collection<A>) underlying);
         } else {
-            return () -> protectedIterator(underlying.iterator());
+            return FiniteWrapper.wrap(underlying);
         }
     }
 
@@ -75,18 +59,18 @@ final class EnhancedIterables {
             return (ImmutableIterable<A>) underlying;
         } else if (underlying instanceof Collection<?>) {
             return immutableFiniteIterableFromCollection((Collection<A>) underlying);
-        } else if (underlying.iterator().hasNext()) {
-            return immutableNonEmptyIterableOrThrow(underlying);
         } else {
-            return () -> protectedIterator(underlying.iterator());
+            return ImmutableWrapper.wrap(underlying);
         }
     }
 
     static <A> ImmutableFiniteIterable<A> immutableFiniteIterable(Iterable<A> underlying) {
         if (underlying instanceof ImmutableFiniteIterable<?>) {
             return (ImmutableFiniteIterable<A>) underlying;
+        } else if (underlying instanceof Collection<?>) {
+            return immutableFiniteIterableFromCollection(((Collection<A>) underlying));
         } else {
-            return () -> protectedIterator(underlying.iterator());
+            return ImmutableFiniteWrapper.wrap(underlying);
         }
     }
 
@@ -94,7 +78,7 @@ final class EnhancedIterables {
         if (iterable instanceof FiniteIterable<?>) {
             return just((FiniteIterable<A>) iterable);
         } else if (iterable instanceof Collection<?>) {
-            return just(finiteIterable(iterable));
+            return just(finiteIterableFromCollection((Collection<A>) iterable));
         } else {
             return nothing();
         }
@@ -114,7 +98,7 @@ final class EnhancedIterables {
         if (iterable instanceof ImmutableFiniteIterable<?>) {
             return just((ImmutableFiniteIterable<A>) iterable);
         } else if (iterable instanceof Collection<?>) {
-            return just(immutableFiniteIterable(iterable));
+            return just(immutableFiniteIterableFromCollection((Collection<A>) iterable));
         } else {
             return nothing();
         }
@@ -140,7 +124,7 @@ final class EnhancedIterables {
     }
 
     static <A> NonEmptyIterable<A> nonEmptyIterable(A head, Iterable<A> tail) {
-        EnhancedIterable<A> enhancedTail = simpleEnhance(tail);
+        EnhancedIterable<A> enhancedTail = enhance(tail);
         return new NonEmptyIterable<A>() {
             @Override
             public A head() {
@@ -154,30 +138,27 @@ final class EnhancedIterables {
         };
     }
 
-    static <A> NonEmptyIterable<A> nonEmptyIterableOrThrow(Iterable<A> underlying) {
+    static <A> NonEmptyIterable<A> unsafeNonEmptyIterable(Iterable<A> underlying) {
         if (underlying instanceof NonEmptyIterable<?>) {
             return (NonEmptyIterable<A>) underlying;
+        } else if (underlying instanceof Collection<?>) {
+            return NonEmptyCollectionWrapper.wrap((Collection<A>) underlying);
+        } else if (underlying instanceof FiniteIterable<?>) {
+            return NonEmptyFiniteWrapper.wrap(underlying);
         } else {
-            if (!underlying.iterator().hasNext()) {
-                throw nonEmptyError().apply();
-            }
+            return NonEmptyWrapper.wrap(underlying);
+        }
+    }
 
-            return new NonEmptyIterable<A>() {
-                @Override
-                public A head() {
-                    return iterator().next();
-                }
-
-                @Override
-                public EnhancedIterable<A> tail() {
-                    return this.drop(1);
-                }
-
-                @Override
-                public Iterator<A> iterator() {
-                    return protectedIterator(underlying.iterator());
-                }
-            };
+    static <A> ImmutableNonEmptyIterable<A> unsafeImmutableNonEmptyIterable(Iterable<A> underlying) {
+        if (underlying instanceof ImmutableNonEmptyIterable<?>) {
+            return (ImmutableNonEmptyIterable<A>) underlying;
+        } else if (underlying instanceof Collection<?>) {
+            return ImmutableNonEmptyCollectionWrapper.wrap((Collection<A>) underlying);
+        } else if (underlying instanceof FiniteIterable<?>) {
+            return ImmutableNonEmptyFiniteWrapper.wrap(underlying);
+        } else {
+            return ImmutableNonEmptyWrapper.wrap(underlying);
         }
     }
 
@@ -200,32 +181,13 @@ final class EnhancedIterables {
         return nonEmptyFiniteIterable(head, finiteIterable(tail));
     }
 
-    static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterableOrThrow(Iterable<A> underlying) {
+    static <A> NonEmptyFiniteIterable<A> unsafeNonEmptyFiniteIterable(Iterable<A> underlying) {
         if (underlying instanceof Collection<?>) {
-            return nonEmptyFiniteIterableFromCollectionOrThrow((Collection<A>) underlying);
+            return NonEmptyCollectionWrapper.wrap((Collection<A>) underlying);
         } else if (underlying instanceof NonEmptyFiniteIterable<?>) {
             return (NonEmptyFiniteIterable<A>) underlying;
         } else {
-            if (!underlying.iterator().hasNext()) {
-                throw nonEmptyError().apply();
-            }
-
-            return new NonEmptyFiniteIterable<A>() {
-                @Override
-                public A head() {
-                    return iterator().next();
-                }
-
-                @Override
-                public FiniteIterable<A> tail() {
-                    return this.drop(1);
-                }
-
-                @Override
-                public Iterator<A> iterator() {
-                    return protectedIterator(underlying.iterator());
-                }
-            };
+            return NonEmptyFiniteWrapper.wrap(underlying);
         }
     }
 
@@ -245,33 +207,6 @@ final class EnhancedIterables {
         };
     }
 
-    static <A> ImmutableNonEmptyIterable<A> immutableNonEmptyIterableOrThrow(Iterable<A> underlying) {
-        if (underlying instanceof ImmutableNonEmptyIterable<?>) {
-            return (ImmutableNonEmptyIterable<A>) underlying;
-        } else {
-            if (!underlying.iterator().hasNext()) {
-                throw nonEmptyError().apply();
-            }
-
-            return new ImmutableNonEmptyIterable<A>() {
-                @Override
-                public A head() {
-                    return iterator().next();
-                }
-
-                @Override
-                public ImmutableIterable<A> tail() {
-                    return this.drop(1);
-                }
-
-                @Override
-                public Iterator<A> iterator() {
-                    return protectedIterator(underlying.iterator());
-                }
-            };
-        }
-    }
-
     static <A> ImmutableNonEmptyFiniteIterable<A> immutableNonEmptyFiniteIterable(A head, ImmutableFiniteIterable<A> tail) {
         requireNonNull(tail);
         return new ImmutableNonEmptyFiniteIterable<A>() {
@@ -287,30 +222,15 @@ final class EnhancedIterables {
         };
     }
 
-    static <A> ImmutableNonEmptyFiniteIterable<A> immutableNonEmptyFiniteIterableOrThrow(Iterable<A> underlying) {
+    static <A> ImmutableNonEmptyFiniteIterable<A> unsafeImmutableNonEmptyFiniteIterable(Iterable<A> underlying) {
         if (underlying instanceof ImmutableNonEmptyFiniteIterable<?>) {
             return (ImmutableNonEmptyFiniteIterable<A>) underlying;
         } else {
-            if (!underlying.iterator().hasNext()) {
-                throw nonEmptyError().apply();
+            if (underlying instanceof Collection<?>) {
+                return ImmutableNonEmptyCollectionWrapper.wrap((Collection<A>) underlying);
+            } else {
+                return ImmutableNonEmptyFiniteWrapper.wrap(underlying);
             }
-
-            return new ImmutableNonEmptyFiniteIterable<A>() {
-                @Override
-                public A head() {
-                    return iterator().next();
-                }
-
-                @Override
-                public ImmutableFiniteIterable<A> tail() {
-                    return this.drop(1);
-                }
-
-                @Override
-                public Iterator<A> iterator() {
-                    return protectedIterator(underlying.iterator());
-                }
-            };
         }
     }
 
@@ -337,7 +257,7 @@ final class EnhancedIterables {
             if (underlying.isEmpty()) {
                 return Collections::emptyIterator;
             } else {
-                return immutableNonEmptyFiniteIterableOrThrow(underlying);
+                return ImmutableNonEmptyCollectionWrapper.wrap(underlying);
             }
         }
     }
@@ -399,12 +319,12 @@ final class EnhancedIterables {
 
     static <A> NonEmptyIterable<A> nonEmptyCycle(NonEmptyFiniteIterable<A> underlying) {
         requireNonNull(underlying);
-        return nonEmptyIterableOrThrow(Cycle.cycle(underlying));
+        return NonEmptyWrapper.wrap(Cycle.cycle(underlying));
     }
 
     static <A> ImmutableNonEmptyIterable<A> nonEmptyCycle(ImmutableNonEmptyFiniteIterable<A> underlying) {
         requireNonNull(underlying);
-        return immutableNonEmptyIterableOrThrow(Cycle.cycle(underlying));
+        return ImmutableNonEmptyWrapper.wrap(Cycle.cycle(underlying));
     }
 
     static <A> FiniteIterable<A> distinct(FiniteIterable<A> underlying) {
@@ -423,12 +343,12 @@ final class EnhancedIterables {
 
     static <A> NonEmptyFiniteIterable<A> nonEmptyDistinct(NonEmptyFiniteIterable<A> underlying) {
         requireNonNull(underlying);
-        return nonEmptyFiniteIterableOrThrow(Distinct.distinct(underlying));
+        return unsafeNonEmptyFiniteIterable(Distinct.distinct(unwrap(underlying)));
     }
 
     static <A> ImmutableNonEmptyFiniteIterable<A> nonEmptyDistinct(ImmutableNonEmptyFiniteIterable<A> underlying) {
         requireNonNull(underlying);
-        return immutableNonEmptyFiniteIterableOrThrow(Distinct.distinct(underlying));
+        return unsafeImmutableNonEmptyFiniteIterable(Distinct.distinct(unwrap(underlying)));
     }
 
     static <A> int size(FiniteIterable<A> as) {
@@ -441,81 +361,20 @@ final class EnhancedIterables {
         }
     }
 
-    /**
-     * Does not attempt to promote to NonEmpty.
-     */
-    private static <A> EnhancedIterable<A> simpleEnhance(Iterable<A> underlying) {
-        requireNonNull(underlying);
-        if (underlying instanceof EnhancedIterable<?>) {
-            return (EnhancedIterable<A>) underlying;
-        } else if (underlying instanceof Collection<?>) {
-            return finiteIterable(underlying);
-        } else {
-            return () -> protectedIterator(underlying.iterator());
-        }
-    }
-
-    /**
-     * Does not attempt to promote to NonEmpty.
-     */
-    private static <A> ImmutableIterable<A> simpleImmutableIterable(Iterable<A> underlying) {
-        requireNonNull(underlying);
-        if (underlying instanceof ImmutableIterable<?>) {
-            return (ImmutableIterable<A>) underlying;
-        } else if (underlying instanceof Collection<?>) {
-            return immutableFiniteIterable(underlying);
-        } else {
-            return () -> protectedIterator(underlying.iterator());
-        }
-    }
-
     private static <A> FiniteIterable<A> finiteIterableFromCollection(Collection<A> collection) {
         if (collection.isEmpty()) {
             return finiteIterable(collection);
         } else {
-            return nonEmptyFiniteIterableFromCollectionOrThrow(collection);
+            return NonEmptyCollectionWrapper.wrap(collection);
         }
     }
 
-    private static <A> ImmutableIterable<A> immutableFiniteIterableFromCollection(Collection<A> collection) {
+    private static <A> ImmutableFiniteIterable<A> immutableFiniteIterableFromCollection(Collection<A> collection) {
         if (collection.isEmpty()) {
-            return immutableFiniteIterable(collection);
+            return emptyImmutableFiniteIterable();
         } else {
-            return immutableNonEmptyFiniteIterableOrThrow(collection);
+            return ImmutableNonEmptyCollectionWrapper.wrap(collection);
         }
-    }
-
-    private static <A> NonEmptyFiniteIterable<A> nonEmptyFiniteIterableFromCollectionOrThrow(Collection<A> underlying) {
-        if (underlying.isEmpty()) {
-            throw nonEmptyError().apply();
-        }
-
-        return new NonEmptyFiniteIterable<A>() {
-            @Override
-            public A head() {
-                return iterator().next();
-            }
-
-            @Override
-            public FiniteIterable<A> tail() {
-                return this.drop(1);
-            }
-
-            @Override
-            public Iterator<A> iterator() {
-                return protectedIterator(underlying.iterator());
-            }
-
-            @Override
-            public int size() {
-                return underlying.size();
-            }
-        };
-
-    }
-
-    private static Fn0<IllegalArgumentException> nonEmptyError() {
-        return () -> new IllegalArgumentException("Cannot construct NonEmptyIterable from empty input");
     }
 
     private static class Singleton<A> implements ImmutableNonEmptyFiniteIterable<A> {
