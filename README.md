@@ -7,8 +7,8 @@
 
 #### Table of Contents
 
- - [What is it?](#what-is-it)
- - [Types](#types)
+- [What is it?](#what-is-it)
+- [Types](#types)
    - [`EnhancedIterable<A>`](#enhanced-iterable)
    - [`FiniteIterable<A>`](#finite-iterable)
    - [`NonEmptyIterable<A>`](#non-empty-iterable)
@@ -17,28 +17,33 @@
    - [`ImmutableFiniteIterable<A>`](#immutable-finite-iterable)
    - [`ImmutableNonEmptyIterable<A>`](#immutable-non-empty-iterable)
    - [`ImmutableNonEmptyFiniteIterable<A>`](#immutable-non-empty-finite-iterable)
- - [License](#license)   
-       
+- [License](#license)
+
 # What is it?
 
-*enhanced-iterables* is a Java library that is intended to be used in conjunction with [lambda](https://github.com/palatable/lambda). 
+*enhanced-iterables* is a Java library that is intended to be used in conjunction
+with [lambda](https://github.com/palatable/lambda).
 
-It provides interfaces that add some useful methods to `Iterable`s.  Most of these methods delegate to lambda functions, and return the most specific type of `Iterable` possible.    
+It provides interfaces that add some useful methods to `Iterable`s. Most of these methods delegate to lambda functions,
+and return the most specific type of `Iterable` possible.
 
 For more details, check out the [javadoc](https://kschuetz.github.io/enhanced-iterables/javadoc/).
 
 # [lambda](https://github.com/palatable/lambda) version compatibility
 
-| enhanced-iterables | lambda 5.2.0 | lambda 5.1.0 | lambda 5.0.0 | lambda 4.0.0 |
-|---|---|---|---|---|
-|1.1.x|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
-|1.0.x|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+The current version of *enhanced-iterables* has been certified to be compatible with the following lambda versions:
+
+- 5.3.0
+- 5.2.0
+- 5.1.0
+- 5.0.0
+- 4.0.0
 
 # Types
 
 ## <a name="enhanced-iterable">`EnhancedIterable<A>`</a>
 
-The base functionality that can be added to any `Iterable`.  Can be infinite, finite, or empty. 
+The base functionality that can be added to any `Iterable`. Can be infinite, finite, or empty.
 
 ### Methods
 
