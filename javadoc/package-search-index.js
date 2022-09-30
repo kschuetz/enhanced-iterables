@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"dev.marksman.enhancediterables"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"software.kes.enhancediterables"}]
